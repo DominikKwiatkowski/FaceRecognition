@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if(photo != null) {
-                    TensorImage image = model.imageLoad(photo);
+                    TensorImage image = model.prepareImage(photo);
                     result = model.processImage(image);
                 }
             }

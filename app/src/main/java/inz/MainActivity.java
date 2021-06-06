@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         pickButton = findViewById(R.id.FileButton);
         countButton = findViewById(R.id.countButton);
 
-        NeuralModel model = new NeuralModel(this);
+        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
 
         pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
 

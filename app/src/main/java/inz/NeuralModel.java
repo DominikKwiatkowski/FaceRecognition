@@ -14,10 +14,13 @@ import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import java.io.IOException;
 import java.lang.reflect.Array;
 
+    /**
+     * Represent neural model. User can defined which one will be used
+     */
     public class NeuralModel {
         private final int inputSize = 160;
         private final int outputSize = 128;
-        private final String nameOfModel =  "Facenet-optimized.tflite";
+        private final String nameOfModel;
         private Interpreter model;
 
         ImageProcessor imageProcessor =
@@ -28,12 +31,15 @@ import java.lang.reflect.Array;
 
         /**
          * Class constructor.
+         * @param context actual Activity
+         * @param nameOfModel name of model to be used. All models must be inside ml folder.
          */
-        NeuralModel(Context context)
+        NeuralModel(Context context, String nameOfModel)
         {
+            this.nameOfModel = nameOfModel;
             try{
                 model = new Interpreter(FileUtil.loadMappedFile(context,
-                        nameOfModel));
+                        this.nameOfModel));
             } catch (IOException e){
                 Log.e("tfliteSupport", "Error reading model", e);
             }
@@ -45,6 +51,7 @@ import java.lang.reflect.Array;
          *
          * @param image image to be prepared.
          * @return tImage image processed and ready to be putted by neural network.
+         * @exception NullPointerException in case of null image
          */
         public TensorImage prepareImage(Bitmap image)
         {
@@ -59,10 +66,11 @@ import java.lang.reflect.Array;
         }
 
         /**
-         * Processing image in neural network.
+         * Recive target image and serialize it to image's vector using neural network model.
          *
          * @param tImage image to be processed by network. It must be preprocessed.
          * @return probabilityBuffer Buffer of face properties. Sized of buffer must be specified.
+         * @exception NullPointerException in case of null image
          */
         public float[][] processImage(TensorImage tImage)
         {

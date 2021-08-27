@@ -5,36 +5,44 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.tensorflow.lite.support.image.TensorImage;
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
 
 public class MainActivity extends AppCompatActivity {
 
     Button pickButton;
     Button countButton;
-
+    Resources res;
     Uri fileUri = null;
-    float [][] result;
+    float [][][] result = new float[3][][];
+    Mat photos[] = new Mat[3];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        res = this.res;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (ActivityCompat.checkSelfPermission(this,
@@ -55,25 +63,35 @@ public class MainActivity extends AppCompatActivity {
 
         pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
 
+        try {
+            photos[0] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu1);
+            photos[1] = Utils.loadResource(this.getApplicationContext(),R.drawable.macius);
+            photos[2] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         countButton.setOnClickListener(v -> {
-            if(fileUri != null)
-            {
-                Bitmap photo = null;
-                try {
-                    photo = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), fileUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(photo != null) {
-                    TensorImage image = model.prepareImage(photo);
-                    result = model.processImage(image);
-                }
+            for(int i = 0;i<photos.length;i++) {
+                MatOfRect faces = model.detectAllFaces(photos[i]);
+                ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
+                TensorImage image = model.changeImageRes(faceImages.get(0));
+                result[i] = model.processImage(image);
             }
+
+            Log.i("score1-3",norm(result[0][0],result[2][0]).toString());
+            Log.i("score2-3",norm(result[1][0],result[2][0]).toString());
         });
     }
 
+    private Double norm(float [] first, float [] second)
+    {
+        float ans = 0;
+        for(int i = 0;i<first.length;i++)
+        {
+            ans += pow(first[i]-second[i],2);
+        }
+        return sqrt(ans);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -116,5 +134,25 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
 
         startActivityForResult(intent, 100);
+    }
+
+    // creates menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Function is responsible for
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Intent i;
+        switch (item.getItemId())
+        {
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

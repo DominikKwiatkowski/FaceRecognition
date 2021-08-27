@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import org.opencv.android.OpenCVLoader;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
@@ -41,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        if(OpenCVLoader.initDebug())
+        {
+            Log.d("OPENCV", "OpenCv loaded succesfully");
         }
         pickButton = findViewById(R.id.FileButton);
         countButton = findViewById(R.id.countButton);

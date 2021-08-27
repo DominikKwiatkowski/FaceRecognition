@@ -82,4 +82,10 @@ import java.lang.reflect.Array;
             model.run(tImage.getBuffer(), probabilityBuffer);
             return probabilityBuffer;
         }
+
+        /*public void detectFaces(CvCameraViewFrame image)
+        {
+            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+            mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface.xml");
+        }*/
     }

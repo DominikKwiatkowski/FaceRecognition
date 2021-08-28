@@ -257,12 +257,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
     /**
      *
-     * @param listener
      */
-
-    public void setCvCameraViewListener(CvCameraViewListener2 listener) {
-        mListener = listener;
-    }
 
     public void setCvCameraViewListener(CvCameraViewListener listener) {
         CvCameraViewListenerAdapter adapter = new CvCameraViewListenerAdapter(listener);

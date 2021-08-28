@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     float [][][] result = new float[numOfPhotos][][];
     Mat photos[] = new Mat[numOfPhotos];
 
+    static {
+        System.loadLibrary("opencv_java3");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 1);
         }
         if(OpenCVLoader.initDebug())
         {
@@ -148,6 +158,16 @@ public class MainActivity extends AppCompatActivity {
                 adb.create().show();
             }
         }
+        else if(requestCode == 1)
+        {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                adb.setTitle("Crucial permission not granted, application will be closed");
+                adb.setPositiveButton("Tak",
+                        (dialog, which) -> MainActivity.super.finish());
+                adb.create().show();
+            }
+        }
     }
 
     /**
@@ -180,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      *
-     * @param item item chosed by user
+     * @param item item chosen by user
      * @return true if successful.
      */
     @Override
@@ -189,6 +209,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             // TODO: if you add some menu option, add its action here
+            case R.id.cameraScreen:
+                Intent i = new Intent(this, CameraActivity.class);
+                startActivity(i);
+                break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -32,8 +32,8 @@ import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
 import static org.opencv.imgproc.Imgproc.warpAffine;
 import static org.junit.Assert.assertEquals;
 
-/**
-     * Represent neural model. User can defined which one will be used
+    /**
+     * Represent neural model. User can defined which one will be used.
      */
     public class NeuralModel {
         private final int inputSize = 160;
@@ -48,8 +48,9 @@ import static org.junit.Assert.assertEquals;
                         .build();
         Context context;
         private final String TAG = "NeuralModelClass";
-        private CascadeClassifier faceCascade = new CascadeClassifier();
-        private CascadeClassifier eyeCascade = new CascadeClassifier();
+        private final CascadeClassifier faceCascade = new CascadeClassifier();
+        private final CascadeClassifier eyeCascade = new CascadeClassifier();
+
         /**
          * Class constructor.
          * @param context actual Activity
@@ -175,8 +176,7 @@ import static org.junit.Assert.assertEquals;
             }
             Rect[] faceArray = detectAllFaces(face).toArray();
             assertEquals("Wrong image, more than 1 face", 1,faceArray.length);
-            Mat faceImg = face.submat(faceArray[0]);
-            return faceImg;
+            return face.submat(faceArray[0]);
         }
 
         /**
@@ -188,7 +188,8 @@ import static org.junit.Assert.assertEquals;
          */
         public ArrayList<Mat> preProcessAllFaces(Mat frame, MatOfRect detectedFaces)
         {
-            ArrayList<Mat> cuttedFaces = new ArrayList();
+            ArrayList<Mat> cutFaces;
+            cutFaces = new ArrayList();
             for (Rect face : detectedFaces.toArray())
             {
                 Mat faceImg = frame.submat(face);
@@ -196,26 +197,26 @@ import static org.junit.Assert.assertEquals;
                 if(eyeArray.length != 2)
                 {
                     // Sth go wrong, we should stop preprocessing
-                    cuttedFaces.add(faceImg);
+                    cutFaces.add(faceImg);
                 }
                 else
                 {
-                    cuttedFaces.add(rotateImageByEye(faceImg,eyeArray));
+                    cutFaces.add(rotateImageByEye(faceImg,eyeArray));
                 }
             }
-            return cuttedFaces;
+            return cutFaces;
         }
 
-    /**
-     * Rotate image by eye.
-     *
-     * @param image image with face which will rotated.
-     * @param eyeArray Array of eyes. It has to have 2 elements.
-     * @return image after rotation.
-     */
+        /**
+         * Rotate image by eye.
+         *
+         * @param image image with face which will rotated.
+         * @param eyeArray Array of eyes. It has to have 2 elements.
+         * @return image after rotation.
+         */
         private Mat rotateImageByEye(Mat image, Rect[] eyeArray)
         {
-            assertEquals("Wron eye number", 2, eyeArray.length);
+            assertEquals("Wrong eye number", 2, eyeArray.length);
             double delta_x = (eyeArray[0].x + eyeArray[0].width) -
                     (eyeArray[1].x + eyeArray[1].width);
             double delta_y = (eyeArray[0].y + eyeArray[0].height) -

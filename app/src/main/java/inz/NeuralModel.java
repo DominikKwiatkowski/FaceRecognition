@@ -47,7 +47,7 @@ import static org.junit.Assert.assertEquals;
                         .add(new NormalizeOp( 127.5f , 127.5f ) )
                         .build();
         Context context;
-        private final String TAG = "NeuralModelClass";
+        private final String TAG = "NeuralModelClass ";
         private final CascadeClassifier faceCascade = new CascadeClassifier();
         private final CascadeClassifier eyeCascade = new CascadeClassifier();
 
@@ -64,7 +64,7 @@ import static org.junit.Assert.assertEquals;
                 model = new Interpreter(FileUtil.loadMappedFile(context,
                         this.nameOfModel));
             } catch (IOException e){
-                Log.e(TAG, "Error reading model", e);
+                Log.e(TAG + nameOfModel, "Error reading model", e);
             }
             res = context.getResources();
             loadClassifier(R.raw.haarcascade_frontalface_default, faceCascade);
@@ -145,7 +145,7 @@ import static org.junit.Assert.assertEquals;
         }
 
         /**
-         * Detecl all faces on given frame. .
+         * Detect all faces on given frame.
          *
          * @param frame image on which faces will be found.
          * @return MatOfRect matrix of all face rectangular. Face rectangular is beginning point and
@@ -217,7 +217,7 @@ import static org.junit.Assert.assertEquals;
          */
         private Mat rotateImageByEye(Mat image, Rect[] eyeArray)
         {
-            assertEquals("Wrong eye number", 2, eyeArray.length);
+            assertEquals("Wrong number of eyes", 2, eyeArray.length);
             double delta_x = (eyeArray[0].x + eyeArray[0].width) -
                     (eyeArray[1].x + eyeArray[1].width);
             double delta_y = (eyeArray[0].y + eyeArray[0].height) -

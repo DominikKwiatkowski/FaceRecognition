@@ -38,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
     Button countButton;
     Resources res;
     Uri fileUri = null;
-    float [][][] result = new float[3][][];
-    Mat photos[] = new Mat[3];
+    final int numOfPhotos = 3;
+    // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
+    float [][][] result = new float[numOfPhotos][][];
+    Mat photos[] = new Mat[numOfPhotos];
 
 
     @Override

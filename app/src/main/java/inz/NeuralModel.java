@@ -33,7 +33,7 @@ import static org.opencv.imgproc.Imgproc.warpAffine;
 import static org.junit.Assert.assertEquals;
 
     /**
-     * Represent neural model. User can defined which one will be used.
+     * Represents neural model. User can define which one will be used.
      */
     public class NeuralModel {
         private final int inputSize = 160;
@@ -108,6 +108,7 @@ import static org.junit.Assert.assertEquals;
             }
             float[][] probabilityBuffer = new float[1][outputSize];
             model.run(tImage.getBuffer(), probabilityBuffer);
+            Log.i(TAG + nameOfModel, "proceeded image succesfully");
             return probabilityBuffer;
         }
 
@@ -136,10 +137,10 @@ import static org.junit.Assert.assertEquals;
                 os.close();
 
                 classifier.load(cascadeFile.getAbsolutePath());
-                Log.i(TAG, "cascade loaded succesfully");
+                Log.i(TAG + nameOfModel, "cascade loaded succesfully");
 
             } catch (IOException e) {
-                Log.e(TAG, "cascade not found");
+                Log.e(TAG + nameOfModel, "cascade not found");
             }
         }
 
@@ -227,7 +228,6 @@ import static org.junit.Assert.assertEquals;
             Mat M = getRotationMatrix2D(new Point(cols/2, rows/2), angle, 1);
             Mat imageRot = new Mat();
             warpAffine(image,imageRot, M, new Size(cols, rows));
-            imwrite(context.getDir("cascade", Context.MODE_PRIVATE).getAbsolutePath() + "/image.jpg",imageRot);
             return imageRot;
         }
 

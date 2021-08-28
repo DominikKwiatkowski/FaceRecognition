@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
     float [][][] result = new float[numOfPhotos][][];
     Mat photos[] = new Mat[numOfPhotos];
+    final ArrayList<String> permissions = new ArrayList<>();
 
     static {
         System.loadLibrary("opencv_java3");
@@ -56,16 +57,20 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA}, 1);
+            permissions.add(Manifest.permission.CAMERA);
         }
+        if(!permissions.isEmpty())
+        {
+            ActivityCompat.requestPermissions(this,
+                    permissions.toArray(new String[permissions.size()]), 0);
+        }
+
         if(OpenCVLoader.initDebug())
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
@@ -150,22 +155,14 @@ public class MainActivity extends AppCompatActivity {
     {
         if(requestCode == 0)
         {
-            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                adb.setTitle("Crucial permission not granted, application will be closed");
-                adb.setPositiveButton("Tak",
-                        (dialog, which) -> MainActivity.super.finish());
-                adb.create().show();
-            }
-        }
-        else if(requestCode == 1)
-        {
-            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                adb.setTitle("Crucial permission not granted, application will be closed");
-                adb.setPositiveButton("Tak",
-                        (dialog, which) -> MainActivity.super.finish());
-                adb.create().show();
+            for(int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    adb.setTitle("Crucial permission not granted, application will be closed");
+                    adb.setPositiveButton("Tak",
+                            (dialog, which) -> MainActivity.super.finish());
+                    adb.create().show();
+                }
             }
         }
     }

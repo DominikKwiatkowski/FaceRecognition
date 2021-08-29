@@ -47,6 +47,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
+        
         // Camera setup.
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);

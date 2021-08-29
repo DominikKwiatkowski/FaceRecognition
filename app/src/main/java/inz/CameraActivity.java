@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -26,7 +27,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private NeuralModel model;
-
+    private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     static {
         System.loadLibrary("opencv_java3");
     }
@@ -47,7 +48,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
-        
+
         // Camera setup.
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -56,6 +57,15 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         // Neural model load.
         model = new NeuralModel(this, "Facenet-optimized.tflite");
+
+        //Set camera change button
+        Button CameraChange = findViewById(R.id.cameraChange);
+        CameraChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                swapCamera();
+            }
+        });
     }
 
     /**
@@ -140,5 +150,23 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     public void onResume() {
         mOpenCvCameraView.enableView();
         super.onResume();
+    }
+
+    /**
+     * change camera, front->back, back->front.
+     */
+    public void swapCamera() {
+        // Change camera index
+        if (CameraIndex == CameraBridgeViewBase.CAMERA_ID_FRONT) {
+            CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
+        }
+        else {
+            CameraIndex = CameraBridgeViewBase.CAMERA_ID_FRONT;
+        }
+
+        // disable old camera, change camera, enable new camera
+        mOpenCvCameraView.disableView();
+        mOpenCvCameraView.setCameraIndex(CameraIndex);
+        mOpenCvCameraView.enableView();
     }
 }

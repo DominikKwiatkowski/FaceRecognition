@@ -13,4 +13,10 @@
         opencv:camera_id="back"
         opencv:show_fps="true" />
 
+    <Button
+        android:id="@+id/cameraChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Camera" />
+
 </FrameLayout>

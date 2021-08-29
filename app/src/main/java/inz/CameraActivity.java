@@ -37,14 +37,19 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);;
+        // Activity creation.
+        super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         OpenCVLoader.initDebug();
         setContentView(R.layout.activity_camera);
+
+        // Camera setup.
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
         //mOpenCvCameraView.setCameraIndex(1);
+
+        // Neural model load.
         model = new NeuralModel(this, "Facenet-optimized.tflite");
     }
 
@@ -110,7 +115,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         //TODO maybe some operation should be done in async, but idk.
         ArrayList<Mat> faceImages = model.preProcessAllFaces(inputFrame, faces);
-       for( Mat face :faceImages) {
+        for( Mat face :faceImages) {
             TensorImage image = model.changeImageRes(face);
             model.processImage(image);
         }

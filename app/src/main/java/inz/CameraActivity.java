@@ -13,10 +13,20 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.support.image.TensorImage;
+
+import java.util.ArrayList;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
     private CameraBridgeViewBase mOpenCvCameraView;
+    private NeuralModel model;
+
     static {
         System.loadLibrary("opencv_java3");
     }
@@ -34,7 +44,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
-
+        //mOpenCvCameraView.setCameraIndex(1);
+        model = new NeuralModel(this, "Facenet-optimized.tflite");
     }
 
     /**
@@ -79,7 +90,31 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
+        MatOfRect faces = model.detectAllFaces(inputFrame);
+        for (Rect face : faces.toArray()) {
+            Imgproc.rectangle(
+                    inputFrame,                                                 // Image
+                    new Point(face.x, face.y),                                  //p1
+                    new Point(face.x + face.width, face.y + face.height),//p2
+                    new Scalar(0, 0, 255),                                     //color
+                    5                                                //Thickness
+            );
+        }
+
+        // TODO: Some way to track face, make some noise detection,
+        // maybe some number of frames with similar object?
+
+        // TODO: we have to proceed this input and put some number to face, and apply
+        // TODO: face detection for
         // frame operation.
+
+        //TODO maybe some operation should be done in async, but idk.
+        ArrayList<Mat> faceImages = model.preProcessAllFaces(inputFrame, faces);
+       for( Mat face :faceImages) {
+            TensorImage image = model.changeImageRes(face);
+            model.processImage(image);
+        }
+
         return inputFrame;
     }
 

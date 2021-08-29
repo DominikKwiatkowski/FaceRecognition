@@ -67,7 +67,7 @@ import static org.junit.Assert.assertEquals;
                 Log.e(TAG + nameOfModel, "Error reading model", e);
             }
             res = context.getResources();
-            loadClassifier(R.raw.haarcascade_frontalface_default, faceCascade);
+            loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
             loadClassifier(R.raw.haarcascade_eye, eyeCascade);
         }
 

@@ -42,32 +42,55 @@ public class MainActivity extends AppCompatActivity {
     // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
     float [][][] result = new float[numOfPhotos][][];
     Mat photos[] = new Mat[numOfPhotos];
+    final ArrayList<String> permissions = new ArrayList<>();
 
+    static {
+        System.loadLibrary("opencv_java3");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         res = this.res;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Check if permission already given - if not ask for it.
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED)
+        {
+            permissions.add(Manifest.permission.CAMERA);
+        }
+
+
+        if(!permissions.isEmpty())
+        {
+            ActivityCompat.requestPermissions(this,
+                    permissions.toArray(new String[permissions.size()]), 0);
+        }
+
+        // Load OpenCv.
         if(OpenCVLoader.initDebug())
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
+
+        // Get/Set layout stuff.
         pickButton = findViewById(R.id.FileButton);
         countButton = findViewById(R.id.countButton);
-
-        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
-
         pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
 
-        // load test photos
+        // Load model.
+        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
+
+        // Load test photos.
         try {
             photos[0] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu1);
             photos[1] = Utils.loadResource(this.getApplicationContext(),R.drawable.macius);
@@ -75,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Set test on button.
         countButton.setOnClickListener(v -> {
             // preprocessed and proceed all test photos
             for(int i = 0;i<photos.length;i++) {
@@ -140,12 +165,14 @@ public class MainActivity extends AppCompatActivity {
     {
         if(requestCode == 0)
         {
-            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                adb.setTitle("Crucial permission not granted, application will be closed");
-                adb.setPositiveButton("Tak",
-                        (dialog, which) -> MainActivity.super.finish());
-                adb.create().show();
+            for(int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    adb.setTitle("Crucial permission not granted, application will be closed");
+                    adb.setPositiveButton("Tak",
+                            (dialog, which) -> MainActivity.super.finish());
+                    adb.create().show();
+                }
             }
         }
     }
@@ -180,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      *
-     * @param item item chosed by user
+     * @param item item chosen by user
      * @return true if successful.
      */
     @Override
@@ -189,6 +216,12 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             // TODO: if you add some menu option, add its action here
+            case R.id.cameraScreen:
+                Intent i = new Intent(this, CameraActivity.class);
+                startActivity(i);
+                break;
+
+
         }
         return super.onOptionsItemSelected(item);
     }

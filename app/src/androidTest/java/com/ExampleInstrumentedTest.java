@@ -1,4 +1,4 @@
-package inz;
+package com;
 
 import android.content.Context;
 

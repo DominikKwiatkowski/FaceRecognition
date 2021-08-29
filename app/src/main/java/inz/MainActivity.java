@@ -53,36 +53,44 @@ public class MainActivity extends AppCompatActivity {
         res = this.res;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Check if permission already given - if not ask for it.
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED)
         {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED)
         {
             permissions.add(Manifest.permission.CAMERA);
         }
+
+
         if(!permissions.isEmpty())
         {
             ActivityCompat.requestPermissions(this,
                     permissions.toArray(new String[permissions.size()]), 0);
         }
 
+        // Load OpenCv.
         if(OpenCVLoader.initDebug())
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
+
+        // Get/Set layout stuff.
         pickButton = findViewById(R.id.FileButton);
         countButton = findViewById(R.id.countButton);
-
-        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
-
         pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
 
-        // load test photos
+        // Load model.
+        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
+
+        // Load test photos.
         try {
             photos[0] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu1);
             photos[1] = Utils.loadResource(this.getApplicationContext(),R.drawable.macius);
@@ -90,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Set test on button.
         countButton.setOnClickListener(v -> {
             // preprocessed and proceed all test photos
             for(int i = 0;i<photos.length;i++) {

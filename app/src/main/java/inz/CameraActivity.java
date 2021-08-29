@@ -40,9 +40,13 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         // Activity creation.
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        OpenCVLoader.initDebug();
         setContentView(R.layout.activity_camera);
 
+        // Load OpenCv
+        if(OpenCVLoader.initDebug())
+        {
+            Log.d("OPENCV", "OpenCv loaded succesfully");
+        }
         // Camera setup.
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -96,6 +100,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
         MatOfRect faces = model.detectAllFaces(inputFrame);
+
+        // Draw rectangle for each face found in photo
         for (Rect face : faces.toArray()) {
             Imgproc.rectangle(
                     inputFrame,                                                 // Image
@@ -107,14 +113,17 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         }
 
         // TODO: Some way to track face, make some noise detection,
-        // maybe some number of frames with similar object?
+        // TODO: maybe some number of frames with similar object?
 
         // TODO: we have to proceed this input and put some number to face, and apply
-        // TODO: face detection for
-        // frame operation.
+        // TODO: face detection for frame operation.
 
         //TODO maybe some operation should be done in async, but idk.
+
+        //Pre process all images
         ArrayList<Mat> faceImages = model.preProcessAllFaces(inputFrame, faces);
+
+        // Calculate vector for each face
         for( Mat face :faceImages) {
             TensorImage image = model.changeImageRes(face);
             model.processImage(image);

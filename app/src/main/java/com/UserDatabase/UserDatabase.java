@@ -66,7 +66,7 @@ public class UserDatabase {
      * @param vector of n-dimensions, for which the closest equivalent wil be found.
      * @return closest UserRecord.
      */
-    public UserRecord findClosestRecord(float[] vector){
+    public UserRecord findClosestRecord(float[] vector) {
         // TODO: Add Maciej's function to calculate distance
         return null;
     }
@@ -76,48 +76,25 @@ public class UserDatabase {
      *
      * @param userRecord to add to database.
      */
-    public void correctUserRecord(UserRecord userRecord) {
+    public void addUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
-        if(userRecord.vector.length == VectorLength){
-            // Check if user exists in database
-            if (usersRecords.containsKey(userRecord.username)) {
-                usersRecords.get(userRecord.username).correctVector(userRecord.vector);
-
-                // Serialize database immediately
-                // TODO: Later on it might be reasonable to save database on application closure (faster)
-                saveDatabase();
-            }
-        }
-        else{
-            throw new AssertionError("Incorrect vector length");
-        }
-    }
-
-    /**
-     * Add new UserRecord to the database.
-     *
-     * @param userRecord to add to database.
-     * @return True if record was added. False if user already exists.
-     */
-    public boolean addUserRecord(UserRecord userRecord) {
-        // Check correctness of vector length
-        if(userRecord.vector.length == VectorLength){
-            // Check if user already exists in database
+        if(userRecord.vector.length == VectorLength) {
             if (!usersRecords.containsKey(userRecord.username)) {
+                // If user doesn't exist in database, insert the record
                 usersRecords.put(userRecord.username, userRecord);
-
-                // Serialize database immediately
-                // TODO: Later on it might be reasonable to save database on application closure (faster)
-                saveDatabase();
-
-                return true;
             }
+            else {
+                // If user exists in database, correct the record
+                usersRecords.get(userRecord.username).correctVector(userRecord.vector);
+            }
+
+            // Serialize database immediately
+            // TODO: Later on it might be reasonable to save database on application closure (faster)
+            saveDatabase();
         }
         else{
             throw new AssertionError("Incorrect vector length");
         }
-
-        return false;
     }
 
     /**

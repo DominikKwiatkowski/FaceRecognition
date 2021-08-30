@@ -1,14 +1,13 @@
-package inz;
+package com;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,13 +15,15 @@ import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+
+import com.UserDatabase.UserDatabase;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.tensorflow.lite.support.image.TensorImage;
 
 import java.io.IOException;
@@ -30,18 +31,17 @@ import java.util.ArrayList;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-import static org.opencv.imgcodecs.Imgcodecs.imread;
 
-public class MainActivity extends AppCompatActivity {
+public class FaceRecognition extends AppCompatActivity {
+    private NeuralModel model = null;
+    private UserDatabase userDatabase = null;
+    private Uri fileUri = null;
+    private final int numOfPhotos = 3;
 
-    Button pickButton;
-    Button countButton;
-    Resources res;
-    Uri fileUri = null;
-    final int numOfPhotos = 3;
     // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
     float [][][] result = new float[numOfPhotos][][];
-    Mat photos[] = new Mat[numOfPhotos];
+
+    Mat[] photos = new Mat[numOfPhotos];
     final ArrayList<String> permissions = new ArrayList<>();
 
     static {
@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        res = this.res;
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        // Check if permission already given - if not ask for it.
+        // Check if permission is already given - if not, ask for it.
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED)
@@ -69,49 +69,38 @@ public class MainActivity extends AppCompatActivity {
             permissions.add(Manifest.permission.CAMERA);
         }
 
-
         if(!permissions.isEmpty())
         {
             ActivityCompat.requestPermissions(this,
                     permissions.toArray(new String[permissions.size()]), 0);
         }
 
-        // Load OpenCv.
+        // Load OpenCv
         if(OpenCVLoader.initDebug())
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
-        // Get/Set layout stuff.
-        pickButton = findViewById(R.id.FileButton);
-        countButton = findViewById(R.id.countButton);
-        pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
+        // Load NeuralModel
+        model = new NeuralModel(this, "Facenet-optimized.tflite");
 
-        // Load model.
-        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
-
-        // Load test photos.
+        // Load test images from resources
         try {
-            photos[0] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu1);
-            photos[1] = Utils.loadResource(this.getApplicationContext(),R.drawable.macius);
-            photos[2] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu2);
+            photos[0] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu1);
+            photos[1] = Utils.loadResource(this.getApplicationContext(), R.drawable.macius);
+            photos[2] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu2);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Set test on button.
-        countButton.setOnClickListener(v -> {
-            // preprocessed and proceed all test photos
-            for(int i = 0;i<photos.length;i++) {
-                MatOfRect faces = model.detectAllFaces(photos[i]);
-                ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
-                TensorImage image = model.changeImageRes(faceImages.get(0));
-                result[i] = model.processImage(image);
-            }
-            // print difference result.
-            Log.i("score1-3",norm(result[0][0],result[2][0]).toString());
-            Log.i("score2-3",norm(result[1][0],result[2][0]).toString());
-        });
+        // Initialize database
+        // TODO: Temporary. Later on it should be moved to the model selection menu
+        //  (database will be defined per model).
+        userDatabase = new UserDatabase(
+                getApplicationContext(),        // App specific internal storage location
+                "Facenet",        // Model name TODO: temporary
+                128                // Vector size TODO: temporary
+        );
     }
 
     /**
@@ -123,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
     private Double norm(float [] first, float [] second)
     {
         float ans = 0;
-        for(int i = 0;i<first.length;i++)
+        for(int i = 0; i < first.length; i++)
         {
-            ans += pow(first[i]-second[i],2);
+            ans += pow(first[i] - second[i], 2);
         }
         return sqrt(ans);
     }
@@ -150,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
         super.onActivityResult(requestCode,resultCode,data);
     }
 
@@ -160,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
      * @param grantResults result value, it might be for fiew permissions.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
     {
         if(requestCode == 0)
         {
@@ -170,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     adb.setTitle("Crucial permission not granted, application will be closed");
                     adb.setPositiveButton("Tak",
-                            (dialog, which) -> MainActivity.super.finish());
+                            (dialog, which) -> FaceRecognition.super.finish());
                     adb.create().show();
                 }
             }
@@ -206,8 +196,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Options menu callback.
      *
-     * @param item item chosen by user
+     * @param item - item chosen by user
      * @return true if successful.
      */
     @Override
@@ -215,14 +206,48 @@ public class MainActivity extends AppCompatActivity {
     {
         switch (item.getItemId())
         {
-            // TODO: if you add some menu option, add its action here
             case R.id.cameraScreen:
                 Intent i = new Intent(this, CameraActivity.class);
                 startActivity(i);
                 break;
-
-
+            case R.id.sampleDatabase:
+                userDatabase.loadSampleDatabase();
+                break;
+            case R.id.loadDatabase:
+                userDatabase.loadDatabase();
+                break;
+            case R.id.saveDatabase:
+                userDatabase.saveDatabase();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * calculateButton onClick callback.
+     *
+     * @param view - application's view
+     */
+    public void calculateButtonOnClick(View view) {
+        // Process and proceed all test photos
+        for(int i = 0; i < photos.length; i++) {
+            MatOfRect faces = model.detectAllFaces(photos[i]);
+            ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
+            TensorImage image = model.changeImageRes(faceImages.get(0));
+            result[i] = model.processImage(image);
+        }
+
+        // Print difference result
+        Log.i("score1-3", norm(result[0][0], result[2][0]).toString());
+        Log.i("score2-3", norm(result[1][0], result[2][0]).toString());
+    }
+
+    /**
+     *  fileButton onClick callback.
+     *
+     * @param view - application's view
+     */
+    public void fileButtonOnClick(View view) {
+        getFile(Uri.fromFile(Environment.getExternalStorageDirectory()));
     }
 }

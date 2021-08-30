@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".FaceRecognition">
 
     <Button
-        android:id="@+id/FileButton"
+        android:id="@+id/fileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="159dp"
         android:layout_marginTop="291dp"
         android:layout_marginEnd="159dp"
         android:text="Pick File"
+        android:onClick="fileButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,8 +26,10 @@
         android:layout_marginStart="162dp"
         android:layout_marginTop="22dp"
         android:layout_marginEnd="162dp"
-        android:text="Count"
+        android:text="Calculate"
+        android:onClick="calculateButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FileButton" />
+        app:layout_constraintTop_toBottomOf="@+id/fileButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

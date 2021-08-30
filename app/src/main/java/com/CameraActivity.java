@@ -1,4 +1,4 @@
-package inz;
+package com;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;

@@ -1,4 +1,4 @@
-package inz;
+package com;
 
 import org.junit.Test;
 

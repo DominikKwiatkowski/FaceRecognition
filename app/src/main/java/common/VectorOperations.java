@@ -5,11 +5,11 @@ import java.lang.Math;
 public final class VectorOperations {
 
     /**
-     * Normalize vector by it's l2 norm (unit vector)
+     * Normalize vector by it's l2 norm (unit vector).
      *
      * @param vector vector to normalize
      * @return normalized vector (unit vector)
-     * @throws NullPointerException when null vector passed.
+     * @throws NullPointerException when null vector passed
      */
     final public float[] l2Normalize(float[] vector) {
         if (vector == null)
@@ -35,7 +35,7 @@ public final class VectorOperations {
      * @param vector1 first vector
      * @param vector2 second vector
      * @return euclidean distance between the two vectors
-     * @throws NullPointerException when null vector(s) passed.
+     * @throws NullPointerException when null vector(s) passed
      */
     final public double euclideanDistance(float[] vector1, float[] vector2) {
         if (vector1 == null || vector2 == null)
@@ -52,12 +52,12 @@ public final class VectorOperations {
     }
 
     /**
-     * Calculate cosine similarity between vectors
+     * Calculate cosine similarity between vectors.
      *
      * @param vector1 first vector
      * @param vector2 second vector
      * @return cosine similarity between the two vectors
-     * @throws NullPointerException when null vector(s) passed.
+     * @throws NullPointerException when null vector(s) passed
      */
     final public double cosineSimilarity(float[] vector1, float[] vector2) {
         if (vector1 == null || vector2 == null)

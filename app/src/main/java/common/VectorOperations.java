@@ -1,4 +1,4 @@
-package inz;
+package common;
 
 import 	java.lang.Math;
 

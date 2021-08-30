@@ -64,12 +64,12 @@ public final class VectorOperations {
      * D  = (v1, v2) = 1 - S (v1, v2)
      *  c                   c
      *
-     *                  v1 ⋅ v2
+     *                 v1 ⋅ v2
      * S (v1, v2) =  ───────────
      *  c            ‖v1‖ ⋅ ‖v2‖
      * @param vector1 first vector
      * @param vector2 second vector
-     * @return cosine similarity between the two vectors
+     * @return cosine distance between the two vectors
      * @throws NullPointerException when null vector(s) passed
      */
     final public double cosineSimilarity(float[] vector1, float[] vector2) {

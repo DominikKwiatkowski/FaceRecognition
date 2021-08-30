@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/cameraScreen" android:title="cameraScreen"/>
+    <item android:id="@+id/sampleDatabase" android:title="Get sample Database"/>
+    <item android:id="@+id/loadDatabase" android:title="Load Database"/>
+    <item android:id="@+id/saveDatabase" android:title="Save Database"/>
 </menu>

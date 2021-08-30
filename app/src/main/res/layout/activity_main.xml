@@ -7,13 +7,14 @@
     tools:context=".FaceRecognition">
 
     <Button
-        android:id="@+id/FileButton"
+        android:id="@+id/fileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="159dp"
         android:layout_marginTop="291dp"
         android:layout_marginEnd="159dp"
         android:text="Pick File"
+        android:onClick="fileButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,48 +26,10 @@
         android:layout_marginStart="162dp"
         android:layout_marginTop="22dp"
         android:layout_marginEnd="162dp"
-        android:text="Count"
+        android:text="Calculate"
+        android:onClick="calculateButtonOnClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/FileButton" />
-
-    <Button
-        android:id="@+id/loadDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:onClick="onClickLoadDatabase"
-        android:text="Load Database"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateDatabase"
-        app:layout_constraintVertical_bias="0.222"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/saveDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:onClick="onClickSaveDatabase"
-        android:text="Save database"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateDatabase"
-        app:layout_constraintVertical_bias="0.222"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/generateDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickGenerateDatabase"
-        android:text="Generate database"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countButton"
-        app:layout_constraintVertical_bias="0.102"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/fileButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

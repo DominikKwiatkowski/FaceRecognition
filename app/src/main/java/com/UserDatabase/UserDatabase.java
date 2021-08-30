@@ -1,7 +1,9 @@
 package com.UserDatabase;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -10,7 +12,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -18,27 +24,36 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class UserDatabase {
-    protected final String LogTag = "Database";
+public class UserDatabase {
+    private final String LogTag = "Database";
+
+    private Map<String, UserRecord> usersRecords;
+
+
+    // Application context to access resources and directory of app-specific storage
+    private final Context AppContext;
 
     // Path of database file
-    private final File Filepath;
+    private final File DatabaseFile;
 
     // Database identifier, to ensure safe loading
     private final String Id;
+
     // Vector target length, to validate database inputs
     private final int VectorLength;
 
-    // protected ArrayList<UserRecord> usersRecords;
-    protected Map<String, float[]> usersRecords;
+    // Database type stored for json serialization
+    private final Type userDatabaseType;
 
 
-    UserDatabase(File filepath, String id, int vectorLength) {
-        this.Filepath = filepath;
-        this.Id = id;
+    public UserDatabase(Context appContext, String databaseName, int vectorLength) {
+        this.AppContext = appContext;
+        this.DatabaseFile = new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
+        this.Id = databaseName;
         this.VectorLength = vectorLength;
+        this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {}.getType();;
 
-        usersRecords = new HashMap<String, float[]>();
+        usersRecords = new HashMap<String, UserRecord>();
 
         // Load Database on creation
         loadDatabase();
@@ -51,7 +66,32 @@ public abstract class UserDatabase {
      * @param vector of n-dimensions, for which the closest equivalent wil be found.
      * @return closest UserRecord.
      */
-    abstract UserRecord findClosestRecord(float[] vector);
+    public UserRecord findClosestRecord(float[] vector){
+        // TODO: Add Maciej's function to calculate distance
+        return null;
+    }
+
+    /**
+     * Add new UserRecord to the database.
+     *
+     * @param userRecord to add to database.
+     */
+    public void correctUserRecord(UserRecord userRecord) {
+        // Check correctness of vector length
+        if(userRecord.vector.length == VectorLength){
+            // Check if user exists in database
+            if (usersRecords.containsKey(userRecord.username)) {
+                usersRecords.get(userRecord.username).correctVector(userRecord.vector);
+
+                // Serialize database immediately
+                // TODO: Later on it might be reasonable to save database on application closure (faster)
+                saveDatabase();
+            }
+        }
+        else{
+            throw new AssertionError("Incorrect vector length");
+        }
+    }
 
     /**
      * Add new UserRecord to the database.
@@ -62,10 +102,9 @@ public abstract class UserDatabase {
     public boolean addUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
         if(userRecord.vector.length == VectorLength){
-
             // Check if user already exists in database
             if (!usersRecords.containsKey(userRecord.username)) {
-                usersRecords.put(userRecord.username, userRecord.vector);
+                usersRecords.put(userRecord.username, userRecord);
 
                 // Serialize database immediately
                 // TODO: Later on it might be reasonable to save database on application closure (faster)
@@ -89,7 +128,7 @@ public abstract class UserDatabase {
     public void forceAddUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
         if(userRecord.vector.length == VectorLength){
-            usersRecords.put(userRecord.username, userRecord.vector);
+            usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
             // TODO: Later on it might be reasonable to save database on application closure (faster)
@@ -135,14 +174,7 @@ public abstract class UserDatabase {
      * @return UserRecord if found. Null if user does not exist.
      */
     public UserRecord getUserRecord(String userName) {
-        float[] vector = usersRecords.get(userName);
-
-        // If vector was null, no user of given name exists
-        if (vector == null) {
-            return null;
-        } else {
-            return new UserRecord(userName, vector);
-        }
+        return usersRecords.get(userName);
     }
 
     /**
@@ -152,7 +184,7 @@ public abstract class UserDatabase {
      * @return vector if found. Null if user does not exist.
      */
     public float[] getUserVector(String userName) {
-        return usersRecords.get(userName);
+        return usersRecords.get(userName).vector;
     }
 
     /**
@@ -175,7 +207,7 @@ public abstract class UserDatabase {
         StringBuilder databaseString = new StringBuilder();
 
         // Read the content of file
-        try (FileInputStream fileInputStream = new FileInputStream(Filepath)) {
+        try (FileInputStream fileInputStream = new FileInputStream(DatabaseFile)) {
             int ch = fileInputStream.read();
 
             while (ch != -1) {
@@ -203,7 +235,6 @@ public abstract class UserDatabase {
 
         // Load users records
         usersRecords.clear();
-        Type userDatabaseType = new TypeToken<Map<String, float[]>>() {}.getType();
         usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
 
         Log.d(LogTag, "Database file successfully loaded");
@@ -227,7 +258,7 @@ public abstract class UserDatabase {
 
         // Write json object to file
         String databaseString = databaseJson.toString();
-        try(FileOutputStream fos = new FileOutputStream(Filepath)) {
+        try(FileOutputStream fos = new FileOutputStream(DatabaseFile)) {
             fos.write(databaseString.getBytes());
         } catch (IOException e) {
             Log.e(LogTag, "Cannot save database");
@@ -239,26 +270,43 @@ public abstract class UserDatabase {
     }
 
     /**
-     * Temporary function to test database functionality.
+     * Load sample database from resource files.
      *
      */
-    public void generateDatabase() {
-        // Erase current database
-        usersRecords.clear();
-
-        // Generate sample vector
-        float[] sampleVector = new float[VectorLength];
-        Random r = new Random();
-        for(int i = 0; i < VectorLength; i++){
-            sampleVector[i] = r.nextFloat();
+    public void loadSampleDatabase() {
+        // Load sample_database.json from resources to a String
+        String resourceString;
+        InputStream is = AppContext.getResources().openRawResource(R.raw.sample_database);
+        int size = 0;
+        try {
+            size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            resourceString = new String(buffer, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            Log.e(LogTag, "Cannot load resource");
+            e.printStackTrace();
+            return;
         }
 
-        // Add sample data
-        usersRecords.put("Kuba", sampleVector);
-        usersRecords.put("Maciej", sampleVector);
-        usersRecords.put("Dominik", sampleVector);
+        // Deserialize database string
+        Gson gson = new Gson();
+        JsonObject databaseJson = gson.fromJson(resourceString, JsonObject.class);
 
-        // Save database in internal memory
-        saveDatabase();
+        String loadedId = databaseJson.get("Id").getAsString();
+        int loadedVectorLength = databaseJson.get("VectorLength").getAsInt();
+        String serializedUserRecords = databaseJson.get("UserRecords").getAsString();
+
+        // Validate database
+        // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
+        assertEquals("Wrong type of database", Id, loadedId);
+        assertEquals("Wrong size of database", VectorLength, loadedVectorLength);
+
+        // Load users records
+        usersRecords.clear();
+        usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
+
+        Log.d(LogTag, "Database file successfully loaded form resources");
     }
 }

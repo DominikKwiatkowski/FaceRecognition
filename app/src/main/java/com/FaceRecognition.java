@@ -8,7 +8,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.UserDatabase.UserDatabase;
-import com.UserDatabase.UserDatabaseList;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -35,12 +33,10 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class FaceRecognition extends AppCompatActivity {
-
-    UserDatabase userDatabase;
-    Button pickButton;
-    Button countButton;
-    Uri fileUri = null;
-    final int numOfPhotos = 3;
+    private NeuralModel model = null;
+    private UserDatabase userDatabase = null;
+    private Uri fileUri = null;
+    private final int numOfPhotos = 3;
 
     // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
     float [][][] result = new float[numOfPhotos][][];
@@ -58,7 +54,7 @@ public class FaceRecognition extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Check if permission already given - if not ask for it.
+        // Check if permission is already given - if not, ask for it.
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED)
@@ -73,60 +69,37 @@ public class FaceRecognition extends AppCompatActivity {
             permissions.add(Manifest.permission.CAMERA);
         }
 
-
         if(!permissions.isEmpty())
         {
             ActivityCompat.requestPermissions(this,
                     permissions.toArray(new String[permissions.size()]), 0);
         }
 
-        // Load OpenCv.
+        // Load OpenCv
         if(OpenCVLoader.initDebug())
         {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
-        // Get/Set layout stuff.
-        pickButton = findViewById(R.id.FileButton);
-        countButton = findViewById(R.id.countButton);
-        pickButton.setOnClickListener(v -> getFile(Uri.fromFile(Environment.getExternalStorageDirectory())));
+        // Load NeuralModel
+        model = new NeuralModel(this, "Facenet-optimized.tflite");
 
-        // Load model.
-        NeuralModel model = new NeuralModel(this, "Facenet-optimized.tflite");
-
-        // Load test images
+        // Load test images from resources
         try {
-            photos[0] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu1);
-            photos[1] = Utils.loadResource(this.getApplicationContext(),R.drawable.macius);
-            photos[2] = Utils.loadResource(this.getApplicationContext(),R.drawable.kwiaciu2);
+            photos[0] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu1);
+            photos[1] = Utils.loadResource(this.getApplicationContext(), R.drawable.macius);
+            photos[2] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu2);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // Set test on button.
-        countButton.setOnClickListener(v -> {
-            // Preprocessed and proceed all test photos
-            for(int i = 0;i<photos.length;i++) {
-                MatOfRect faces = model.detectAllFaces(photos[i]);
-                ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
-                TensorImage image = model.changeImageRes(faceImages.get(0));
-                result[i] = model.processImage(image);
-            }
-
-            // Print difference result
-            Log.i("score1-3",norm(result[0][0],result[2][0]).toString());
-            Log.i("score2-3",norm(result[1][0],result[2][0]).toString());
-        });
-
         // Initialize database
         // TODO: Temporary. Later on it should be moved to the model selection menu
         //  (database will be defined per model).
-
-        userDatabase = new UserDatabaseList(
-                getApplicationContext().getFilesDir(),  // App specific internal storage location
-                "Facenet",                // Model name TODO: temporary
-                128,                       // Vector size TODO: temporary
-                getApplicationContext()
+        userDatabase = new UserDatabase(
+                getApplicationContext(),        // App specific internal storage location
+                "Facenet",        // Model name TODO: temporary
+                128                // Vector size TODO: temporary
         );
     }
 
@@ -139,9 +112,9 @@ public class FaceRecognition extends AppCompatActivity {
     private Double norm(float [] first, float [] second)
     {
         float ans = 0;
-        for(int i = 0;i<first.length;i++)
+        for(int i = 0; i < first.length; i++)
         {
-            ans += pow(first[i]-second[i],2);
+            ans += pow(first[i] - second[i], 2);
         }
         return sqrt(ans);
     }
@@ -223,6 +196,7 @@ public class FaceRecognition extends AppCompatActivity {
     }
 
     /**
+     * Options menu callback.
      *
      * @param item - item chosen by user
      * @return true if successful.
@@ -232,42 +206,48 @@ public class FaceRecognition extends AppCompatActivity {
     {
         switch (item.getItemId())
         {
-            // TODO: if you add some menu option, add its action here
             case R.id.cameraScreen:
                 Intent i = new Intent(this, CameraActivity.class);
                 startActivity(i);
                 break;
-
-
+            case R.id.sampleDatabase:
+                userDatabase.loadSampleDatabase();
+                break;
+            case R.id.loadDatabase:
+                userDatabase.loadDatabase();
+                break;
+            case R.id.saveDatabase:
+                userDatabase.saveDatabase();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Function executed on LoadDatabase button click
+     * calculateButton onClick callback.
      *
-     * @param view view of the app
+     * @param view - application's view
      */
-    public void onClickLoadDatabase(View view) {
-        userDatabase.loadDatabase();
+    public void calculateButtonOnClick(View view) {
+        // Process and proceed all test photos
+        for(int i = 0; i < photos.length; i++) {
+            MatOfRect faces = model.detectAllFaces(photos[i]);
+            ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
+            TensorImage image = model.changeImageRes(faceImages.get(0));
+            result[i] = model.processImage(image);
+        }
+
+        // Print difference result
+        Log.i("score1-3", norm(result[0][0], result[2][0]).toString());
+        Log.i("score2-3", norm(result[1][0], result[2][0]).toString());
     }
 
     /**
-     * Function executed on SaveDatabase button click
+     *  fileButton onClick callback.
      *
-     * @param view view of the app
+     * @param view - application's view
      */
-    public void onClickSaveDatabase(View view) {
-        userDatabase.saveDatabase();
-    }
-
-    /**
-     * Function executed on GenerateDatabase button click
-     *      TODO: Temporary function to test database functionality
-     *
-     * @param view view of the app
-     */
-    public void onClickGenerateDatabase(View view) {
-        userDatabase.generateDatabase();
+    public void fileButtonOnClick(View view) {
+        getFile(Uri.fromFile(Environment.getExternalStorageDirectory()));
     }
 }

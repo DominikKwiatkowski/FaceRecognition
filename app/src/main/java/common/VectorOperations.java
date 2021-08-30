@@ -6,6 +6,9 @@ public final class VectorOperations {
 
     /**
      * Normalize vector by it's l2 norm (unit vector).
+     *       v
+     * v  = ───
+     *  n   ‖v‖
      *
      * @param vector vector to normalize
      * @return normalized vector (unit vector)
@@ -31,6 +34,10 @@ public final class VectorOperations {
 
     /**
      * Calculate euclidean distance between two vectors.
+     *                 ________________________________________________
+     *                ╱           2              2                    2
+     * d(v1, v2) =   ╱ ⎛v1  - v2 ⎞  + ⎛v1  - v2 ⎞  + ... + ⎛v1  - v2 ⎞
+     *             ╲╱  ⎝  1     1⎠    ⎝  2     2⎠          ⎝  n     n⎠
      *
      * @param vector1 first vector
      * @param vector2 second vector
@@ -52,8 +59,14 @@ public final class VectorOperations {
     }
 
     /**
-     * Calculate cosine similarity between vectors.
+     * Calculate cosine distance between vectors.
      *
+     * D  = (v1, v2) = 1 - S (v1, v2)
+     *  c                   c
+     *
+     *                  v1 ⋅ v2
+     * S (v1, v2) =  ───────────
+     *  c            ‖v1‖ ⋅ ‖v2‖
      * @param vector1 first vector
      * @param vector2 second vector
      * @return cosine similarity between the two vectors

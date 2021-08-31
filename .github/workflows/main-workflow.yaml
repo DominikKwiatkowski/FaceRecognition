@@ -1,0 +1,15 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  google-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # v2 required
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--replace"

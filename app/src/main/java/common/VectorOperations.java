@@ -14,7 +14,7 @@ public final class VectorOperations {
      * @return normalized vector (unit vector)
      * @throws NullPointerException when null vector passed
      */
-    final public float[] l2Normalize(float[] vector) {
+    static public float[] l2Normalize(float[] vector) {
         if (vector == null)
             throw new NullPointerException("Null vector passed");
 
@@ -44,7 +44,7 @@ public final class VectorOperations {
      * @return euclidean distance between the two vectors
      * @throws NullPointerException when null vector(s) passed
      */
-    final public double euclideanDistance(float[] vector1, float[] vector2) {
+    static public double euclideanDistance(float[] vector1, float[] vector2) {
         if (vector1 == null || vector2 == null)
             throw new NullPointerException("Null vector(s) passed");
 
@@ -72,7 +72,7 @@ public final class VectorOperations {
      * @return cosine distance between the two vectors
      * @throws NullPointerException when null vector(s) passed
      */
-    final public double cosineSimilarity(float[] vector1, float[] vector2) {
+    static public double cosineSimilarity(float[] vector1, float[] vector2) {
         if (vector1 == null || vector2 == null)
             throw new NullPointerException("Null vector(s) passed");
 

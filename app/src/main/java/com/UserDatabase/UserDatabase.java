@@ -13,8 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -22,28 +20,23 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import common.VectorOperations;
+
 import static org.junit.Assert.assertEquals;
 
 public class UserDatabase {
     private final String LogTag = "Database";
-
-    private Map<String, UserRecord> usersRecords;
-
-
     // Application context to access resources and directory of app-specific storage
     private final Context AppContext;
-
     // Path of database file
     private final File DatabaseFile;
-
     // Database identifier, to ensure safe loading
     private final String Id;
-
     // Vector target length, to validate database inputs
     private final int VectorLength;
-
     // Database type stored for json serialization
     private final Type userDatabaseType;
+    private Map<String, UserRecord> usersRecords;
 
 
     public UserDatabase(Context appContext, String databaseName, int vectorLength) {
@@ -51,7 +44,8 @@ public class UserDatabase {
         this.DatabaseFile = new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
         this.Id = databaseName;
         this.VectorLength = vectorLength;
-        this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {}.getType();;
+        this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {
+        }.getType();
 
         usersRecords = new HashMap<String, UserRecord>();
 
@@ -67,8 +61,24 @@ public class UserDatabase {
      * @return closest UserRecord.
      */
     public UserRecord findClosestRecord(float[] vector) {
-        // TODO: Add Maciej's function to calculate distance
-        return null;
+        // Check correctness of vector length
+        if (vector.length == VectorLength) {
+            UserRecord closestRecord = null;
+            double minDist = Double.MAX_VALUE;
+
+            for (String user : usersRecords.keySet()) {
+                double prevMinDist = minDist;
+                minDist = Math.min(minDist, VectorOperations.cosineSimilarity(vector, usersRecords.get(user).vector));
+
+                if (minDist < prevMinDist) {
+                    closestRecord = usersRecords.get(user);
+                }
+            }
+
+            return closestRecord;
+        } else {
+            throw new AssertionError("Incorrect vector length");
+        }
     }
 
     /**
@@ -78,12 +88,11 @@ public class UserDatabase {
      */
     public void addUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
-        if(userRecord.vector.length == VectorLength) {
+        if (userRecord.vector.length == VectorLength) {
             if (!usersRecords.containsKey(userRecord.username)) {
                 // If user doesn't exist in database, insert the record
                 usersRecords.put(userRecord.username, userRecord);
-            }
-            else {
+            } else {
                 // If user exists in database, correct the record
                 usersRecords.get(userRecord.username).correctVector(userRecord.vector);
             }
@@ -91,8 +100,7 @@ public class UserDatabase {
             // Serialize database immediately
             // TODO: Later on it might be reasonable to save database on application closure (faster)
             saveDatabase();
-        }
-        else{
+        } else {
             throw new AssertionError("Incorrect vector length");
         }
     }
@@ -104,14 +112,13 @@ public class UserDatabase {
      */
     public void forceAddUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
-        if(userRecord.vector.length == VectorLength){
+        if (userRecord.vector.length == VectorLength) {
             usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
             // TODO: Later on it might be reasonable to save database on application closure (faster)
             saveDatabase();
-        }
-        else {
+        } else {
             throw new AssertionError("Incorrect vector length");
         }
     }
@@ -178,7 +185,6 @@ public class UserDatabase {
 
     /**
      * Deserialize user database.
-     *
      */
     public void loadDatabase() {
         StringBuilder databaseString = new StringBuilder();
@@ -219,11 +225,10 @@ public class UserDatabase {
 
     /**
      * Serialize user database.
-     *
      */
     public void saveDatabase() {
 
-         // Serialize userRecords to Json
+        // Serialize userRecords to Json
         Gson gson = new Gson();
         String serializedUserRecords = gson.toJson(usersRecords);
 
@@ -235,7 +240,7 @@ public class UserDatabase {
 
         // Write json object to file
         String databaseString = databaseJson.toString();
-        try(FileOutputStream fos = new FileOutputStream(DatabaseFile)) {
+        try (FileOutputStream fos = new FileOutputStream(DatabaseFile)) {
             fos.write(databaseString.getBytes());
         } catch (IOException e) {
             Log.e(LogTag, "Cannot save database");
@@ -248,7 +253,6 @@ public class UserDatabase {
 
     /**
      * Load sample database from resource files.
-     *
      */
     public void loadSampleDatabase() {
         // Load sample_database.json from resources to a String

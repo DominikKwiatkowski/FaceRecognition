@@ -23,8 +23,8 @@ public class FrameProcessTask implements Runnable{
     }
 
     /**
-     * This function will constantly get newest frame and proceed it with face detection
-     * and recognition.
+     * Get newest frame and proceed it. It will end only if user call setStop(true).
+     *
      */
     @Override
     public void run() {

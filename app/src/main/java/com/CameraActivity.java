@@ -1,17 +1,14 @@
 package com;
 
-import androidx.appcompat.app.AppCompatActivity;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import org.opencv.android.BaseLoaderCallback;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -19,28 +16,28 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.tensorflow.lite.support.image.TensorImage;
 
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import common.FrameProcessTask;
+
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
-    private CameraBridgeViewBase mOpenCvCameraView;
-    private NeuralModel model;
-    private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     static {
         System.loadLibrary("opencv_java3");
     }
 
     Executor singleThreadExecutor = Executors.newSingleThreadExecutor();
-    MatOfRect faceMat = null;
-    String [] names = null;
-    Mat lastFrame = null;
+
+
+    private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
+    private CameraBridgeViewBase mOpenCvCameraView;
+    private FrameProcessTask frameProcessTask;
 
     /**
      * Method to get and set stuff after view creation.
+     *
      * @param savedInstanceState creation bundle - no important
      */
     @Override
@@ -50,9 +47,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_camera);
 
-        // Load OpenCv
-        if(OpenCVLoader.initDebug())
-        {
+        // Load OpenCv.
+        if (OpenCVLoader.initDebug()) {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
@@ -61,10 +57,10 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
 
-        // Neural model load.
-        model = new NeuralModel(this, "Facenet-optimized.tflite");
+        // Create thread class.
+        frameProcessTask = new FrameProcessTask(this);
 
-        //Set camera change button
+        // Set camera change button.
         Button CameraChange = findViewById(R.id.cameraChange);
         CameraChange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,8 +68,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
                 swapCamera();
             }
         });
-
-        singleThreadExecutor.execute(runnable);
     }
 
     /**
@@ -82,6 +76,11 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public void onPause() {
         super.onPause();
+
+        // Stop processing frames.
+        frameProcessTask.setStop(true);
+
+        // Disable camera.
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -96,16 +95,16 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     }
 
     /**
-     *
-     * @param width -  the width of the frames that will be delivered.
-     * @param height - the height of the frames that will be delivered.
+     * We won't do anything in this case, just needed implementation
+     * @param width  -  the width of the frames that will be delivered
+     * @param height - the height of the frames that will be delivered
      */
     @Override
     public void onCameraViewStarted(int width, int height) {
     }
 
     /**
-     *
+     *  We won't do anything in this case, just needed implementation
      */
     @Override
     public void onCameraViewStopped() {
@@ -113,17 +112,18 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     /**
      * Most important function. It enable us to manipulate frame and show it to user.
-     * @param inputFrame frame from camera.
-     * @return frame, which will be shown on screen.
+     *
+     * @param inputFrame frame from camera
+     * @return frame, which will be shown on screen
      */
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
         // Set and get synchronized data.
-        setFrame(inputFrame);
-        MatOfRect faces = getFaces();
+        frameProcessTask.setFrame(inputFrame);
+        MatOfRect faces = frameProcessTask.getFaces();
 
         // Until we will proceed first image, we can't proceed results.
-        if(faces != null) {
+        if (faces != null) {
             // Draw rectangle for each face found in photo.
             for (Rect face : faces.toArray()) {
                 Imgproc.rectangle(
@@ -145,18 +145,18 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public void onResume() {
         mOpenCvCameraView.enableView();
+        singleThreadExecutor.execute(frameProcessTask);
         super.onResume();
     }
 
     /**
-     * change camera, front->back, back->front.
+     * Change camera, front->back, back->front.
      */
     public void swapCamera() {
         // Change camera index
         if (CameraIndex == CameraBridgeViewBase.CAMERA_ID_FRONT) {
             CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
-        }
-        else {
+        } else {
             CameraIndex = CameraBridgeViewBase.CAMERA_ID_FRONT;
         }
 
@@ -164,105 +164,5 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.disableView();
         mOpenCvCameraView.setCameraIndex(CameraIndex);
         mOpenCvCameraView.enableView();
-    }
-
-    private Runnable runnable = new Runnable() {
-        /**
-         * This function will constantly get newest frame and proceed it with face detection
-         * and recognition.
-         */
-        @Override
-        public void run() {
-            while(true)
-            {
-                // Get frame. Set frame to null to avoid doing same operation twice.
-                Mat inputFrame = getFrame();
-                setFrame(null);
-
-                if(inputFrame != null) {
-                    MatOfRect faces = model.detectAllFaces(inputFrame);
-                    // TODO: Some way to track face, make some noise detection,
-                    // TODO: maybe some number of frames with similar object?
-
-                    // TODO: we have to proceed this input and put some number to face, and apply
-                    // TODO: face detection for frame operation.
-
-                    //Pre process all images
-                    ArrayList<Mat> faceImages = model.preProcessAllFaces(inputFrame, faces);
-
-                    // Calculate vector for each face
-                    for (Mat face : faceImages) {
-                        TensorImage image = model.changeImageRes(face);
-                        model.processImage(image);
-                    }
-
-                    // Set result synchronized.
-                    setFaces(faces);
-                }
-                else
-                {
-                    // In case of no ready frame, wait some time
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    };
-
-    /**
-     * Synchronized function to set last frame.
-     * @param lastFrame last frame recieved from video
-     */
-    public synchronized void setFrame (Mat lastFrame)
-    {
-        this.lastFrame = lastFrame;
-    }
-
-    /**
-     * Synchronized function to get last frame.
-     * @return last frame of video
-     */
-    public synchronized Mat getFrame ()
-    {
-        return lastFrame;
-    }
-
-    /**
-     * Synchronized function to set all detected faces.
-     * @param newFaces Array of Rect, which determines face position
-     */
-    public synchronized void setFaces (MatOfRect newFaces)
-    {
-        faceMat = newFaces;
-    }
-
-    /**
-     * Synchronized function to get detected faces.
-     * @return Array of Rect, which determines face position
-     */
-    public synchronized MatOfRect getFaces ()
-    {
-        return faceMat;
-    }
-
-    /**
-     * Synchronized function to set all names of detected faces.
-     * @param names names of people on image
-     */
-    public synchronized void setNames (String[] names)
-    {
-        this.names = names;
-    }
-
-    /**
-     * Synchronized function to get all names of detected faces.
-     * @return names of people on image
-     */
-    public synchronized String[] getnames ()
-    {
-        return names;
     }
 }

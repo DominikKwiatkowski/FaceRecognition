@@ -1,9 +1,5 @@
 package com;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -16,7 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.UserDatabase.UserDatabase;
 
@@ -33,20 +32,18 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class FaceRecognition extends AppCompatActivity {
-    private NeuralModel model = null;
-    private UserDatabase userDatabase = null;
-    private Uri fileUri = null;
-    private final int numOfPhotos = 3;
-
-    // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
-    float [][][] result = new float[numOfPhotos][][];
-
-    Mat[] photos = new Mat[numOfPhotos];
-    final ArrayList<String> permissions = new ArrayList<>();
-
     static {
         System.loadLibrary("opencv_java3");
     }
+
+    final ArrayList<String> permissions = new ArrayList<>();
+    private final int numOfPhotos = 3;
+    // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
+    float[][][] result = new float[numOfPhotos][][];
+    Mat[] photos = new Mat[numOfPhotos];
+    private NeuralModel model = null;
+    private UserDatabase userDatabase = null;
+    private Uri fileUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,27 +54,23 @@ public class FaceRecognition extends AppCompatActivity {
         // Check if permission is already given - if not, ask for it.
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED)
-        {
+                PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) !=
-                PackageManager.PERMISSION_GRANTED)
-        {
+                PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.CAMERA);
         }
 
-        if(!permissions.isEmpty())
-        {
+        if (!permissions.isEmpty()) {
             ActivityCompat.requestPermissions(this,
                     permissions.toArray(new String[permissions.size()]), 0);
         }
 
         // Load OpenCv
-        if(OpenCVLoader.initDebug())
-        {
+        if (OpenCVLoader.initDebug()) {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
@@ -104,58 +97,49 @@ public class FaceRecognition extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param first array of floats from neural model, on which norm will be calculated.
+     * @param first  array of floats from neural model, on which norm will be calculated.
      * @param second array of floats from neural model, on which norm will be calculated.
      * @return difference between this 2 arrases.
      */
-    private Double norm(float [] first, float [] second)
-    {
+    private Double norm(float[] first, float[] second) {
         float ans = 0;
-        for(int i = 0; i < first.length; i++)
-        {
+        for (int i = 0; i < first.length; i++) {
             ans += pow(first[i] - second[i], 2);
         }
         return sqrt(ans);
     }
 
     /**
-     *
      * @param requestCode code of request, each request should have unique code.
-     * @param resultCode result code for operation, defined by android api.
-     * @param data returned data from intent.
+     * @param resultCode  result code for operation, defined by android api.
+     * @param data        returned data from intent.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result for browsing storage made in getFile function.
-        if (requestCode == 100)
-        {
-            if (resultCode == RESULT_OK)
-            {
-                if( data != null)
-                {
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
                     fileUri = data.getData();
                 }
             }
         }
 
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
      * Function to menage user response within granting permissions.
-     * @param requestCode code of permission request.
-     * @param permissions name of permissions, which was requested.
+     *
+     * @param requestCode  code of permission request.
+     * @param permissions  name of permissions, which was requested.
      * @param grantResults result value, it might be for fiew permissions.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
-        if(requestCode == 0)
-        {
-            for(int result : grantResults) {
+                                           @NonNull int[] grantResults) {
+        if (requestCode == 0) {
+            for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     adb.setTitle("Crucial permission not granted, application will be closed");
@@ -169,6 +153,7 @@ public class FaceRecognition extends AppCompatActivity {
 
     /**
      * Function call intent to pick file from disk. It will only allow photos to be picked
+     *
      * @param pickerInitialUri uri to begin picking file from
      */
     private void getFile(Uri pickerInitialUri) {
@@ -184,14 +169,12 @@ public class FaceRecognition extends AppCompatActivity {
     }
 
     /**
-     *
      * @param menu class of menu to be used. It should be some resource within menu directory.
      * @return true if successful.
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -202,10 +185,8 @@ public class FaceRecognition extends AppCompatActivity {
      * @return true if successful.
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.cameraScreen:
                 Intent i = new Intent(this, CameraActivity.class);
                 startActivity(i);
@@ -230,7 +211,7 @@ public class FaceRecognition extends AppCompatActivity {
      */
     public void calculateButtonOnClick(View view) {
         // Process and proceed all test photos
-        for(int i = 0; i < photos.length; i++) {
+        for (int i = 0; i < photos.length; i++) {
             MatOfRect faces = model.detectAllFaces(photos[i]);
             ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
             TensorImage image = model.changeImageRes(faceImages.get(0));
@@ -243,7 +224,7 @@ public class FaceRecognition extends AppCompatActivity {
     }
 
     /**
-     *  fileButton onClick callback.
+     * fileButton onClick callback.
      *
      * @param view - application's view
      */

@@ -20,8 +20,6 @@ import org.opencv.imgproc.Imgproc;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import common.FrameProcessTask;
-
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
     static {
@@ -96,6 +94,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     /**
      * We won't do anything in this case, just needed implementation
+     *
      * @param width  -  the width of the frames that will be delivered
      * @param height - the height of the frames that will be delivered
      */
@@ -104,7 +103,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     }
 
     /**
-     *  We won't do anything in this case, just needed implementation
+     * We won't do anything in this case, just needed implementation
      */
     @Override
     public void onCameraViewStopped() {

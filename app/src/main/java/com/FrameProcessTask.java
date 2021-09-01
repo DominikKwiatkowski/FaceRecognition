@@ -1,8 +1,6 @@
-package common;
+package com;
 
 import android.content.Context;
-
-import com.NeuralModel;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -10,21 +8,20 @@ import org.tensorflow.lite.support.image.TensorImage;
 
 import java.util.ArrayList;
 
-public class FrameProcessTask implements Runnable{
-    private NeuralModel model;
+public class FrameProcessTask implements Runnable {
+    private final NeuralModel model;
     private MatOfRect faceMat = null;
     private String[] names = null;
     private Mat lastFrame = null;
     private boolean stop = false;
 
-    public FrameProcessTask(Context context){
+    public FrameProcessTask(Context context) {
         // Neural model load.
         model = new NeuralModel(context, "Facenet-optimized.tflite");
     }
 
     /**
      * Get newest frame and proceed it. It will end only if user call setStop(true).
-     *
      */
     @Override
     public void run() {
@@ -33,7 +30,7 @@ public class FrameProcessTask implements Runnable{
 
         while (true) {
             // Check if thread should stop.
-            if(stop)
+            if (stop)
                 return;
 
             // Get frame. Set frame to null to avoid doing same operation twice.
@@ -108,15 +105,6 @@ public class FrameProcessTask implements Runnable{
     }
 
     /**
-     * Thread safe function to set all names of detected faces.
-     *
-     * @param names names of people on image
-     */
-    public synchronized void setNames(String[] names) {
-        this.names = names;
-    }
-
-    /**
      * Thread safe function to get all names of detected faces.
      *
      * @return names of people on image
@@ -126,12 +114,20 @@ public class FrameProcessTask implements Runnable{
     }
 
     /**
+     * Thread safe function to set all names of detected faces.
+     *
+     * @param names names of people on image
+     */
+    public synchronized void setNames(String[] names) {
+        this.names = names;
+    }
+
+    /**
      * Set if thread should stop.
      *
      * @param value false if thread should run, false otherwise
      */
-    public synchronized void setStop(boolean value)
-    {
+    public synchronized void setStop(boolean value) {
         stop = value;
     }
 }

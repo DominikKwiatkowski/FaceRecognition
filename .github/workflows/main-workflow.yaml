@@ -13,8 +13,13 @@ jobs:
   google-formatting:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the code.
-        uses: actions/checkout@v2 # v2 required
+      - name: Checkout.
+      - if: github.event_name != 'pull_request'
+        uses: actions/checkout@v2
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Reformat the code.
         uses: axel-op/googlejavaformat-action@v3
         with:
@@ -22,7 +27,12 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the code.
-        uses: actions/checkout@v2 # v2 required
+      - name: Checkout.
+      - if: github.event_name != 'pull_request'
+        uses: actions/checkout@v2
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Build the app.
         run: ./gradlew app:build

@@ -10,3 +10,17 @@ jobs:
       - uses: axel-op/googlejavaformat-action@v3
         with:
           args: "--aosp --replace"
+  assembly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2 # v2 required
+      - name: Assembly the app
+        run: ./gradlew assembly
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2 # v2 required
+      - name: Build the app
+        run: ./gradlew build

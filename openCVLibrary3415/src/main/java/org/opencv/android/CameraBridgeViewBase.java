@@ -358,7 +358,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             ad.setCancelable(false); // This blocks the 'BACK' button
             ad.setMessage(
                     "It seems that you device does not support camera (or it is locked)."
-                        + " Application will be closed.");
+                            + " Application will be closed.");
             ad.setButton(
                     DialogInterface.BUTTON_NEUTRAL,
                     "OK",

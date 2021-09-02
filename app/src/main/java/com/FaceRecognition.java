@@ -6,17 +6,18 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.UserDatabase.UserDatabase;
 
@@ -26,13 +27,17 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.tensorflow.lite.support.image.TensorImage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class FaceRecognition extends AppCompatActivity {
+    private static final int PICK_PHOTO = 100;
     private NeuralModel model = null;
     private UserDatabase userDatabase = null;
     private Uri fileUri = null;
@@ -82,8 +87,8 @@ public class FaceRecognition extends AppCompatActivity {
         }
 
         // Load NeuralModel
-        model = new NeuralModel(this, "Facenet-optimized.tflite");
-
+        model = NeuralModel.getInstance(getApplicationContext(),"Facenet-optimized.tflite");
+        // model = new NeuralModel(this, "Facenet-optimized.tflite");
         // Load test images from resources
         try {
             photos[0] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu1);
@@ -96,11 +101,12 @@ public class FaceRecognition extends AppCompatActivity {
         // Initialize database
         // TODO: Temporary. Later on it should be moved to the model selection menu
         //  (database will be defined per model).
-        userDatabase = new UserDatabase(
+        userDatabase = UserDatabase.getInstance(
                 getApplicationContext(),        // App specific internal storage location
                 "Facenet",        // Model name TODO: temporary
                 128                // Vector size TODO: temporary
         );
+
     }
 
     /**
@@ -126,22 +132,18 @@ public class FaceRecognition extends AppCompatActivity {
      * @param data returned data from intent.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result for browsing storage made in getFile function.
-        if (requestCode == 100)
-        {
-            if (resultCode == RESULT_OK)
-            {
-                if( data != null)
-                {
-                    fileUri = data.getData();
-                }
-            }
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            if(data == null)
+                return;
+
         }
 
         super.onActivityResult(requestCode,resultCode,data);
     }
+
+
 
     /**
      * Function to menage user response within granting permissions.
@@ -171,7 +173,7 @@ public class FaceRecognition extends AppCompatActivity {
      * Function call intent to pick file from disk. It will only allow photos to be picked
      * @param pickerInitialUri uri to begin picking file from
      */
-    private void getFile(Uri pickerInitialUri) {
+    private void getPhoto(Uri pickerInitialUri) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -180,7 +182,7 @@ public class FaceRecognition extends AppCompatActivity {
         // the system file picker when your app creates the document.
         intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
 
-        startActivityForResult(intent, 100);
+        startActivityForResult(intent, PICK_PHOTO);
     }
 
     /**
@@ -219,6 +221,11 @@ public class FaceRecognition extends AppCompatActivity {
             case R.id.saveDatabase:
                 userDatabase.saveDatabase();
                 break;
+            case R.id.addUser:
+                Intent addFaceIntent = new Intent(this, AddFace.class);
+                startActivity(addFaceIntent);
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -248,6 +255,6 @@ public class FaceRecognition extends AppCompatActivity {
      * @param view - application's view
      */
     public void fileButtonOnClick(View view) {
-        getFile(Uri.fromFile(Environment.getExternalStorageDirectory()));
+        getPhoto(Uri.fromFile(Environment.getExternalStorageDirectory()));
     }
 }

@@ -7,7 +7,7 @@ public class UserRecord {
     public float[] vector;
     private int weight;
 
-    UserRecord(String username, float[] vector) {
+    public UserRecord(String username, float[] vector) {
         this.weight = 1;
         this.username = username;
         this.vector = vector;

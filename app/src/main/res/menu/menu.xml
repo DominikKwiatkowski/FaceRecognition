@@ -4,4 +4,5 @@
     <item android:id="@+id/sampleDatabase" android:title="Get sample Database"/>
     <item android:id="@+id/loadDatabase" android:title="Load Database"/>
     <item android:id="@+id/saveDatabase" android:title="Save Database"/>
+    <item android:id="@+id/addUser" android:title="Add user"/>
 </menu>

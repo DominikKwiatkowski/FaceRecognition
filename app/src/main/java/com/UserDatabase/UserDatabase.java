@@ -3,6 +3,7 @@ package com.UserDatabase;
 import android.content.Context;
 import android.util.Log;
 
+import com.NeuralModel;
 import com.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -25,6 +26,7 @@ import common.VectorOperations;
 import static org.junit.Assert.assertEquals;
 
 public class UserDatabase {
+    private static UserDatabase instance;
     private final String LogTag = "Database";
     // Application context to access resources and directory of app-specific storage
     private final Context AppContext;
@@ -39,7 +41,7 @@ public class UserDatabase {
     private Map<String, UserRecord> usersRecords;
 
 
-    public UserDatabase(Context appContext, String databaseName, int vectorLength) {
+    private UserDatabase(Context appContext, String databaseName, int vectorLength) {
         this.AppContext = appContext;
         this.DatabaseFile = new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
         this.Id = databaseName;
@@ -51,6 +53,17 @@ public class UserDatabase {
 
         // Load Database on creation
         loadDatabase();
+    }
+
+    public static UserDatabase getInstance(Context appContext, String databaseName, int vectorLength) {
+        if(instance == null) {
+            synchronized (NeuralModel.class) {
+                if(instance == null) {
+                    instance = new UserDatabase(appContext, databaseName, vectorLength);
+                }
+            }
+        }
+        return instance;
     }
 
     /**

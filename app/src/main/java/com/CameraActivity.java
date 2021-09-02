@@ -56,7 +56,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         //mOpenCvCameraView.setCameraIndex(1);
 
         // Neural model load.
-        model = new NeuralModel(this, "Facenet-optimized.tflite");
+        model = NeuralModel.getInstance(this, "Facenet-optimized.tflite");
 
         //Set camera change button
         Button CameraChange = findViewById(R.id.cameraChange);

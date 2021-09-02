@@ -1,4 +1,5 @@
 package com;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertEquals;
     public class NeuralModel {
         private final int inputSize = 160;
         private final int outputSize = 128;
+        private static NeuralModel instance;
 
         private final String nameOfModel;
         private Interpreter model;
@@ -61,7 +63,7 @@ import static org.junit.Assert.assertEquals;
          * @param context actual Activity
          * @param nameOfModel name of model to be used. All models must be inside ml folder.
          */
-        NeuralModel(Context context, String nameOfModel)
+        private NeuralModel(Context context, String nameOfModel)
         {
             this.context = context;
             this.nameOfModel = nameOfModel;
@@ -77,6 +79,17 @@ import static org.junit.Assert.assertEquals;
 
             loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
             loadClassifier(R.raw.haarcascade_eye, eyeCascade);
+        }
+
+        public static NeuralModel getInstance(Context context, String nameOfModel) {
+            if(instance == null) {
+                synchronized (NeuralModel.class) {
+                    if(instance == null) {
+                        instance = new NeuralModel(context, nameOfModel);
+                    }
+                }
+            }
+            return instance;
         }
 
         /**
@@ -122,6 +135,15 @@ import static org.junit.Assert.assertEquals;
             Log.i(TAG + nameOfModel, "proceeded image successfully");
 
             return probabilityBuffer;
+        }
+
+        /**
+         * Resize and process image*
+         * @param image image to be prepared.
+         * @return probabilityBuffer Buffer of face properties.
+         */
+        public float[][] resizeAndProcess(Mat image) {
+            return processImage(changeImageRes(image));
         }
 
         /**
@@ -178,10 +200,9 @@ import static org.junit.Assert.assertEquals;
          * Try to rotate face and trim rest of photo.
          *
          * @param face image of face which will be preprocessed.
-         * @param detectedFaces Rect of this face.
          * @return Matrix of preprocessed face.
          */
-        public Mat preProcessOneFace(Mat face, Rect detectedFaces)
+        public Mat preProcessOneFace(Mat face)
         {
             Rect[] eyeArray = findEyesOnImg(face);
 

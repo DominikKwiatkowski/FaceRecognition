@@ -63,7 +63,7 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
                     IncomatibilityMessage.setTitle("OpenCV Manager");
                     IncomatibilityMessage.setMessage(
                             "OpenCV Manager service is incompatible with this app. Try to update it"
-                                + " via Google Play.");
+                                    + " via Google Play.");
                     IncomatibilityMessage.setCancelable(false); // This blocks the 'BACK' button
                     IncomatibilityMessage.setButton(
                             AlertDialog.BUTTON_POSITIVE,

@@ -146,7 +146,7 @@ class AsyncServiceHelper {
                         Log.d(
                                 TAG,
                                 "OpenCV Manager Service connection fails. May be service was not"
-                                    + " installed?");
+                                        + " installed?");
                         InstallService(mAppContext, mUserAppCallback);
                     } else {
                         mServiceInstallationProgress = false;
@@ -179,7 +179,7 @@ class AsyncServiceHelper {
                                                     Log.d(
                                                             TAG,
                                                             "Trying to install OpenCV lib via"
-                                                                + " Google Play");
+                                                                    + " Google Play");
                                                     try {
                                                         if (mEngineService.installVersion(
                                                                 mOpenCVersion)) {
@@ -194,7 +194,7 @@ class AsyncServiceHelper {
                                                             Log.d(
                                                                     TAG,
                                                                     "OpenCV package was not"
-                                                                        + " installed!");
+                                                                            + " installed!");
                                                             Log.d(
                                                                     TAG,
                                                                     "Init finished with status "
@@ -230,7 +230,7 @@ class AsyncServiceHelper {
                                                     Log.d(
                                                             TAG,
                                                             "OpenCV library installation was"
-                                                                + " canceled");
+                                                                    + " canceled");
                                                     Log.d(
                                                             TAG,
                                                             "Init finished with status "
@@ -248,7 +248,7 @@ class AsyncServiceHelper {
                                                     Log.e(
                                                             TAG,
                                                             "Installation was not started! Nothing"
-                                                                + " to wait!");
+                                                                    + " to wait!");
                                                 }
                                             };
 
@@ -266,14 +266,14 @@ class AsyncServiceHelper {
                                                     Log.e(
                                                             TAG,
                                                             "Nothing to install we just wait"
-                                                                + " current installation");
+                                                                    + " current installation");
                                                 }
 
                                                 public void cancel() {
                                                     Log.d(
                                                             TAG,
                                                             "OpenCV library installation was"
-                                                                + " canceled");
+                                                                    + " canceled");
                                                     mLibraryInstallationProgress = false;
                                                     Log.d(
                                                             TAG,
@@ -296,7 +296,7 @@ class AsyncServiceHelper {
                                                             Log.d(
                                                                     TAG,
                                                                     "OpenCV package was not"
-                                                                        + " installed!");
+                                                                            + " installed!");
                                                             Log.d(
                                                                     TAG,
                                                                     "Init finished with status "
@@ -310,7 +310,7 @@ class AsyncServiceHelper {
                                                             Log.d(
                                                                     TAG,
                                                                     "Waiting for package"
-                                                                        + " installation");
+                                                                            + " installation");
                                                         }
 
                                                         Log.d(TAG, "Unbind from service");

@@ -3,20 +3,23 @@
 //
 package org.opencv.imgproc;
 
-import org.opencv.imgproc.GeneralizedHough;
 
 // C++: class GeneralizedHoughBallard
 /**
  * finds arbitrary template in the grayscale image using Generalized Hough Transform
  *
- * Detects position only without translation and rotation CITE: Ballard1981 .
+ * <p>Detects position only without translation and rotation CITE: Ballard1981 .
  */
 public class GeneralizedHoughBallard extends GeneralizedHough {
 
-    protected GeneralizedHoughBallard(long addr) { super(addr); }
+    protected GeneralizedHoughBallard(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static GeneralizedHoughBallard __fromPtr__(long addr) { return new GeneralizedHoughBallard(addr); }
+    public static GeneralizedHoughBallard __fromPtr__(long addr) {
+        return new GeneralizedHoughBallard(addr);
+    }
 
     //
     // C++:  void cv::GeneralizedHoughBallard::setLevels(int levels)
@@ -26,7 +29,6 @@ public class GeneralizedHoughBallard extends GeneralizedHough {
         setLevels_0(nativeObj, levels);
     }
 
-
     //
     // C++:  int cv::GeneralizedHoughBallard::getLevels()
     //
@@ -34,7 +36,6 @@ public class GeneralizedHoughBallard extends GeneralizedHough {
     public int getLevels() {
         return getLevels_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHoughBallard::setVotesThreshold(int votesThreshold)
@@ -44,7 +45,6 @@ public class GeneralizedHoughBallard extends GeneralizedHough {
         setVotesThreshold_0(nativeObj, votesThreshold);
     }
 
-
     //
     // C++:  int cv::GeneralizedHoughBallard::getVotesThreshold()
     //
@@ -53,13 +53,10 @@ public class GeneralizedHoughBallard extends GeneralizedHough {
         return getVotesThreshold_0(nativeObj);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  void cv::GeneralizedHoughBallard::setLevels(int levels)
     private static native void setLevels_0(long nativeObj, int levels);
@@ -75,5 +72,4 @@ public class GeneralizedHoughBallard extends GeneralizedHough {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

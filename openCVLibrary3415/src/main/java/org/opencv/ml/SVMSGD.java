@@ -5,72 +5,62 @@ package org.opencv.ml;
 
 import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
-import org.opencv.ml.SVMSGD;
-import org.opencv.ml.StatModel;
 
 // C++: class SVMSGD
 /**
- * *************************************************************************************\
- * Stochastic Gradient Descent SVM Classifier                      *
+ * *************************************************************************************\ Stochastic
+ * Gradient Descent SVM Classifier *
  * \***************************************************************************************
  */
 public class SVMSGD extends StatModel {
 
-    protected SVMSGD(long addr) { super(addr); }
+    protected SVMSGD(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static SVMSGD __fromPtr__(long addr) { return new SVMSGD(addr); }
+    public static SVMSGD __fromPtr__(long addr) {
+        return new SVMSGD(addr);
+    }
 
     // C++: enum MarginType (cv.ml.SVMSGD.MarginType)
-    public static final int
-            SOFT_MARGIN = 0,
-            HARD_MARGIN = 1;
-
+    public static final int SOFT_MARGIN = 0, HARD_MARGIN = 1;
 
     // C++: enum SvmsgdType (cv.ml.SVMSGD.SvmsgdType)
-    public static final int
-            SGD = 0,
-            ASGD = 1;
-
+    public static final int SGD = 0, ASGD = 1;
 
     //
     // C++:  Mat cv::ml::SVMSGD::getWeights()
     //
 
-    /**
-     * @return the weights of the trained model (decision function f(x) = weights * x + shift).
-     */
+    /** @return the weights of the trained model (decision function f(x) = weights * x + shift). */
     public Mat getWeights() {
         return new Mat(getWeights_0(nativeObj));
     }
-
 
     //
     // C++:  float cv::ml::SVMSGD::getShift()
     //
 
-    /**
-     * @return the shift of the trained model (decision function f(x) = weights * x + shift).
-     */
+    /** @return the shift of the trained model (decision function f(x) = weights * x + shift). */
     public float getShift() {
         return getShift_0(nativeObj);
     }
-
 
     //
     // C++: static Ptr_SVMSGD cv::ml::SVMSGD::create()
     //
 
     /**
-     * Creates empty model.
-     * Use StatModel::train to train the model. Since %SVMSGD has several parameters, you may want to
-     * find the best parameters for your problem or use setOptimalParameters() to set some default parameters.
+     * Creates empty model. Use StatModel::train to train the model. Since %SVMSGD has several
+     * parameters, you may want to find the best parameters for your problem or use
+     * setOptimalParameters() to set some default parameters.
+     *
      * @return automatically generated
      */
     public static SVMSGD create() {
         return SVMSGD.__fromPtr__(create_0());
     }
-
 
     //
     // C++: static Ptr_SVMSGD cv::ml::SVMSGD::load(String filepath, String nodeName = String())
@@ -79,9 +69,9 @@ public class SVMSGD extends StatModel {
     /**
      * Loads and creates a serialized SVMSGD from a file
      *
-     * Use SVMSGD::save to serialize and store an SVMSGD to disk.
-     * Load the SVMSGD from this file again, by calling this function with the path to the file.
-     * Optionally specify the node for the file containing the classifier
+     * <p>Use SVMSGD::save to serialize and store an SVMSGD to disk. Load the SVMSGD from this file
+     * again, by calling this function with the path to the file. Optionally specify the node for
+     * the file containing the classifier
      *
      * @param filepath path to serialized SVMSGD
      * @param nodeName name of node containing the classifier
@@ -94,9 +84,9 @@ public class SVMSGD extends StatModel {
     /**
      * Loads and creates a serialized SVMSGD from a file
      *
-     * Use SVMSGD::save to serialize and store an SVMSGD to disk.
-     * Load the SVMSGD from this file again, by calling this function with the path to the file.
-     * Optionally specify the node for the file containing the classifier
+     * <p>Use SVMSGD::save to serialize and store an SVMSGD to disk. Load the SVMSGD from this file
+     * again, by calling this function with the path to the file. Optionally specify the node for
+     * the file containing the classifier
      *
      * @param filepath path to serialized SVMSGD
      * @return automatically generated
@@ -105,13 +95,14 @@ public class SVMSGD extends StatModel {
         return SVMSGD.__fromPtr__(load_1(filepath));
     }
 
-
     //
-    // C++:  void cv::ml::SVMSGD::setOptimalParameters(int svmsgdType = SVMSGD::ASGD, int marginType = SVMSGD::SOFT_MARGIN)
+    // C++:  void cv::ml::SVMSGD::setOptimalParameters(int svmsgdType = SVMSGD::ASGD, int marginType
+    // = SVMSGD::SOFT_MARGIN)
     //
 
     /**
      * Function sets optimal parameters values for chosen SVM SGD model.
+     *
      * @param svmsgdType is the type of SVMSGD classifier.
      * @param marginType is the type of margin constraint.
      */
@@ -121,19 +112,17 @@ public class SVMSGD extends StatModel {
 
     /**
      * Function sets optimal parameters values for chosen SVM SGD model.
+     *
      * @param svmsgdType is the type of SVMSGD classifier.
      */
     public void setOptimalParameters(int svmsgdType) {
         setOptimalParameters_1(nativeObj, svmsgdType);
     }
 
-    /**
-     * Function sets optimal parameters values for chosen SVM SGD model.
-     */
+    /** Function sets optimal parameters values for chosen SVM SGD model. */
     public void setOptimalParameters() {
         setOptimalParameters_2(nativeObj);
     }
-
 
     //
     // C++:  int cv::ml::SVMSGD::getSvmsgdType()
@@ -141,25 +130,25 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setSvmsgdType
+     *
      * @return automatically generated
      */
     public int getSvmsgdType() {
         return getSvmsgdType_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setSvmsgdType(int svmsgdType)
     //
 
     /**
-     *  getSvmsgdType SEE: getSvmsgdType
+     * getSvmsgdType SEE: getSvmsgdType
+     *
      * @param svmsgdType automatically generated
      */
     public void setSvmsgdType(int svmsgdType) {
         setSvmsgdType_0(nativeObj, svmsgdType);
     }
-
 
     //
     // C++:  int cv::ml::SVMSGD::getMarginType()
@@ -167,25 +156,25 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setMarginType
+     *
      * @return automatically generated
      */
     public int getMarginType() {
         return getMarginType_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setMarginType(int marginType)
     //
 
     /**
-     *  getMarginType SEE: getMarginType
+     * getMarginType SEE: getMarginType
+     *
      * @param marginType automatically generated
      */
     public void setMarginType(int marginType) {
         setMarginType_0(nativeObj, marginType);
     }
-
 
     //
     // C++:  float cv::ml::SVMSGD::getMarginRegularization()
@@ -193,25 +182,25 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setMarginRegularization
+     *
      * @return automatically generated
      */
     public float getMarginRegularization() {
         return getMarginRegularization_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setMarginRegularization(float marginRegularization)
     //
 
     /**
-     *  getMarginRegularization SEE: getMarginRegularization
+     * getMarginRegularization SEE: getMarginRegularization
+     *
      * @param marginRegularization automatically generated
      */
     public void setMarginRegularization(float marginRegularization) {
         setMarginRegularization_0(nativeObj, marginRegularization);
     }
-
 
     //
     // C++:  float cv::ml::SVMSGD::getInitialStepSize()
@@ -219,25 +208,25 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setInitialStepSize
+     *
      * @return automatically generated
      */
     public float getInitialStepSize() {
         return getInitialStepSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setInitialStepSize(float InitialStepSize)
     //
 
     /**
-     *  getInitialStepSize SEE: getInitialStepSize
+     * getInitialStepSize SEE: getInitialStepSize
+     *
      * @param InitialStepSize automatically generated
      */
     public void setInitialStepSize(float InitialStepSize) {
         setInitialStepSize_0(nativeObj, InitialStepSize);
     }
-
 
     //
     // C++:  float cv::ml::SVMSGD::getStepDecreasingPower()
@@ -245,25 +234,25 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setStepDecreasingPower
+     *
      * @return automatically generated
      */
     public float getStepDecreasingPower() {
         return getStepDecreasingPower_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setStepDecreasingPower(float stepDecreasingPower)
     //
 
     /**
-     *  getStepDecreasingPower SEE: getStepDecreasingPower
+     * getStepDecreasingPower SEE: getStepDecreasingPower
+     *
      * @param stepDecreasingPower automatically generated
      */
     public void setStepDecreasingPower(float stepDecreasingPower) {
         setStepDecreasingPower_0(nativeObj, stepDecreasingPower);
     }
-
 
     //
     // C++:  TermCriteria cv::ml::SVMSGD::getTermCriteria()
@@ -271,32 +260,30 @@ public class SVMSGD extends StatModel {
 
     /**
      * SEE: setTermCriteria
+     *
      * @return automatically generated
      */
     public TermCriteria getTermCriteria() {
         return new TermCriteria(getTermCriteria_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::ml::SVMSGD::setTermCriteria(TermCriteria val)
     //
 
     /**
-     *  getTermCriteria SEE: getTermCriteria
+     * getTermCriteria SEE: getTermCriteria
+     *
      * @param val automatically generated
      */
     public void setTermCriteria(TermCriteria val) {
         setTermCriteria_0(nativeObj, val.type, val.maxCount, val.epsilon);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  Mat cv::ml::SVMSGD::getWeights()
     private static native long getWeights_0(long nativeObj);
@@ -309,11 +296,16 @@ public class SVMSGD extends StatModel {
 
     // C++: static Ptr_SVMSGD cv::ml::SVMSGD::load(String filepath, String nodeName = String())
     private static native long load_0(String filepath, String nodeName);
+
     private static native long load_1(String filepath);
 
-    // C++:  void cv::ml::SVMSGD::setOptimalParameters(int svmsgdType = SVMSGD::ASGD, int marginType = SVMSGD::SOFT_MARGIN)
-    private static native void setOptimalParameters_0(long nativeObj, int svmsgdType, int marginType);
+    // C++:  void cv::ml::SVMSGD::setOptimalParameters(int svmsgdType = SVMSGD::ASGD, int marginType
+    // = SVMSGD::SOFT_MARGIN)
+    private static native void setOptimalParameters_0(
+            long nativeObj, int svmsgdType, int marginType);
+
     private static native void setOptimalParameters_1(long nativeObj, int svmsgdType);
+
     private static native void setOptimalParameters_2(long nativeObj);
 
     // C++:  int cv::ml::SVMSGD::getSvmsgdType()
@@ -332,7 +324,8 @@ public class SVMSGD extends StatModel {
     private static native float getMarginRegularization_0(long nativeObj);
 
     // C++:  void cv::ml::SVMSGD::setMarginRegularization(float marginRegularization)
-    private static native void setMarginRegularization_0(long nativeObj, float marginRegularization);
+    private static native void setMarginRegularization_0(
+            long nativeObj, float marginRegularization);
 
     // C++:  float cv::ml::SVMSGD::getInitialStepSize()
     private static native float getInitialStepSize_0(long nativeObj);
@@ -350,9 +343,9 @@ public class SVMSGD extends StatModel {
     private static native double[] getTermCriteria_0(long nativeObj);
 
     // C++:  void cv::ml::SVMSGD::setTermCriteria(TermCriteria val)
-    private static native void setTermCriteria_0(long nativeObj, int val_type, int val_maxCount, double val_epsilon);
+    private static native void setTermCriteria_0(
+            long nativeObj, int val_type, int val_maxCount, double val_epsilon);
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

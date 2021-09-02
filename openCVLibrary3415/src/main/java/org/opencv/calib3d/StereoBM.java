@@ -3,8 +3,6 @@
 //
 package org.opencv.calib3d;
 
-import org.opencv.calib3d.StereoBM;
-import org.opencv.calib3d.StereoMatcher;
 import org.opencv.core.Rect;
 
 // C++: class StereoBM
@@ -14,16 +12,17 @@ import org.opencv.core.Rect;
  */
 public class StereoBM extends StereoMatcher {
 
-    protected StereoBM(long addr) { super(addr); }
+    protected StereoBM(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static StereoBM __fromPtr__(long addr) { return new StereoBM(addr); }
+    public static StereoBM __fromPtr__(long addr) {
+        return new StereoBM(addr);
+    }
 
     // C++: enum <unnamed>
-    public static final int
-            PREFILTER_NORMALIZED_RESPONSE = 0,
-            PREFILTER_XSOBEL = 1;
-
+    public static final int PREFILTER_NORMALIZED_RESPONSE = 0, PREFILTER_XSOBEL = 1;
 
     //
     // C++:  int cv::StereoBM::getPreFilterType()
@@ -33,7 +32,6 @@ public class StereoBM extends StereoMatcher {
         return getPreFilterType_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setPreFilterType(int preFilterType)
     //
@@ -41,7 +39,6 @@ public class StereoBM extends StereoMatcher {
     public void setPreFilterType(int preFilterType) {
         setPreFilterType_0(nativeObj, preFilterType);
     }
-
 
     //
     // C++:  int cv::StereoBM::getPreFilterSize()
@@ -51,7 +48,6 @@ public class StereoBM extends StereoMatcher {
         return getPreFilterSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setPreFilterSize(int preFilterSize)
     //
@@ -59,7 +55,6 @@ public class StereoBM extends StereoMatcher {
     public void setPreFilterSize(int preFilterSize) {
         setPreFilterSize_0(nativeObj, preFilterSize);
     }
-
 
     //
     // C++:  int cv::StereoBM::getPreFilterCap()
@@ -69,7 +64,6 @@ public class StereoBM extends StereoMatcher {
         return getPreFilterCap_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setPreFilterCap(int preFilterCap)
     //
@@ -77,7 +71,6 @@ public class StereoBM extends StereoMatcher {
     public void setPreFilterCap(int preFilterCap) {
         setPreFilterCap_0(nativeObj, preFilterCap);
     }
-
 
     //
     // C++:  int cv::StereoBM::getTextureThreshold()
@@ -87,7 +80,6 @@ public class StereoBM extends StereoMatcher {
         return getTextureThreshold_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setTextureThreshold(int textureThreshold)
     //
@@ -95,7 +87,6 @@ public class StereoBM extends StereoMatcher {
     public void setTextureThreshold(int textureThreshold) {
         setTextureThreshold_0(nativeObj, textureThreshold);
     }
-
 
     //
     // C++:  int cv::StereoBM::getUniquenessRatio()
@@ -105,7 +96,6 @@ public class StereoBM extends StereoMatcher {
         return getUniquenessRatio_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setUniquenessRatio(int uniquenessRatio)
     //
@@ -113,7 +103,6 @@ public class StereoBM extends StereoMatcher {
     public void setUniquenessRatio(int uniquenessRatio) {
         setUniquenessRatio_0(nativeObj, uniquenessRatio);
     }
-
 
     //
     // C++:  int cv::StereoBM::getSmallerBlockSize()
@@ -123,7 +112,6 @@ public class StereoBM extends StereoMatcher {
         return getSmallerBlockSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoBM::setSmallerBlockSize(int blockSize)
     //
@@ -131,7 +119,6 @@ public class StereoBM extends StereoMatcher {
     public void setSmallerBlockSize(int blockSize) {
         setSmallerBlockSize_0(nativeObj, blockSize);
     }
-
 
     //
     // C++:  Rect cv::StereoBM::getROI1()
@@ -141,7 +128,6 @@ public class StereoBM extends StereoMatcher {
         return new Rect(getROI1_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::StereoBM::setROI1(Rect roi1)
     //
@@ -149,7 +135,6 @@ public class StereoBM extends StereoMatcher {
     public void setROI1(Rect roi1) {
         setROI1_0(nativeObj, roi1.x, roi1.y, roi1.width, roi1.height);
     }
-
 
     //
     // C++:  Rect cv::StereoBM::getROI2()
@@ -159,7 +144,6 @@ public class StereoBM extends StereoMatcher {
         return new Rect(getROI2_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::StereoBM::setROI2(Rect roi2)
     //
@@ -168,7 +152,6 @@ public class StereoBM extends StereoMatcher {
         setROI2_0(nativeObj, roi2.x, roi2.y, roi2.width, roi2.height);
     }
 
-
     //
     // C++: static Ptr_StereoBM cv::StereoBM::create(int numDisparities = 0, int blockSize = 21)
     //
@@ -176,16 +159,15 @@ public class StereoBM extends StereoMatcher {
     /**
      * Creates StereoBM object
      *
-     *     @param numDisparities the disparity search range. For each pixel algorithm will find the best
-     *     disparity from 0 (default minimum disparity) to numDisparities. The search range can then be
-     *     shifted by changing the minimum disparity.
-     *     @param blockSize the linear size of the blocks compared by the algorithm. The size should be odd
-     *     (as the block is centered at the current pixel). Larger block size implies smoother, though less
-     *     accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher
-     *     chance for algorithm to find a wrong correspondence.
-     *
-     *     The function create StereoBM object. You can then call StereoBM::compute() to compute disparity for
-     *     a specific stereo pair.
+     * @param numDisparities the disparity search range. For each pixel algorithm will find the best
+     *     disparity from 0 (default minimum disparity) to numDisparities. The search range can then
+     *     be shifted by changing the minimum disparity.
+     * @param blockSize the linear size of the blocks compared by the algorithm. The size should be
+     *     odd (as the block is centered at the current pixel). Larger block size implies smoother,
+     *     though less accurate disparity map. Smaller block size gives more detailed disparity map,
+     *     but there is higher chance for algorithm to find a wrong correspondence.
+     *     <p>The function create StereoBM object. You can then call StereoBM::compute() to compute
+     *     disparity for a specific stereo pair.
      * @return automatically generated
      */
     public static StereoBM create(int numDisparities, int blockSize) {
@@ -195,15 +177,14 @@ public class StereoBM extends StereoMatcher {
     /**
      * Creates StereoBM object
      *
-     *     @param numDisparities the disparity search range. For each pixel algorithm will find the best
-     *     disparity from 0 (default minimum disparity) to numDisparities. The search range can then be
-     *     shifted by changing the minimum disparity.
-     *     (as the block is centered at the current pixel). Larger block size implies smoother, though less
-     *     accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher
-     *     chance for algorithm to find a wrong correspondence.
-     *
-     *     The function create StereoBM object. You can then call StereoBM::compute() to compute disparity for
-     *     a specific stereo pair.
+     * @param numDisparities the disparity search range. For each pixel algorithm will find the best
+     *     disparity from 0 (default minimum disparity) to numDisparities. The search range can then
+     *     be shifted by changing the minimum disparity. (as the block is centered at the current
+     *     pixel). Larger block size implies smoother, though less accurate disparity map. Smaller
+     *     block size gives more detailed disparity map, but there is higher chance for algorithm to
+     *     find a wrong correspondence.
+     *     <p>The function create StereoBM object. You can then call StereoBM::compute() to compute
+     *     disparity for a specific stereo pair.
      * @return automatically generated
      */
     public static StereoBM create(int numDisparities) {
@@ -213,27 +194,25 @@ public class StereoBM extends StereoMatcher {
     /**
      * Creates StereoBM object
      *
-     *     disparity from 0 (default minimum disparity) to numDisparities. The search range can then be
-     *     shifted by changing the minimum disparity.
-     *     (as the block is centered at the current pixel). Larger block size implies smoother, though less
-     *     accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher
-     *     chance for algorithm to find a wrong correspondence.
+     * <p>disparity from 0 (default minimum disparity) to numDisparities. The search range can then
+     * be shifted by changing the minimum disparity. (as the block is centered at the current
+     * pixel). Larger block size implies smoother, though less accurate disparity map. Smaller block
+     * size gives more detailed disparity map, but there is higher chance for algorithm to find a
+     * wrong correspondence.
      *
-     *     The function create StereoBM object. You can then call StereoBM::compute() to compute disparity for
-     *     a specific stereo pair.
+     * <p>The function create StereoBM object. You can then call StereoBM::compute() to compute
+     * disparity for a specific stereo pair.
+     *
      * @return automatically generated
      */
     public static StereoBM create() {
         return StereoBM.__fromPtr__(create_2());
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  int cv::StereoBM::getPreFilterType()
     private static native int getPreFilterType_0(long nativeObj);
@@ -275,20 +254,23 @@ public class StereoBM extends StereoMatcher {
     private static native double[] getROI1_0(long nativeObj);
 
     // C++:  void cv::StereoBM::setROI1(Rect roi1)
-    private static native void setROI1_0(long nativeObj, int roi1_x, int roi1_y, int roi1_width, int roi1_height);
+    private static native void setROI1_0(
+            long nativeObj, int roi1_x, int roi1_y, int roi1_width, int roi1_height);
 
     // C++:  Rect cv::StereoBM::getROI2()
     private static native double[] getROI2_0(long nativeObj);
 
     // C++:  void cv::StereoBM::setROI2(Rect roi2)
-    private static native void setROI2_0(long nativeObj, int roi2_x, int roi2_y, int roi2_width, int roi2_height);
+    private static native void setROI2_0(
+            long nativeObj, int roi2_x, int roi2_y, int roi2_width, int roi2_height);
 
     // C++: static Ptr_StereoBM cv::StereoBM::create(int numDisparities = 0, int blockSize = 21)
     private static native long create_0(int numDisparities, int blockSize);
+
     private static native long create_1(int numDisparities);
+
     private static native long create_2();
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

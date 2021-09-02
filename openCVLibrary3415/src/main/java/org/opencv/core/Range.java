@@ -1,6 +1,6 @@
 package org.opencv.core;
 
-//javadoc:Range
+// javadoc:Range
 public class Range {
 
     public int start, end;
@@ -26,7 +26,6 @@ public class Range {
             start = 0;
             end = 0;
         }
-
     }
 
     public int size() {

@@ -3,19 +3,24 @@
 //
 package org.opencv.features2d;
 
-
-
 // C++: class Params
 
 public class Params {
 
     protected final long nativeObj;
-    protected Params(long addr) { nativeObj = addr; }
 
-    public long getNativeObjAddr() { return nativeObj; }
+    protected Params(long addr) {
+        nativeObj = addr;
+    }
+
+    public long getNativeObjAddr() {
+        return nativeObj;
+    }
 
     // internal usage only
-    public static Params __fromPtr__(long addr) { return new Params(addr); }
+    public static Params __fromPtr__(long addr) {
+        return new Params(addr);
+    }
 
     //
     // C++:   cv::SimpleBlobDetector::Params::Params()
@@ -25,7 +30,6 @@ public class Params {
         nativeObj = Params_0();
     }
 
-
     //
     // C++: float Params::thresholdStep
     //
@@ -33,7 +37,6 @@ public class Params {
     public float get_thresholdStep() {
         return get_thresholdStep_0(nativeObj);
     }
-
 
     //
     // C++: void Params::thresholdStep
@@ -43,7 +46,6 @@ public class Params {
         set_thresholdStep_0(nativeObj, thresholdStep);
     }
 
-
     //
     // C++: float Params::minThreshold
     //
@@ -51,7 +53,6 @@ public class Params {
     public float get_minThreshold() {
         return get_minThreshold_0(nativeObj);
     }
-
 
     //
     // C++: void Params::minThreshold
@@ -61,7 +62,6 @@ public class Params {
         set_minThreshold_0(nativeObj, minThreshold);
     }
 
-
     //
     // C++: float Params::maxThreshold
     //
@@ -69,7 +69,6 @@ public class Params {
     public float get_maxThreshold() {
         return get_maxThreshold_0(nativeObj);
     }
-
 
     //
     // C++: void Params::maxThreshold
@@ -79,7 +78,6 @@ public class Params {
         set_maxThreshold_0(nativeObj, maxThreshold);
     }
 
-
     //
     // C++: size_t Params::minRepeatability
     //
@@ -87,7 +85,6 @@ public class Params {
     public long get_minRepeatability() {
         return get_minRepeatability_0(nativeObj);
     }
-
 
     //
     // C++: void Params::minRepeatability
@@ -97,7 +94,6 @@ public class Params {
         set_minRepeatability_0(nativeObj, minRepeatability);
     }
 
-
     //
     // C++: float Params::minDistBetweenBlobs
     //
@@ -105,7 +101,6 @@ public class Params {
     public float get_minDistBetweenBlobs() {
         return get_minDistBetweenBlobs_0(nativeObj);
     }
-
 
     //
     // C++: void Params::minDistBetweenBlobs
@@ -115,7 +110,6 @@ public class Params {
         set_minDistBetweenBlobs_0(nativeObj, minDistBetweenBlobs);
     }
 
-
     //
     // C++: bool Params::filterByColor
     //
@@ -123,7 +117,6 @@ public class Params {
     public boolean get_filterByColor() {
         return get_filterByColor_0(nativeObj);
     }
-
 
     //
     // C++: void Params::filterByColor
@@ -133,20 +126,17 @@ public class Params {
         set_filterByColor_0(nativeObj, filterByColor);
     }
 
-
     //
     // C++: uchar Params::blobColor
     //
 
     // Return type 'uchar' is not supported, skipping the function
 
-
     //
     // C++: void Params::blobColor
     //
 
     // Unknown type 'uchar' (I), skipping the function
-
 
     //
     // C++: bool Params::filterByArea
@@ -156,7 +146,6 @@ public class Params {
         return get_filterByArea_0(nativeObj);
     }
 
-
     //
     // C++: void Params::filterByArea
     //
@@ -164,7 +153,6 @@ public class Params {
     public void set_filterByArea(boolean filterByArea) {
         set_filterByArea_0(nativeObj, filterByArea);
     }
-
 
     //
     // C++: float Params::minArea
@@ -174,7 +162,6 @@ public class Params {
         return get_minArea_0(nativeObj);
     }
 
-
     //
     // C++: void Params::minArea
     //
@@ -182,7 +169,6 @@ public class Params {
     public void set_minArea(float minArea) {
         set_minArea_0(nativeObj, minArea);
     }
-
 
     //
     // C++: float Params::maxArea
@@ -192,7 +178,6 @@ public class Params {
         return get_maxArea_0(nativeObj);
     }
 
-
     //
     // C++: void Params::maxArea
     //
@@ -200,7 +185,6 @@ public class Params {
     public void set_maxArea(float maxArea) {
         set_maxArea_0(nativeObj, maxArea);
     }
-
 
     //
     // C++: bool Params::filterByCircularity
@@ -210,7 +194,6 @@ public class Params {
         return get_filterByCircularity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::filterByCircularity
     //
@@ -218,7 +201,6 @@ public class Params {
     public void set_filterByCircularity(boolean filterByCircularity) {
         set_filterByCircularity_0(nativeObj, filterByCircularity);
     }
-
 
     //
     // C++: float Params::minCircularity
@@ -228,7 +210,6 @@ public class Params {
         return get_minCircularity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::minCircularity
     //
@@ -236,7 +217,6 @@ public class Params {
     public void set_minCircularity(float minCircularity) {
         set_minCircularity_0(nativeObj, minCircularity);
     }
-
 
     //
     // C++: float Params::maxCircularity
@@ -246,7 +226,6 @@ public class Params {
         return get_maxCircularity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::maxCircularity
     //
@@ -254,7 +233,6 @@ public class Params {
     public void set_maxCircularity(float maxCircularity) {
         set_maxCircularity_0(nativeObj, maxCircularity);
     }
-
 
     //
     // C++: bool Params::filterByInertia
@@ -264,7 +242,6 @@ public class Params {
         return get_filterByInertia_0(nativeObj);
     }
 
-
     //
     // C++: void Params::filterByInertia
     //
@@ -272,7 +249,6 @@ public class Params {
     public void set_filterByInertia(boolean filterByInertia) {
         set_filterByInertia_0(nativeObj, filterByInertia);
     }
-
 
     //
     // C++: float Params::minInertiaRatio
@@ -282,7 +258,6 @@ public class Params {
         return get_minInertiaRatio_0(nativeObj);
     }
 
-
     //
     // C++: void Params::minInertiaRatio
     //
@@ -290,7 +265,6 @@ public class Params {
     public void set_minInertiaRatio(float minInertiaRatio) {
         set_minInertiaRatio_0(nativeObj, minInertiaRatio);
     }
-
 
     //
     // C++: float Params::maxInertiaRatio
@@ -300,7 +274,6 @@ public class Params {
         return get_maxInertiaRatio_0(nativeObj);
     }
 
-
     //
     // C++: void Params::maxInertiaRatio
     //
@@ -308,7 +281,6 @@ public class Params {
     public void set_maxInertiaRatio(float maxInertiaRatio) {
         set_maxInertiaRatio_0(nativeObj, maxInertiaRatio);
     }
-
 
     //
     // C++: bool Params::filterByConvexity
@@ -318,7 +290,6 @@ public class Params {
         return get_filterByConvexity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::filterByConvexity
     //
@@ -326,7 +297,6 @@ public class Params {
     public void set_filterByConvexity(boolean filterByConvexity) {
         set_filterByConvexity_0(nativeObj, filterByConvexity);
     }
-
 
     //
     // C++: float Params::minConvexity
@@ -336,7 +306,6 @@ public class Params {
         return get_minConvexity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::minConvexity
     //
@@ -344,7 +313,6 @@ public class Params {
     public void set_minConvexity(float minConvexity) {
         set_minConvexity_0(nativeObj, minConvexity);
     }
-
 
     //
     // C++: float Params::maxConvexity
@@ -354,7 +322,6 @@ public class Params {
         return get_maxConvexity_0(nativeObj);
     }
 
-
     //
     // C++: void Params::maxConvexity
     //
@@ -363,13 +330,10 @@ public class Params {
         set_maxConvexity_0(nativeObj, maxConvexity);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:   cv::SimpleBlobDetector::Params::Params()
     private static native long Params_0();
@@ -432,7 +396,8 @@ public class Params {
     private static native boolean get_filterByCircularity_0(long nativeObj);
 
     // C++: void Params::filterByCircularity
-    private static native void set_filterByCircularity_0(long nativeObj, boolean filterByCircularity);
+    private static native void set_filterByCircularity_0(
+            long nativeObj, boolean filterByCircularity);
 
     // C++: float Params::minCircularity
     private static native float get_minCircularity_0(long nativeObj);
@@ -484,5 +449,4 @@ public class Params {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

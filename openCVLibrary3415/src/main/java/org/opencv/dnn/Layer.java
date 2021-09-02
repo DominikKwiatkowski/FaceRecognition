@@ -3,25 +3,31 @@
 //
 package org.opencv.dnn;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Algorithm;
 import org.opencv.core.Mat;
 import org.opencv.utils.Converters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // C++: class Layer
 /**
  * This interface class allows to build new Layers - are building blocks of networks.
  *
- * Each class, derived from Layer, must implement allocate() methods to declare own outputs and forward() to compute outputs.
- * Also before using the new layer into networks you must register your layer by using one of REF: dnnLayerFactory "LayerFactory" macros.
+ * <p>Each class, derived from Layer, must implement allocate() methods to declare own outputs and
+ * forward() to compute outputs. Also before using the new layer into networks you must register
+ * your layer by using one of REF: dnnLayerFactory "LayerFactory" macros.
  */
 public class Layer extends Algorithm {
 
-    protected Layer(long addr) { super(addr); }
+    protected Layer(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static Layer __fromPtr__(long addr) { return new Layer(addr); }
+    public static Layer __fromPtr__(long addr) {
+        return new Layer(addr);
+    }
 
     //
     // C++:  void cv::dnn::Layer::finalize(vector_Mat inputs, vector_Mat& outputs)
@@ -29,10 +35,10 @@ public class Layer extends Algorithm {
 
     /**
      * Computes and sets internal parameters according to inputs, outputs and blobs.
-     * @param outputs vector of already allocated output blobs
      *
-     * If this method is called after network has allocated all memory for input and output blobs
-     * and before inferencing.
+     * @param outputs vector of already allocated output blobs
+     *     <p>If this method is called after network has allocated all memory for input and output
+     *     blobs and before inferencing.
      * @param inputs automatically generated
      */
     public void finalize(List<Mat> inputs, List<Mat> outputs) {
@@ -43,13 +49,13 @@ public class Layer extends Algorithm {
         outputs_mat.release();
     }
 
-
     //
     // C++:  void cv::dnn::Layer::run(vector_Mat inputs, vector_Mat& outputs, vector_Mat& internals)
     //
 
     /**
      * Allocates layer and computes output.
+     *
      * @deprecated This method will be removed in the future release.
      * @param inputs automatically generated
      * @param outputs automatically generated
@@ -67,21 +73,19 @@ public class Layer extends Algorithm {
         internals_mat.release();
     }
 
-
     //
     // C++:  int cv::dnn::Layer::outputNameToIndex(String outputName)
     //
 
     /**
-     * Returns index of output blob in output array.
-     * SEE: inputNameToIndex()
+     * Returns index of output blob in output array. SEE: inputNameToIndex()
+     *
      * @param outputName automatically generated
      * @return automatically generated
      */
     public int outputNameToIndex(String outputName) {
         return outputNameToIndex_0(nativeObj, outputName);
     }
-
 
     //
     // C++: vector_Mat Layer::blobs
@@ -94,7 +98,6 @@ public class Layer extends Algorithm {
         return retVal;
     }
 
-
     //
     // C++: void Layer::blobs
     //
@@ -104,7 +107,6 @@ public class Layer extends Algorithm {
         set_blobs_0(nativeObj, blobs_mat.nativeObj);
     }
 
-
     //
     // C++: String Layer::name
     //
@@ -112,7 +114,6 @@ public class Layer extends Algorithm {
     public String get_name() {
         return get_name_0(nativeObj);
     }
-
 
     //
     // C++: String Layer::type
@@ -122,7 +123,6 @@ public class Layer extends Algorithm {
         return get_type_0(nativeObj);
     }
 
-
     //
     // C++: int Layer::preferableTarget
     //
@@ -131,19 +131,21 @@ public class Layer extends Algorithm {
         return get_preferableTarget_0(nativeObj);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
-
-
     // C++:  void cv::dnn::Layer::finalize(vector_Mat inputs, vector_Mat& outputs)
-    private static native void finalize_0(long nativeObj, long inputs_mat_nativeObj, long outputs_mat_nativeObj);
+    private static native void finalize_0(
+            long nativeObj, long inputs_mat_nativeObj, long outputs_mat_nativeObj);
 
     // C++:  void cv::dnn::Layer::run(vector_Mat inputs, vector_Mat& outputs, vector_Mat& internals)
-    private static native void run_0(long nativeObj, long inputs_mat_nativeObj, long outputs_mat_nativeObj, long internals_mat_nativeObj);
+    private static native void run_0(
+            long nativeObj,
+            long inputs_mat_nativeObj,
+            long outputs_mat_nativeObj,
+            long internals_mat_nativeObj);
 
     // C++:  int cv::dnn::Layer::outputNameToIndex(String outputName)
     private static native int outputNameToIndex_0(long nativeObj, String outputName);
@@ -165,5 +167,4 @@ public class Layer extends Algorithm {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

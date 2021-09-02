@@ -1,6 +1,6 @@
 package org.opencv.core;
 
-//javadoc:Size_
+// javadoc:Size_
 public class Size {
 
     public double width, height;
@@ -67,7 +67,6 @@ public class Size {
 
     @Override
     public String toString() {
-        return (int)width + "x" + (int)height;
+        return (int) width + "x" + (int) height;
     }
-
 }

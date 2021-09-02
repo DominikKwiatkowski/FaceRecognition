@@ -3,20 +3,23 @@
 //
 package org.opencv.ml;
 
-import org.opencv.ml.ANN_MLP;
 
 // C++: class ANN_MLP_ANNEAL
 /**
  * Artificial Neural Networks - Multi-Layer Perceptrons.
  *
- * SEE: REF: ml_intro_ann
+ * <p>SEE: REF: ml_intro_ann
  */
 public class ANN_MLP_ANNEAL extends ANN_MLP {
 
-    protected ANN_MLP_ANNEAL(long addr) { super(addr); }
+    protected ANN_MLP_ANNEAL(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static ANN_MLP_ANNEAL __fromPtr__(long addr) { return new ANN_MLP_ANNEAL(addr); }
+    public static ANN_MLP_ANNEAL __fromPtr__(long addr) {
+        return new ANN_MLP_ANNEAL(addr);
+    }
 
     //
     // C++:  double cv::ml::ANN_MLP_ANNEAL::getAnnealInitialT()
@@ -24,25 +27,25 @@ public class ANN_MLP_ANNEAL extends ANN_MLP {
 
     /**
      * SEE: setAnnealInitialT
+     *
      * @return automatically generated
      */
     public double getAnnealInitialT() {
         return getAnnealInitialT_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::ANN_MLP_ANNEAL::setAnnealInitialT(double val)
     //
 
     /**
-     *  getAnnealInitialT SEE: getAnnealInitialT
+     * getAnnealInitialT SEE: getAnnealInitialT
+     *
      * @param val automatically generated
      */
     public void setAnnealInitialT(double val) {
         setAnnealInitialT_0(nativeObj, val);
     }
-
 
     //
     // C++:  double cv::ml::ANN_MLP_ANNEAL::getAnnealFinalT()
@@ -50,25 +53,25 @@ public class ANN_MLP_ANNEAL extends ANN_MLP {
 
     /**
      * SEE: setAnnealFinalT
+     *
      * @return automatically generated
      */
     public double getAnnealFinalT() {
         return getAnnealFinalT_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::ANN_MLP_ANNEAL::setAnnealFinalT(double val)
     //
 
     /**
-     *  getAnnealFinalT SEE: getAnnealFinalT
+     * getAnnealFinalT SEE: getAnnealFinalT
+     *
      * @param val automatically generated
      */
     public void setAnnealFinalT(double val) {
         setAnnealFinalT_0(nativeObj, val);
     }
-
 
     //
     // C++:  double cv::ml::ANN_MLP_ANNEAL::getAnnealCoolingRatio()
@@ -76,25 +79,25 @@ public class ANN_MLP_ANNEAL extends ANN_MLP {
 
     /**
      * SEE: setAnnealCoolingRatio
+     *
      * @return automatically generated
      */
     public double getAnnealCoolingRatio() {
         return getAnnealCoolingRatio_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::ANN_MLP_ANNEAL::setAnnealCoolingRatio(double val)
     //
 
     /**
-     *  getAnnealCoolingRatio SEE: getAnnealCoolingRatio
+     * getAnnealCoolingRatio SEE: getAnnealCoolingRatio
+     *
      * @param val automatically generated
      */
     public void setAnnealCoolingRatio(double val) {
         setAnnealCoolingRatio_0(nativeObj, val);
     }
-
 
     //
     // C++:  int cv::ml::ANN_MLP_ANNEAL::getAnnealItePerStep()
@@ -102,32 +105,30 @@ public class ANN_MLP_ANNEAL extends ANN_MLP {
 
     /**
      * SEE: setAnnealItePerStep
+     *
      * @return automatically generated
      */
     public int getAnnealItePerStep() {
         return getAnnealItePerStep_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::ANN_MLP_ANNEAL::setAnnealItePerStep(int val)
     //
 
     /**
-     *  getAnnealItePerStep SEE: getAnnealItePerStep
+     * getAnnealItePerStep SEE: getAnnealItePerStep
+     *
      * @param val automatically generated
      */
     public void setAnnealItePerStep(int val) {
         setAnnealItePerStep_0(nativeObj, val);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  double cv::ml::ANN_MLP_ANNEAL::getAnnealInitialT()
     private static native double getAnnealInitialT_0(long nativeObj);
@@ -155,5 +156,4 @@ public class ANN_MLP_ANNEAL extends ANN_MLP {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

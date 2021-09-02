@@ -20,14 +20,14 @@ import org.opencv.imgproc.Imgproc;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
+public class CameraActivity extends AppCompatActivity
+        implements CameraBridgeViewBase.CvCameraViewListener {
 
     static {
         System.loadLibrary("opencv_java3");
     }
 
     Executor singleThreadExecutor = Executors.newSingleThreadExecutor();
-
 
     private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -60,17 +60,16 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         // Set camera change button.
         Button CameraChange = findViewById(R.id.cameraChange);
-        CameraChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                swapCamera();
-            }
-        });
+        CameraChange.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        swapCamera();
+                    }
+                });
     }
 
-    /**
-     * If Intent will be paused, we should disable camera.
-     */
+    /** If Intent will be paused, we should disable camera. */
     @Override
     public void onPause() {
         super.onPause();
@@ -79,35 +78,27 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         frameProcessTask.setStop(true);
 
         // Disable camera.
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (mOpenCvCameraView != null) mOpenCvCameraView.disableView();
     }
 
-    /**
-     * Disable camera on intent destroy.
-     */
+    /** Disable camera on intent destroy. */
     public void onDestroy() {
         super.onDestroy();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (mOpenCvCameraView != null) mOpenCvCameraView.disableView();
     }
 
     /**
      * We won't do anything in this case, just needed implementation
      *
-     * @param width  -  the width of the frames that will be delivered
+     * @param width - the width of the frames that will be delivered
      * @param height - the height of the frames that will be delivered
      */
     @Override
-    public void onCameraViewStarted(int width, int height) {
-    }
+    public void onCameraViewStarted(int width, int height) {}
 
-    /**
-     * We won't do anything in this case, just needed implementation
-     */
+    /** We won't do anything in this case, just needed implementation */
     @Override
-    public void onCameraViewStopped() {
-    }
+    public void onCameraViewStopped() {}
 
     /**
      * Most important function. It enable us to manipulate frame and show it to user.
@@ -126,21 +117,19 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             // Draw rectangle for each face found in photo.
             for (Rect face : faces.toArray()) {
                 Imgproc.rectangle(
-                        inputFrame,                                                 // Image
-                        new Point(face.x, face.y),                                  //p1
-                        new Point(face.x + face.width, face.y + face.height),//p2
-                        new Scalar(0, 0, 255),                                     //color
-                        5                                                //Thickness
-                );
+                        inputFrame, // Image
+                        new Point(face.x, face.y), // p1
+                        new Point(face.x + face.width, face.y + face.height), // p2
+                        new Scalar(0, 0, 255), // color
+                        5 // Thickness
+                        );
             }
         }
 
         return inputFrame;
     }
 
-    /**
-     * In case of resuming up, we have to turn on camera again.
-     */
+    /** In case of resuming up, we have to turn on camera again. */
     @Override
     public void onResume() {
         mOpenCvCameraView.enableView();
@@ -148,9 +137,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         super.onResume();
     }
 
-    /**
-     * Change camera, front->back, back->front.
-     */
+    /** Change camera, front->back, back->front. */
     public void swapCamera() {
         // Change camera index
         if (CameraIndex == CameraBridgeViewBase.CAMERA_ID_FRONT) {

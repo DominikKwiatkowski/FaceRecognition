@@ -1,24 +1,18 @@
 package org.opencv.core;
 
-//C++: class DMatch
+// C++: class DMatch
 
 /**
- * Structure for matching: query descriptor index, train descriptor index, train
- * image index and distance between descriptors.
+ * Structure for matching: query descriptor index, train descriptor index, train image index and
+ * distance between descriptors.
  */
 public class DMatch {
 
-    /**
-     * Query descriptor index.
-     */
+    /** Query descriptor index. */
     public int queryIdx;
-    /**
-     * Train descriptor index.
-     */
+    /** Train descriptor index. */
     public int trainIdx;
-    /**
-     * Train image index.
-     */
+    /** Train image index. */
     public int imgIdx;
 
     // javadoc: DMatch::distance
@@ -51,8 +45,14 @@ public class DMatch {
 
     @Override
     public String toString() {
-        return "DMatch [queryIdx=" + queryIdx + ", trainIdx=" + trainIdx
-                + ", imgIdx=" + imgIdx + ", distance=" + distance + "]";
+        return "DMatch [queryIdx="
+                + queryIdx
+                + ", trainIdx="
+                + trainIdx
+                + ", imgIdx="
+                + imgIdx
+                + ", distance="
+                + distance
+                + "]";
     }
-
 }

@@ -7,21 +7,20 @@ import org.opencv.core.Algorithm;
 import org.opencv.core.Mat;
 
 // C++: class StereoMatcher
-/**
- * The base class for stereo correspondence algorithms.
- */
+/** The base class for stereo correspondence algorithms. */
 public class StereoMatcher extends Algorithm {
 
-    protected StereoMatcher(long addr) { super(addr); }
+    protected StereoMatcher(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static StereoMatcher __fromPtr__(long addr) { return new StereoMatcher(addr); }
+    public static StereoMatcher __fromPtr__(long addr) {
+        return new StereoMatcher(addr);
+    }
 
     // C++: enum <unnamed>
-    public static final int
-            DISP_SHIFT = 4,
-            DISP_SCALE = (1 << DISP_SHIFT);
-
+    public static final int DISP_SHIFT = 4, DISP_SCALE = (1 << DISP_SHIFT);
 
     //
     // C++:  void cv::StereoMatcher::compute(Mat left, Mat right, Mat& disparity)
@@ -30,16 +29,16 @@ public class StereoMatcher extends Algorithm {
     /**
      * Computes disparity map for the specified stereo pair
      *
-     *     @param left Left 8-bit single-channel image.
-     *     @param right Right image of the same size and the same type as the left one.
-     *     @param disparity Output disparity map. It has the same size as the input images. Some algorithms,
-     *     like StereoBM or StereoSGBM compute 16-bit fixed-point disparity map (where each disparity value
-     *     has 4 fractional bits), whereas other algorithms output 32-bit floating-point disparity map.
+     * @param left Left 8-bit single-channel image.
+     * @param right Right image of the same size and the same type as the left one.
+     * @param disparity Output disparity map. It has the same size as the input images. Some
+     *     algorithms, like StereoBM or StereoSGBM compute 16-bit fixed-point disparity map (where
+     *     each disparity value has 4 fractional bits), whereas other algorithms output 32-bit
+     *     floating-point disparity map.
      */
     public void compute(Mat left, Mat right, Mat disparity) {
         compute_0(nativeObj, left.nativeObj, right.nativeObj, disparity.nativeObj);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getMinDisparity()
@@ -49,7 +48,6 @@ public class StereoMatcher extends Algorithm {
         return getMinDisparity_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setMinDisparity(int minDisparity)
     //
@@ -57,7 +55,6 @@ public class StereoMatcher extends Algorithm {
     public void setMinDisparity(int minDisparity) {
         setMinDisparity_0(nativeObj, minDisparity);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getNumDisparities()
@@ -67,7 +64,6 @@ public class StereoMatcher extends Algorithm {
         return getNumDisparities_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setNumDisparities(int numDisparities)
     //
@@ -75,7 +71,6 @@ public class StereoMatcher extends Algorithm {
     public void setNumDisparities(int numDisparities) {
         setNumDisparities_0(nativeObj, numDisparities);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getBlockSize()
@@ -85,7 +80,6 @@ public class StereoMatcher extends Algorithm {
         return getBlockSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setBlockSize(int blockSize)
     //
@@ -93,7 +87,6 @@ public class StereoMatcher extends Algorithm {
     public void setBlockSize(int blockSize) {
         setBlockSize_0(nativeObj, blockSize);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getSpeckleWindowSize()
@@ -103,7 +96,6 @@ public class StereoMatcher extends Algorithm {
         return getSpeckleWindowSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setSpeckleWindowSize(int speckleWindowSize)
     //
@@ -111,7 +103,6 @@ public class StereoMatcher extends Algorithm {
     public void setSpeckleWindowSize(int speckleWindowSize) {
         setSpeckleWindowSize_0(nativeObj, speckleWindowSize);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getSpeckleRange()
@@ -121,7 +112,6 @@ public class StereoMatcher extends Algorithm {
         return getSpeckleRange_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setSpeckleRange(int speckleRange)
     //
@@ -129,7 +119,6 @@ public class StereoMatcher extends Algorithm {
     public void setSpeckleRange(int speckleRange) {
         setSpeckleRange_0(nativeObj, speckleRange);
     }
-
 
     //
     // C++:  int cv::StereoMatcher::getDisp12MaxDiff()
@@ -139,7 +128,6 @@ public class StereoMatcher extends Algorithm {
         return getDisp12MaxDiff_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::StereoMatcher::setDisp12MaxDiff(int disp12MaxDiff)
     //
@@ -148,16 +136,14 @@ public class StereoMatcher extends Algorithm {
         setDisp12MaxDiff_0(nativeObj, disp12MaxDiff);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
-
-
     // C++:  void cv::StereoMatcher::compute(Mat left, Mat right, Mat& disparity)
-    private static native void compute_0(long nativeObj, long left_nativeObj, long right_nativeObj, long disparity_nativeObj);
+    private static native void compute_0(
+            long nativeObj, long left_nativeObj, long right_nativeObj, long disparity_nativeObj);
 
     // C++:  int cv::StereoMatcher::getMinDisparity()
     private static native int getMinDisparity_0(long nativeObj);
@@ -197,5 +183,4 @@ public class StereoMatcher extends Algorithm {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

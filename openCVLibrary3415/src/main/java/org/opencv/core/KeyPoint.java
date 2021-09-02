@@ -1,39 +1,34 @@
 package org.opencv.core;
 
-import org.opencv.core.Point;
 
-//javadoc: KeyPoint
+// javadoc: KeyPoint
 public class KeyPoint {
 
-    /**
-     * Coordinates of the keypoint.
-     */
+    /** Coordinates of the keypoint. */
     public Point pt;
-    /**
-     * Diameter of the useful keypoint adjacent area.
-     */
+    /** Diameter of the useful keypoint adjacent area. */
     public float size;
-    /**
-     * Computed orientation of the keypoint (-1 if not applicable).
-     */
+    /** Computed orientation of the keypoint (-1 if not applicable). */
     public float angle;
     /**
-     * The response, by which the strongest keypoints have been selected. Can
-     * be used for further sorting or subsampling.
+     * The response, by which the strongest keypoints have been selected. Can be used for further
+     * sorting or subsampling.
      */
     public float response;
-    /**
-     * Octave (pyramid layer), from which the keypoint has been extracted.
-     */
+    /** Octave (pyramid layer), from which the keypoint has been extracted. */
     public int octave;
-    /**
-     * Object ID, that can be used to cluster keypoints by an object they
-     * belong to.
-     */
+    /** Object ID, that can be used to cluster keypoints by an object they belong to. */
     public int class_id;
 
     // javadoc:KeyPoint::KeyPoint(x,y,_size,_angle,_response,_octave,_class_id)
-    public KeyPoint(float x, float y, float _size, float _angle, float _response, int _octave, int _class_id) {
+    public KeyPoint(
+            float x,
+            float y,
+            float _size,
+            float _angle,
+            float _response,
+            int _octave,
+            int _class_id) {
         pt = new Point(x, y);
         size = _size;
         angle = _angle;
@@ -69,9 +64,18 @@ public class KeyPoint {
 
     @Override
     public String toString() {
-        return "KeyPoint [pt=" + pt + ", size=" + size + ", angle=" + angle
-                + ", response=" + response + ", octave=" + octave
-                + ", class_id=" + class_id + "]";
+        return "KeyPoint [pt="
+                + pt
+                + ", size="
+                + size
+                + ", angle="
+                + angle
+                + ", response="
+                + response
+                + ", octave="
+                + octave
+                + ", class_id="
+                + class_id
+                + "]";
     }
-
 }

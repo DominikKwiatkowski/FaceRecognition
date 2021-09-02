@@ -5,26 +5,25 @@ package org.opencv.ml;
 
 import org.opencv.core.Algorithm;
 import org.opencv.core.Mat;
-import org.opencv.ml.TrainData;
 
 // C++: class StatModel
-/**
- * Base class for statistical models in OpenCV ML.
- */
+/** Base class for statistical models in OpenCV ML. */
 public class StatModel extends Algorithm {
 
-    protected StatModel(long addr) { super(addr); }
+    protected StatModel(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static StatModel __fromPtr__(long addr) { return new StatModel(addr); }
+    public static StatModel __fromPtr__(long addr) {
+        return new StatModel(addr);
+    }
 
     // C++: enum Flags (cv.ml.StatModel.Flags)
-    public static final int
-            UPDATE_MODEL = 1,
+    public static final int UPDATE_MODEL = 1,
             RAW_OUTPUT = 1,
             COMPRESSED_INPUT = 2,
             PREPROCESSED_INPUT = 4;
-
 
     //
     // C++:  int cv::ml::StatModel::getVarCount()
@@ -32,12 +31,12 @@ public class StatModel extends Algorithm {
 
     /**
      * Returns the number of variables in training samples
+     *
      * @return automatically generated
      */
     public int getVarCount() {
         return getVarCount_0(nativeObj);
     }
-
 
     //
     // C++:  bool cv::ml::StatModel::empty()
@@ -47,19 +46,18 @@ public class StatModel extends Algorithm {
         return empty_0(nativeObj);
     }
 
-
     //
     // C++:  bool cv::ml::StatModel::isTrained()
     //
 
     /**
      * Returns true if the model is trained
+     *
      * @return automatically generated
      */
     public boolean isTrained() {
         return isTrained_0(nativeObj);
     }
-
 
     //
     // C++:  bool cv::ml::StatModel::isClassifier()
@@ -67,12 +65,12 @@ public class StatModel extends Algorithm {
 
     /**
      * Returns true if the model is classifier
+     *
      * @return automatically generated
      */
     public boolean isClassifier() {
         return isClassifier_0(nativeObj);
     }
-
 
     //
     // C++:  bool cv::ml::StatModel::train(Ptr_TrainData trainData, int flags = 0)
@@ -81,10 +79,11 @@ public class StatModel extends Algorithm {
     /**
      * Trains the statistical model
      *
-     *     @param trainData training data that can be loaded from file using TrainData::loadFromCSV or
-     *         created with TrainData::create.
-     *     @param flags optional flags, depending on the model. Some of the models can be updated with the
-     *         new training samples, not completely overwritten (such as NormalBayesClassifier or ANN_MLP).
+     * @param trainData training data that can be loaded from file using TrainData::loadFromCSV or
+     *     created with TrainData::create.
+     * @param flags optional flags, depending on the model. Some of the models can be updated with
+     *     the new training samples, not completely overwritten (such as NormalBayesClassifier or
+     *     ANN_MLP).
      * @return automatically generated
      */
     public boolean train(TrainData trainData, int flags) {
@@ -94,15 +93,14 @@ public class StatModel extends Algorithm {
     /**
      * Trains the statistical model
      *
-     *     @param trainData training data that can be loaded from file using TrainData::loadFromCSV or
-     *         created with TrainData::create.
-     *         new training samples, not completely overwritten (such as NormalBayesClassifier or ANN_MLP).
+     * @param trainData training data that can be loaded from file using TrainData::loadFromCSV or
+     *     created with TrainData::create. new training samples, not completely overwritten (such as
+     *     NormalBayesClassifier or ANN_MLP).
      * @return automatically generated
      */
     public boolean train(TrainData trainData) {
         return train_1(nativeObj, trainData.getNativeObjAddr());
     }
-
 
     //
     // C++:  bool cv::ml::StatModel::train(Mat samples, int layout, Mat responses)
@@ -111,15 +109,14 @@ public class StatModel extends Algorithm {
     /**
      * Trains the statistical model
      *
-     *     @param samples training samples
-     *     @param layout See ml::SampleTypes.
-     *     @param responses vector of responses associated with the training samples.
+     * @param samples training samples
+     * @param layout See ml::SampleTypes.
+     * @param responses vector of responses associated with the training samples.
      * @return automatically generated
      */
     public boolean train(Mat samples, int layout, Mat responses) {
         return train_2(nativeObj, samples.nativeObj, layout, responses.nativeObj);
     }
-
 
     //
     // C++:  float cv::ml::StatModel::calcError(Ptr_TrainData data, bool test, Mat& resp)
@@ -128,22 +125,22 @@ public class StatModel extends Algorithm {
     /**
      * Computes error on the training or test dataset
      *
-     *     @param data the training data
-     *     @param test if true, the error is computed over the test subset of the data, otherwise it's
-     *         computed over the training subset of the data. Please note that if you loaded a completely
-     *         different dataset to evaluate already trained classifier, you will probably want not to set
-     *         the test subset at all with TrainData::setTrainTestSplitRatio and specify test=false, so
-     *         that the error is computed for the whole new set. Yes, this sounds a bit confusing.
-     *     @param resp the optional output responses.
-     *
-     *     The method uses StatModel::predict to compute the error. For regression models the error is
-     *     computed as RMS, for classifiers - as a percent of missclassified samples (0%-100%).
+     * @param data the training data
+     * @param test if true, the error is computed over the test subset of the data, otherwise it's
+     *     computed over the training subset of the data. Please note that if you loaded a
+     *     completely different dataset to evaluate already trained classifier, you will probably
+     *     want not to set the test subset at all with TrainData::setTrainTestSplitRatio and specify
+     *     test=false, so that the error is computed for the whole new set. Yes, this sounds a bit
+     *     confusing.
+     * @param resp the optional output responses.
+     *     <p>The method uses StatModel::predict to compute the error. For regression models the
+     *     error is computed as RMS, for classifiers - as a percent of missclassified samples
+     *     (0%-100%).
      * @return automatically generated
      */
     public float calcError(TrainData data, boolean test, Mat resp) {
         return calcError_0(nativeObj, data.getNativeObjAddr(), test, resp.nativeObj);
     }
-
 
     //
     // C++:  float cv::ml::StatModel::predict(Mat samples, Mat& results = Mat(), int flags = 0)
@@ -152,9 +149,9 @@ public class StatModel extends Algorithm {
     /**
      * Predicts response(s) for the provided sample(s)
      *
-     *     @param samples The input samples, floating-point matrix
-     *     @param results The optional output matrix of results.
-     *     @param flags The optional flags, model-dependent. See cv::ml::StatModel::Flags.
+     * @param samples The input samples, floating-point matrix
+     * @param results The optional output matrix of results.
+     * @param flags The optional flags, model-dependent. See cv::ml::StatModel::Flags.
      * @return automatically generated
      */
     public float predict(Mat samples, Mat results, int flags) {
@@ -164,8 +161,8 @@ public class StatModel extends Algorithm {
     /**
      * Predicts response(s) for the provided sample(s)
      *
-     *     @param samples The input samples, floating-point matrix
-     *     @param results The optional output matrix of results.
+     * @param samples The input samples, floating-point matrix
+     * @param results The optional output matrix of results.
      * @return automatically generated
      */
     public float predict(Mat samples, Mat results) {
@@ -175,20 +172,17 @@ public class StatModel extends Algorithm {
     /**
      * Predicts response(s) for the provided sample(s)
      *
-     *     @param samples The input samples, floating-point matrix
+     * @param samples The input samples, floating-point matrix
      * @return automatically generated
      */
     public float predict(Mat samples) {
         return predict_2(nativeObj, samples.nativeObj);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  int cv::ml::StatModel::getVarCount()
     private static native int getVarCount_0(long nativeObj);
@@ -204,20 +198,26 @@ public class StatModel extends Algorithm {
 
     // C++:  bool cv::ml::StatModel::train(Ptr_TrainData trainData, int flags = 0)
     private static native boolean train_0(long nativeObj, long trainData_nativeObj, int flags);
+
     private static native boolean train_1(long nativeObj, long trainData_nativeObj);
 
     // C++:  bool cv::ml::StatModel::train(Mat samples, int layout, Mat responses)
-    private static native boolean train_2(long nativeObj, long samples_nativeObj, int layout, long responses_nativeObj);
+    private static native boolean train_2(
+            long nativeObj, long samples_nativeObj, int layout, long responses_nativeObj);
 
     // C++:  float cv::ml::StatModel::calcError(Ptr_TrainData data, bool test, Mat& resp)
-    private static native float calcError_0(long nativeObj, long data_nativeObj, boolean test, long resp_nativeObj);
+    private static native float calcError_0(
+            long nativeObj, long data_nativeObj, boolean test, long resp_nativeObj);
 
     // C++:  float cv::ml::StatModel::predict(Mat samples, Mat& results = Mat(), int flags = 0)
-    private static native float predict_0(long nativeObj, long samples_nativeObj, long results_nativeObj, int flags);
-    private static native float predict_1(long nativeObj, long samples_nativeObj, long results_nativeObj);
+    private static native float predict_0(
+            long nativeObj, long samples_nativeObj, long results_nativeObj, int flags);
+
+    private static native float predict_1(
+            long nativeObj, long samples_nativeObj, long results_nativeObj);
+
     private static native float predict_2(long nativeObj, long samples_nativeObj);
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

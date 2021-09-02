@@ -4,34 +4,34 @@
 package org.opencv.ml;
 
 import org.opencv.core.Mat;
-import org.opencv.ml.DTrees;
-import org.opencv.ml.StatModel;
 
 // C++: class DTrees
 /**
  * The class represents a single decision tree or a collection of decision trees.
  *
- * The current public interface of the class allows user to train only a single decision tree, however
- * the class is capable of storing multiple decision trees and using them for prediction (by summing
- * responses or using a voting schemes), and the derived from DTrees classes (such as RTrees and Boost)
- * use this capability to implement decision tree ensembles.
+ * <p>The current public interface of the class allows user to train only a single decision tree,
+ * however the class is capable of storing multiple decision trees and using them for prediction (by
+ * summing responses or using a voting schemes), and the derived from DTrees classes (such as RTrees
+ * and Boost) use this capability to implement decision tree ensembles.
  *
- * SEE: REF: ml_intro_trees
+ * <p>SEE: REF: ml_intro_trees
  */
 public class DTrees extends StatModel {
 
-    protected DTrees(long addr) { super(addr); }
+    protected DTrees(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static DTrees __fromPtr__(long addr) { return new DTrees(addr); }
+    public static DTrees __fromPtr__(long addr) {
+        return new DTrees(addr);
+    }
 
     // C++: enum Flags (cv.ml.DTrees.Flags)
-    public static final int
-            PREDICT_AUTO = 0,
-            PREDICT_SUM = (1<<8),
-            PREDICT_MAX_VOTE = (2<<8),
-            PREDICT_MASK = (3<<8);
-
+    public static final int PREDICT_AUTO = 0,
+            PREDICT_SUM = (1 << 8),
+            PREDICT_MAX_VOTE = (2 << 8),
+            PREDICT_MASK = (3 << 8);
 
     //
     // C++:  int cv::ml::DTrees::getMaxCategories()
@@ -39,25 +39,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setMaxCategories
+     *
      * @return automatically generated
      */
     public int getMaxCategories() {
         return getMaxCategories_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setMaxCategories(int val)
     //
 
     /**
-     *  getMaxCategories SEE: getMaxCategories
+     * getMaxCategories SEE: getMaxCategories
+     *
      * @param val automatically generated
      */
     public void setMaxCategories(int val) {
         setMaxCategories_0(nativeObj, val);
     }
-
 
     //
     // C++:  int cv::ml::DTrees::getMaxDepth()
@@ -65,25 +65,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setMaxDepth
+     *
      * @return automatically generated
      */
     public int getMaxDepth() {
         return getMaxDepth_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setMaxDepth(int val)
     //
 
     /**
-     *  getMaxDepth SEE: getMaxDepth
+     * getMaxDepth SEE: getMaxDepth
+     *
      * @param val automatically generated
      */
     public void setMaxDepth(int val) {
         setMaxDepth_0(nativeObj, val);
     }
-
 
     //
     // C++:  int cv::ml::DTrees::getMinSampleCount()
@@ -91,25 +91,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setMinSampleCount
+     *
      * @return automatically generated
      */
     public int getMinSampleCount() {
         return getMinSampleCount_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setMinSampleCount(int val)
     //
 
     /**
-     *  getMinSampleCount SEE: getMinSampleCount
+     * getMinSampleCount SEE: getMinSampleCount
+     *
      * @param val automatically generated
      */
     public void setMinSampleCount(int val) {
         setMinSampleCount_0(nativeObj, val);
     }
-
 
     //
     // C++:  int cv::ml::DTrees::getCVFolds()
@@ -117,25 +117,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setCVFolds
+     *
      * @return automatically generated
      */
     public int getCVFolds() {
         return getCVFolds_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setCVFolds(int val)
     //
 
     /**
-     *  getCVFolds SEE: getCVFolds
+     * getCVFolds SEE: getCVFolds
+     *
      * @param val automatically generated
      */
     public void setCVFolds(int val) {
         setCVFolds_0(nativeObj, val);
     }
-
 
     //
     // C++:  bool cv::ml::DTrees::getUseSurrogates()
@@ -143,25 +143,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setUseSurrogates
+     *
      * @return automatically generated
      */
     public boolean getUseSurrogates() {
         return getUseSurrogates_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setUseSurrogates(bool val)
     //
 
     /**
-     *  getUseSurrogates SEE: getUseSurrogates
+     * getUseSurrogates SEE: getUseSurrogates
+     *
      * @param val automatically generated
      */
     public void setUseSurrogates(boolean val) {
         setUseSurrogates_0(nativeObj, val);
     }
-
 
     //
     // C++:  bool cv::ml::DTrees::getUse1SERule()
@@ -169,25 +169,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setUse1SERule
+     *
      * @return automatically generated
      */
     public boolean getUse1SERule() {
         return getUse1SERule_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setUse1SERule(bool val)
     //
 
     /**
-     *  getUse1SERule SEE: getUse1SERule
+     * getUse1SERule SEE: getUse1SERule
+     *
      * @param val automatically generated
      */
     public void setUse1SERule(boolean val) {
         setUse1SERule_0(nativeObj, val);
     }
-
 
     //
     // C++:  bool cv::ml::DTrees::getTruncatePrunedTree()
@@ -195,25 +195,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setTruncatePrunedTree
+     *
      * @return automatically generated
      */
     public boolean getTruncatePrunedTree() {
         return getTruncatePrunedTree_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setTruncatePrunedTree(bool val)
     //
 
     /**
-     *  getTruncatePrunedTree SEE: getTruncatePrunedTree
+     * getTruncatePrunedTree SEE: getTruncatePrunedTree
+     *
      * @param val automatically generated
      */
     public void setTruncatePrunedTree(boolean val) {
         setTruncatePrunedTree_0(nativeObj, val);
     }
-
 
     //
     // C++:  float cv::ml::DTrees::getRegressionAccuracy()
@@ -221,25 +221,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setRegressionAccuracy
+     *
      * @return automatically generated
      */
     public float getRegressionAccuracy() {
         return getRegressionAccuracy_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setRegressionAccuracy(float val)
     //
 
     /**
-     *  getRegressionAccuracy SEE: getRegressionAccuracy
+     * getRegressionAccuracy SEE: getRegressionAccuracy
+     *
      * @param val automatically generated
      */
     public void setRegressionAccuracy(float val) {
         setRegressionAccuracy_0(nativeObj, val);
     }
-
 
     //
     // C++:  Mat cv::ml::DTrees::getPriors()
@@ -247,25 +247,25 @@ public class DTrees extends StatModel {
 
     /**
      * SEE: setPriors
+     *
      * @return automatically generated
      */
     public Mat getPriors() {
         return new Mat(getPriors_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::ml::DTrees::setPriors(Mat val)
     //
 
     /**
-     *  getPriors SEE: getPriors
+     * getPriors SEE: getPriors
+     *
      * @param val automatically generated
      */
     public void setPriors(Mat val) {
         setPriors_0(nativeObj, val.nativeObj);
     }
-
 
     //
     // C++: static Ptr_DTrees cv::ml::DTrees::create()
@@ -274,15 +274,15 @@ public class DTrees extends StatModel {
     /**
      * Creates the empty model
      *
-     *     The static method creates empty decision tree with the specified parameters. It should be then
-     *     trained using train method (see StatModel::train). Alternatively, you can load the model from
-     *     file using Algorithm::load&lt;DTrees&gt;(filename).
+     * <p>The static method creates empty decision tree with the specified parameters. It should be
+     * then trained using train method (see StatModel::train). Alternatively, you can load the model
+     * from file using Algorithm::load&lt;DTrees&gt;(filename).
+     *
      * @return automatically generated
      */
     public static DTrees create() {
         return DTrees.__fromPtr__(create_0());
     }
-
 
     //
     // C++: static Ptr_DTrees cv::ml::DTrees::load(String filepath, String nodeName = String())
@@ -291,9 +291,9 @@ public class DTrees extends StatModel {
     /**
      * Loads and creates a serialized DTrees from a file
      *
-     * Use DTree::save to serialize and store an DTree to disk.
-     * Load the DTree from this file again, by calling this function with the path to the file.
-     * Optionally specify the node for the file containing the classifier
+     * <p>Use DTree::save to serialize and store an DTree to disk. Load the DTree from this file
+     * again, by calling this function with the path to the file. Optionally specify the node for
+     * the file containing the classifier
      *
      * @param filepath path to serialized DTree
      * @param nodeName name of node containing the classifier
@@ -306,9 +306,9 @@ public class DTrees extends StatModel {
     /**
      * Loads and creates a serialized DTrees from a file
      *
-     * Use DTree::save to serialize and store an DTree to disk.
-     * Load the DTree from this file again, by calling this function with the path to the file.
-     * Optionally specify the node for the file containing the classifier
+     * <p>Use DTree::save to serialize and store an DTree to disk. Load the DTree from this file
+     * again, by calling this function with the path to the file. Optionally specify the node for
+     * the file containing the classifier
      *
      * @param filepath path to serialized DTree
      * @return automatically generated
@@ -317,13 +317,10 @@ public class DTrees extends StatModel {
         return DTrees.__fromPtr__(load_1(filepath));
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  int cv::ml::DTrees::getMaxCategories()
     private static native int getMaxCategories_0(long nativeObj);
@@ -384,9 +381,9 @@ public class DTrees extends StatModel {
 
     // C++: static Ptr_DTrees cv::ml::DTrees::load(String filepath, String nodeName = String())
     private static native long load_0(String filepath, String nodeName);
+
     private static native long load_1(String filepath);
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

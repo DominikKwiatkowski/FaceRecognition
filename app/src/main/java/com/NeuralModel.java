@@ -1,5 +1,11 @@
 package com;
 
+import static org.junit.Assert.assertEquals;
+import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
+import static org.opencv.imgproc.Imgproc.warpAffine;
+
+import static java.lang.Math.atan2;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -27,14 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import static java.lang.Math.atan2;
-import static org.junit.Assert.assertEquals;
-import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
-import static org.opencv.imgproc.Imgproc.warpAffine;
-
-/**
- * Represents neural model. User can define which one will be used.
- */
+/** Represents neural model. User can define which one will be used. */
 public class NeuralModel {
     private final int inputSize = 160;
     private final int outputSize = 128;
@@ -55,7 +54,7 @@ public class NeuralModel {
     /**
      * Class constructor.
      *
-     * @param context     actual Activity
+     * @param context actual Activity
      * @param nameOfModel name of model to be used. All models must be inside ml folder
      */
     public NeuralModel(Context context, String nameOfModel) {
@@ -63,8 +62,7 @@ public class NeuralModel {
         this.nameOfModel = nameOfModel;
 
         try {
-            model = new Interpreter(FileUtil.loadMappedFile(context,
-                    this.nameOfModel));
+            model = new Interpreter(FileUtil.loadMappedFile(context, this.nameOfModel));
         } catch (IOException e) {
             Log.e(TAG + nameOfModel, "Error reading model", e);
         }
@@ -152,7 +150,7 @@ public class NeuralModel {
      *
      * @param frame image on which faces will be found
      * @return MatOfRect matrix of all face rectangular. Face rectangular is beginning point and
-     * Size
+     *     Size
      */
     public MatOfRect detectAllFaces(Mat frame) {
         Mat frameGray = new Mat();
@@ -167,7 +165,7 @@ public class NeuralModel {
     /**
      * Try to rotate face and trim rest of photo.
      *
-     * @param face          image of face which will be preprocessed
+     * @param face image of face which will be preprocessed
      * @param detectedFaces Rect of this face
      * @return Matrix of preprocessed face
      */
@@ -187,7 +185,7 @@ public class NeuralModel {
     /**
      * Try to rotate face and trim rest of photo.
      *
-     * @param frame         image with many faces which will be preprocessed
+     * @param frame image with many faces which will be preprocessed
      * @param detectedFaces Rect of this face
      * @return Matrix of all faces after trimming and rotatiton
      */
@@ -213,18 +211,17 @@ public class NeuralModel {
     /**
      * Rotate image by eye.
      *
-     * @param image    image with face which will rotated
+     * @param image image with face which will rotated
      * @param eyeArray Array of eyes. It has to have 2 elements
      * @return image after rotation
      */
     private Mat rotateImageByEye(Mat image, Rect[] eyeArray) {
         assertEquals("Wrong number of eyes", 2, eyeArray.length);
 
-        double delta_x = (eyeArray[0].x + eyeArray[0].width) -
-                (eyeArray[1].x + eyeArray[1].width);
+        double delta_x = (eyeArray[0].x + eyeArray[0].width) - (eyeArray[1].x + eyeArray[1].width);
 
-        double delta_y = (eyeArray[0].y + eyeArray[0].height) -
-                (eyeArray[1].y + eyeArray[1].height);
+        double delta_y =
+                (eyeArray[0].y + eyeArray[0].height) - (eyeArray[1].y + eyeArray[1].height);
 
         double angle = atan2(delta_y, delta_x);
         int rows = image.rows();

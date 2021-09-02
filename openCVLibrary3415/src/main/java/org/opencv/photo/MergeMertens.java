@@ -3,31 +3,34 @@
 //
 package org.opencv.photo;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
-import org.opencv.photo.MergeExposures;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class MergeMertens
 /**
  * Pixels are weighted using contrast, saturation and well-exposedness measures, than images are
  * combined using laplacian pyramids.
  *
- * The resulting image weight is constructed as weighted average of contrast, saturation and
+ * <p>The resulting image weight is constructed as weighted average of contrast, saturation and
  * well-exposedness measures.
  *
- * The resulting image doesn't require tonemapping and can be converted to 8-bit image by multiplying
- * by 255, but it's recommended to apply gamma correction and/or linear tonemapping.
+ * <p>The resulting image doesn't require tonemapping and can be converted to 8-bit image by
+ * multiplying by 255, but it's recommended to apply gamma correction and/or linear tonemapping.
  *
- * For more information see CITE: MK07 .
+ * <p>For more information see CITE: MK07 .
  */
 public class MergeMertens extends MergeExposures {
 
-    protected MergeMertens(long addr) { super(addr); }
+    protected MergeMertens(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static MergeMertens __fromPtr__(long addr) { return new MergeMertens(addr); }
+    public static MergeMertens __fromPtr__(long addr) {
+        return new MergeMertens(addr);
+    }
 
     //
     // C++:  void cv::MergeMertens::process(vector_Mat src, Mat& dst, Mat times, Mat response)
@@ -38,7 +41,6 @@ public class MergeMertens extends MergeExposures {
         process_0(nativeObj, src_mat.nativeObj, dst.nativeObj, times.nativeObj, response.nativeObj);
     }
 
-
     //
     // C++:  void cv::MergeMertens::process(vector_Mat src, Mat& dst)
     //
@@ -46,14 +48,13 @@ public class MergeMertens extends MergeExposures {
     /**
      * Short version of process, that doesn't take extra arguments.
      *
-     *     @param src vector of input images
-     *     @param dst result image
+     * @param src vector of input images
+     * @param dst result image
      */
     public void process(List<Mat> src, Mat dst) {
         Mat src_mat = Converters.vector_Mat_to_Mat(src);
         process_1(nativeObj, src_mat.nativeObj, dst.nativeObj);
     }
-
 
     //
     // C++:  float cv::MergeMertens::getContrastWeight()
@@ -63,7 +64,6 @@ public class MergeMertens extends MergeExposures {
         return getContrastWeight_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::MergeMertens::setContrastWeight(float contrast_weiht)
     //
@@ -71,7 +71,6 @@ public class MergeMertens extends MergeExposures {
     public void setContrastWeight(float contrast_weiht) {
         setContrastWeight_0(nativeObj, contrast_weiht);
     }
-
 
     //
     // C++:  float cv::MergeMertens::getSaturationWeight()
@@ -81,7 +80,6 @@ public class MergeMertens extends MergeExposures {
         return getSaturationWeight_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::MergeMertens::setSaturationWeight(float saturation_weight)
     //
@@ -89,7 +87,6 @@ public class MergeMertens extends MergeExposures {
     public void setSaturationWeight(float saturation_weight) {
         setSaturationWeight_0(nativeObj, saturation_weight);
     }
-
 
     //
     // C++:  float cv::MergeMertens::getExposureWeight()
@@ -99,7 +96,6 @@ public class MergeMertens extends MergeExposures {
         return getExposureWeight_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::MergeMertens::setExposureWeight(float exposure_weight)
     //
@@ -108,19 +104,22 @@ public class MergeMertens extends MergeExposures {
         setExposureWeight_0(nativeObj, exposure_weight);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
-
-
     // C++:  void cv::MergeMertens::process(vector_Mat src, Mat& dst, Mat times, Mat response)
-    private static native void process_0(long nativeObj, long src_mat_nativeObj, long dst_nativeObj, long times_nativeObj, long response_nativeObj);
+    private static native void process_0(
+            long nativeObj,
+            long src_mat_nativeObj,
+            long dst_nativeObj,
+            long times_nativeObj,
+            long response_nativeObj);
 
     // C++:  void cv::MergeMertens::process(vector_Mat src, Mat& dst)
-    private static native void process_1(long nativeObj, long src_mat_nativeObj, long dst_nativeObj);
+    private static native void process_1(
+            long nativeObj, long src_mat_nativeObj, long dst_nativeObj);
 
     // C++:  float cv::MergeMertens::getContrastWeight()
     private static native float getContrastWeight_0(long nativeObj);
@@ -142,5 +141,4 @@ public class MergeMertens extends MergeExposures {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

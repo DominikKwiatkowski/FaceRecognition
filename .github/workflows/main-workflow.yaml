@@ -1,0 +1,28 @@
+name: Main Workflow
+
+on:
+  # Triggers the workflow on every pull request to master branch
+  pull_request:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  google-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code.
+        uses: actions/checkout@v2 # v2 required
+      - name: Reformat the code.
+        uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--aosp --replace"
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code.
+        uses: actions/checkout@v2 # v2 required
+      - name: Build the app.
+        run: ./gradlew app:build

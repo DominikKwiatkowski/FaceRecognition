@@ -7,7 +7,7 @@
     tools:context=".AddFace">
 
   <ImageView
-      android:id="@+id/imageView"
+      android:id="@+id/selectedImage"
       android:layout_width="300dp"
       android:layout_height="291dp"
       android:layout_marginTop="44dp"
@@ -27,7 +27,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.495"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/imageView" />
+      app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
   <Button
       android:id="@+id/AddUser"
@@ -59,7 +59,7 @@
       android:layout_marginEnd="52dp"
       android:text="Zrób zdjęcie"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/imageView" />
+      app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
   <Button
       android:id="@+id/addFromCamera"
@@ -70,6 +70,6 @@
       android:onClick="choosePhoto"
       android:text="Wybierz zdjęcia"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/imageView" />
+      app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

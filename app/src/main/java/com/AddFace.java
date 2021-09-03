@@ -4,11 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+
+import org.opencv.android.Utils;
 import org.opencv.imgcodecs.Imgcodecs;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.UserDatabase.UserDatabase;
 import com.UserDatabase.UserRecord;
@@ -16,10 +22,15 @@ import com.UserDatabase.UserRecord;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class AddFace extends AppCompatActivity {
 
     private static final int PICK_PHOTO = 1;
     boolean filePickerMode;
+    ImageView currentFaceImage = null;
+    Button addButton = null;
     private Imgcodecs imageCodecs = null;
     NeuralModel model = null;
     UserDatabase userDatabase = null;
@@ -29,6 +40,11 @@ public class AddFace extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_face);
+
+        currentFaceImage = findViewById(R.id.selectedImage);
+        addButton = findViewById(R.id.addUser);
+        //addButton.setClickable(false);
+        //addButton.setAlpha(0.5f);
 
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
@@ -47,6 +63,7 @@ public class AddFace extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Process picked image
         if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
             processImage(data.getData());
         }
@@ -58,6 +75,7 @@ public class AddFace extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO);
     }
+
 
     public void cancel(View view) {
         finish();
@@ -78,10 +96,24 @@ public class AddFace extends AppCompatActivity {
      * ...
      */
     private void processImage(Uri photo) {
-        Mat image = imageCodecs.imread(photo.toString());
+        InputStream stream = null;
+        try {
+            stream = getContentResolver().openInputStream(photo);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+        bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
+        Mat image = new Mat();
+        Utils.bitmapToMat(bmp, image);
         Mat face = model.preProcessOneFace(image);
+        bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(face, bmp);
+        currentFaceImage.setImageBitmap(bmp);
         currentFaceVector = model.resizeAndProcess(face)[0];
+        //addButton.setClickable(true);
+        //addButton.setAlpha(1f);
     }
 
 }
-

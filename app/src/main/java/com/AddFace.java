@@ -28,24 +28,25 @@ import java.io.InputStream;
 public class AddFace extends AppCompatActivity {
 
     private static final int PICK_PHOTO = 1;
-    boolean filePickerMode;
     ImageView currentFaceImage = null;
     Button addButton = null;
     private Imgcodecs imageCodecs = null;
+    // NeuralModel singleton reference
     NeuralModel model = null;
+    // UserDatabase singleton reference
     UserDatabase userDatabase = null;
+    // Vector representation of face found on selected photo
     float[] currentFaceVector = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_face);
-
         currentFaceImage = findViewById(R.id.selectedImage);
         addButton = findViewById(R.id.addUser);
+        // Disable add button before photo selected
         addButton.setClickable(false);
         addButton.setAlpha(0.5f);
-
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
         // Get network model instance

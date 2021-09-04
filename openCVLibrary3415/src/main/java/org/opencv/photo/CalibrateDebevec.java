@@ -3,22 +3,25 @@
 //
 package org.opencv.photo;
 
-import org.opencv.photo.CalibrateCRF;
 
 // C++: class CalibrateDebevec
 /**
- * Inverse camera response function is extracted for each brightness value by minimizing an objective
- * function as linear system. Objective function is constructed using pixel values on the same position
- * in all images, extra term is added to make the result smoother.
+ * Inverse camera response function is extracted for each brightness value by minimizing an
+ * objective function as linear system. Objective function is constructed using pixel values on the
+ * same position in all images, extra term is added to make the result smoother.
  *
- * For more information see CITE: DM97 .
+ * <p>For more information see CITE: DM97 .
  */
 public class CalibrateDebevec extends CalibrateCRF {
 
-    protected CalibrateDebevec(long addr) { super(addr); }
+    protected CalibrateDebevec(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static CalibrateDebevec __fromPtr__(long addr) { return new CalibrateDebevec(addr); }
+    public static CalibrateDebevec __fromPtr__(long addr) {
+        return new CalibrateDebevec(addr);
+    }
 
     //
     // C++:  float cv::CalibrateDebevec::getLambda()
@@ -28,7 +31,6 @@ public class CalibrateDebevec extends CalibrateCRF {
         return getLambda_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::CalibrateDebevec::setLambda(float lambda)
     //
@@ -36,7 +38,6 @@ public class CalibrateDebevec extends CalibrateCRF {
     public void setLambda(float lambda) {
         setLambda_0(nativeObj, lambda);
     }
-
 
     //
     // C++:  int cv::CalibrateDebevec::getSamples()
@@ -46,7 +47,6 @@ public class CalibrateDebevec extends CalibrateCRF {
         return getSamples_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::CalibrateDebevec::setSamples(int samples)
     //
@@ -54,7 +54,6 @@ public class CalibrateDebevec extends CalibrateCRF {
     public void setSamples(int samples) {
         setSamples_0(nativeObj, samples);
     }
-
 
     //
     // C++:  bool cv::CalibrateDebevec::getRandom()
@@ -64,7 +63,6 @@ public class CalibrateDebevec extends CalibrateCRF {
         return getRandom_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::CalibrateDebevec::setRandom(bool random)
     //
@@ -73,13 +71,10 @@ public class CalibrateDebevec extends CalibrateCRF {
         setRandom_0(nativeObj, random);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  float cv::CalibrateDebevec::getLambda()
     private static native float getLambda_0(long nativeObj);
@@ -101,5 +96,4 @@ public class CalibrateDebevec extends CalibrateCRF {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

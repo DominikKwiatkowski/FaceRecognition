@@ -3,32 +3,31 @@
 //
 package org.opencv.features2d;
 
-import org.opencv.features2d.FastFeatureDetector;
-import org.opencv.features2d.Feature2D;
 
 // C++: class FastFeatureDetector
-/**
- * Wrapping class for feature detection using the FAST method. :
- */
+/** Wrapping class for feature detection using the FAST method. : */
 public class FastFeatureDetector extends Feature2D {
 
-    protected FastFeatureDetector(long addr) { super(addr); }
+    protected FastFeatureDetector(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static FastFeatureDetector __fromPtr__(long addr) { return new FastFeatureDetector(addr); }
+    public static FastFeatureDetector __fromPtr__(long addr) {
+        return new FastFeatureDetector(addr);
+    }
 
     // C++: enum <unnamed>
-    public static final int
-            TYPE_5_8 = 0,
+    public static final int TYPE_5_8 = 0,
             TYPE_7_12 = 1,
             TYPE_9_16 = 2,
             THRESHOLD = 10000,
             NONMAX_SUPPRESSION = 10001,
             FAST_N = 10002;
 
-
     //
-    // C++: static Ptr_FastFeatureDetector cv::FastFeatureDetector::create(int threshold = 10, bool nonmaxSuppression = true, int type = FastFeatureDetector::TYPE_9_16)
+    // C++: static Ptr_FastFeatureDetector cv::FastFeatureDetector::create(int threshold = 10, bool
+    // nonmaxSuppression = true, int type = FastFeatureDetector::TYPE_9_16)
     //
 
     public static FastFeatureDetector create(int threshold, boolean nonmaxSuppression, int type) {
@@ -47,7 +46,6 @@ public class FastFeatureDetector extends Feature2D {
         return FastFeatureDetector.__fromPtr__(create_3());
     }
 
-
     //
     // C++:  void cv::FastFeatureDetector::setThreshold(int threshold)
     //
@@ -55,7 +53,6 @@ public class FastFeatureDetector extends Feature2D {
     public void setThreshold(int threshold) {
         setThreshold_0(nativeObj, threshold);
     }
-
 
     //
     // C++:  int cv::FastFeatureDetector::getThreshold()
@@ -65,7 +62,6 @@ public class FastFeatureDetector extends Feature2D {
         return getThreshold_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FastFeatureDetector::setNonmaxSuppression(bool f)
     //
@@ -73,7 +69,6 @@ public class FastFeatureDetector extends Feature2D {
     public void setNonmaxSuppression(boolean f) {
         setNonmaxSuppression_0(nativeObj, f);
     }
-
 
     //
     // C++:  bool cv::FastFeatureDetector::getNonmaxSuppression()
@@ -83,7 +78,6 @@ public class FastFeatureDetector extends Feature2D {
         return getNonmaxSuppression_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FastFeatureDetector::setType(int type)
     //
@@ -91,7 +85,6 @@ public class FastFeatureDetector extends Feature2D {
     public void setType(int type) {
         setType_0(nativeObj, type);
     }
-
 
     //
     // C++:  int cv::FastFeatureDetector::getType()
@@ -101,7 +94,6 @@ public class FastFeatureDetector extends Feature2D {
         return getType_0(nativeObj);
     }
 
-
     //
     // C++:  String cv::FastFeatureDetector::getDefaultName()
     //
@@ -110,18 +102,19 @@ public class FastFeatureDetector extends Feature2D {
         return getDefaultName_0(nativeObj);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
-
-
-    // C++: static Ptr_FastFeatureDetector cv::FastFeatureDetector::create(int threshold = 10, bool nonmaxSuppression = true, int type = FastFeatureDetector::TYPE_9_16)
+    // C++: static Ptr_FastFeatureDetector cv::FastFeatureDetector::create(int threshold = 10, bool
+    // nonmaxSuppression = true, int type = FastFeatureDetector::TYPE_9_16)
     private static native long create_0(int threshold, boolean nonmaxSuppression, int type);
+
     private static native long create_1(int threshold, boolean nonmaxSuppression);
+
     private static native long create_2(int threshold);
+
     private static native long create_3();
 
     // C++:  void cv::FastFeatureDetector::setThreshold(int threshold)
@@ -147,5 +140,4 @@ public class FastFeatureDetector extends Feature2D {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

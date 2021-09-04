@@ -1,6 +1,6 @@
 package org.opencv.core;
 
-//javadoc:Rect_
+// javadoc:Rect_
 public class Rect {
 
     public int x, y, width, height;

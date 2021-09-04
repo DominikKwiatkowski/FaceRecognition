@@ -1,5 +1,8 @@
 package com;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -28,9 +31,6 @@ import org.tensorflow.lite.support.image.TensorImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
 public class FaceRecognition extends AppCompatActivity {
     static {
         System.loadLibrary("opencv_java3");
@@ -52,21 +52,20 @@ public class FaceRecognition extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Check if permission is already given - if not, ask for it.
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                        this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) !=
-                PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
             permissions.add(Manifest.permission.CAMERA);
         }
 
         if (!permissions.isEmpty()) {
-            ActivityCompat.requestPermissions(this,
-                    permissions.toArray(new String[permissions.size()]), 0);
+            ActivityCompat.requestPermissions(
+                    this, permissions.toArray(new String[permissions.size()]), 0);
         }
 
         // Load OpenCv
@@ -89,15 +88,16 @@ public class FaceRecognition extends AppCompatActivity {
         // Initialize database
         // TODO: Temporary. Later on it should be moved to the model selection menu
         //  (database will be defined per model).
-        userDatabase = new UserDatabase(
-                getApplicationContext(),        // App specific internal storage location
-                "Facenet",        // Model name TODO: temporary
-                128                // Vector size TODO: temporary
-        );
+        userDatabase =
+                new UserDatabase(
+                        getApplicationContext(), // App specific internal storage location
+                        "Facenet", // Model name TODO: temporary
+                        128 // Vector size TODO: temporary
+                        );
     }
 
     /**
-     * @param first  array of floats from neural model, on which norm will be calculated.
+     * @param first array of floats from neural model, on which norm will be calculated.
      * @param second array of floats from neural model, on which norm will be calculated.
      * @return difference between this 2 arrases.
      */
@@ -111,8 +111,8 @@ public class FaceRecognition extends AppCompatActivity {
 
     /**
      * @param requestCode code of request, each request should have unique code.
-     * @param resultCode  result code for operation, defined by android api.
-     * @param data        returned data from intent.
+     * @param resultCode result code for operation, defined by android api.
+     * @param data returned data from intent.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -131,20 +131,19 @@ public class FaceRecognition extends AppCompatActivity {
     /**
      * Function to menage user response within granting permissions.
      *
-     * @param requestCode  code of permission request.
-     * @param permissions  name of permissions, which was requested.
+     * @param requestCode code of permission request.
+     * @param permissions name of permissions, which was requested.
      * @param grantResults result value, it might be for fiew permissions.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 0) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     adb.setTitle("Crucial permission not granted, application will be closed");
-                    adb.setPositiveButton("Tak",
-                            (dialog, which) -> FaceRecognition.super.finish());
+                    adb.setPositiveButton("Tak", (dialog, which) -> FaceRecognition.super.finish());
                     adb.create().show();
                 }
             }

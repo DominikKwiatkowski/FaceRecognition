@@ -3,23 +3,26 @@
 //
 package org.opencv.photo;
 
-import org.opencv.photo.Tonemap;
 
 // C++: class TonemapReinhard
 /**
  * This is a global tonemapping operator that models human visual system.
  *
- * Mapping function is controlled by adaptation parameter, that is computed using light adaptation and
- * color adaptation.
+ * <p>Mapping function is controlled by adaptation parameter, that is computed using light
+ * adaptation and color adaptation.
  *
- * For more information see CITE: RD05 .
+ * <p>For more information see CITE: RD05 .
  */
 public class TonemapReinhard extends Tonemap {
 
-    protected TonemapReinhard(long addr) { super(addr); }
+    protected TonemapReinhard(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static TonemapReinhard __fromPtr__(long addr) { return new TonemapReinhard(addr); }
+    public static TonemapReinhard __fromPtr__(long addr) {
+        return new TonemapReinhard(addr);
+    }
 
     //
     // C++:  float cv::TonemapReinhard::getIntensity()
@@ -29,7 +32,6 @@ public class TonemapReinhard extends Tonemap {
         return getIntensity_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::TonemapReinhard::setIntensity(float intensity)
     //
@@ -37,7 +39,6 @@ public class TonemapReinhard extends Tonemap {
     public void setIntensity(float intensity) {
         setIntensity_0(nativeObj, intensity);
     }
-
 
     //
     // C++:  float cv::TonemapReinhard::getLightAdaptation()
@@ -47,7 +48,6 @@ public class TonemapReinhard extends Tonemap {
         return getLightAdaptation_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::TonemapReinhard::setLightAdaptation(float light_adapt)
     //
@@ -55,7 +55,6 @@ public class TonemapReinhard extends Tonemap {
     public void setLightAdaptation(float light_adapt) {
         setLightAdaptation_0(nativeObj, light_adapt);
     }
-
 
     //
     // C++:  float cv::TonemapReinhard::getColorAdaptation()
@@ -65,7 +64,6 @@ public class TonemapReinhard extends Tonemap {
         return getColorAdaptation_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::TonemapReinhard::setColorAdaptation(float color_adapt)
     //
@@ -74,13 +72,10 @@ public class TonemapReinhard extends Tonemap {
         setColorAdaptation_0(nativeObj, color_adapt);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  float cv::TonemapReinhard::getIntensity()
     private static native float getIntensity_0(long nativeObj);
@@ -102,5 +97,4 @@ public class TonemapReinhard extends Tonemap {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

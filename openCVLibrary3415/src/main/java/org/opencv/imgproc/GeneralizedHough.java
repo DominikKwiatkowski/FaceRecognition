@@ -8,15 +8,17 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
 // C++: class GeneralizedHough
-/**
- * finds arbitrary template in the grayscale image using Generalized Hough Transform
- */
+/** finds arbitrary template in the grayscale image using Generalized Hough Transform */
 public class GeneralizedHough extends Algorithm {
 
-    protected GeneralizedHough(long addr) { super(addr); }
+    protected GeneralizedHough(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static GeneralizedHough __fromPtr__(long addr) { return new GeneralizedHough(addr); }
+    public static GeneralizedHough __fromPtr__(long addr) {
+        return new GeneralizedHough(addr);
+    }
 
     //
     // C++:  void cv::GeneralizedHough::setTemplate(Mat templ, Point templCenter = Point(-1, -1))
@@ -30,19 +32,24 @@ public class GeneralizedHough extends Algorithm {
         setTemplate_1(nativeObj, templ.nativeObj);
     }
 
-
     //
-    // C++:  void cv::GeneralizedHough::setTemplate(Mat edges, Mat dx, Mat dy, Point templCenter = Point(-1, -1))
+    // C++:  void cv::GeneralizedHough::setTemplate(Mat edges, Mat dx, Mat dy, Point templCenter =
+    // Point(-1, -1))
     //
 
     public void setTemplate(Mat edges, Mat dx, Mat dy, Point templCenter) {
-        setTemplate_2(nativeObj, edges.nativeObj, dx.nativeObj, dy.nativeObj, templCenter.x, templCenter.y);
+        setTemplate_2(
+                nativeObj,
+                edges.nativeObj,
+                dx.nativeObj,
+                dy.nativeObj,
+                templCenter.x,
+                templCenter.y);
     }
 
     public void setTemplate(Mat edges, Mat dx, Mat dy) {
         setTemplate_3(nativeObj, edges.nativeObj, dx.nativeObj, dy.nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::detect(Mat image, Mat& positions, Mat& votes = Mat())
@@ -56,19 +63,24 @@ public class GeneralizedHough extends Algorithm {
         detect_1(nativeObj, image.nativeObj, positions.nativeObj);
     }
 
-
     //
-    // C++:  void cv::GeneralizedHough::detect(Mat edges, Mat dx, Mat dy, Mat& positions, Mat& votes = Mat())
+    // C++:  void cv::GeneralizedHough::detect(Mat edges, Mat dx, Mat dy, Mat& positions, Mat& votes
+    // = Mat())
     //
 
     public void detect(Mat edges, Mat dx, Mat dy, Mat positions, Mat votes) {
-        detect_2(nativeObj, edges.nativeObj, dx.nativeObj, dy.nativeObj, positions.nativeObj, votes.nativeObj);
+        detect_2(
+                nativeObj,
+                edges.nativeObj,
+                dx.nativeObj,
+                dy.nativeObj,
+                positions.nativeObj,
+                votes.nativeObj);
     }
 
     public void detect(Mat edges, Mat dx, Mat dy, Mat positions) {
         detect_3(nativeObj, edges.nativeObj, dx.nativeObj, dy.nativeObj, positions.nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::setCannyLowThresh(int cannyLowThresh)
@@ -78,7 +90,6 @@ public class GeneralizedHough extends Algorithm {
         setCannyLowThresh_0(nativeObj, cannyLowThresh);
     }
 
-
     //
     // C++:  int cv::GeneralizedHough::getCannyLowThresh()
     //
@@ -86,7 +97,6 @@ public class GeneralizedHough extends Algorithm {
     public int getCannyLowThresh() {
         return getCannyLowThresh_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::setCannyHighThresh(int cannyHighThresh)
@@ -96,7 +106,6 @@ public class GeneralizedHough extends Algorithm {
         setCannyHighThresh_0(nativeObj, cannyHighThresh);
     }
 
-
     //
     // C++:  int cv::GeneralizedHough::getCannyHighThresh()
     //
@@ -104,7 +113,6 @@ public class GeneralizedHough extends Algorithm {
     public int getCannyHighThresh() {
         return getCannyHighThresh_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::setMinDist(double minDist)
@@ -114,7 +122,6 @@ public class GeneralizedHough extends Algorithm {
         setMinDist_0(nativeObj, minDist);
     }
 
-
     //
     // C++:  double cv::GeneralizedHough::getMinDist()
     //
@@ -122,7 +129,6 @@ public class GeneralizedHough extends Algorithm {
     public double getMinDist() {
         return getMinDist_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::setDp(double dp)
@@ -132,7 +138,6 @@ public class GeneralizedHough extends Algorithm {
         setDp_0(nativeObj, dp);
     }
 
-
     //
     // C++:  double cv::GeneralizedHough::getDp()
     //
@@ -140,7 +145,6 @@ public class GeneralizedHough extends Algorithm {
     public double getDp() {
         return getDp_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::GeneralizedHough::setMaxBufferSize(int maxBufferSize)
@@ -150,7 +154,6 @@ public class GeneralizedHough extends Algorithm {
         setMaxBufferSize_0(nativeObj, maxBufferSize);
     }
 
-
     //
     // C++:  int cv::GeneralizedHough::getMaxBufferSize()
     //
@@ -159,29 +162,53 @@ public class GeneralizedHough extends Algorithm {
         return getMaxBufferSize_0(nativeObj);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
 
-
-
     // C++:  void cv::GeneralizedHough::setTemplate(Mat templ, Point templCenter = Point(-1, -1))
-    private static native void setTemplate_0(long nativeObj, long templ_nativeObj, double templCenter_x, double templCenter_y);
+    private static native void setTemplate_0(
+            long nativeObj, long templ_nativeObj, double templCenter_x, double templCenter_y);
+
     private static native void setTemplate_1(long nativeObj, long templ_nativeObj);
 
-    // C++:  void cv::GeneralizedHough::setTemplate(Mat edges, Mat dx, Mat dy, Point templCenter = Point(-1, -1))
-    private static native void setTemplate_2(long nativeObj, long edges_nativeObj, long dx_nativeObj, long dy_nativeObj, double templCenter_x, double templCenter_y);
-    private static native void setTemplate_3(long nativeObj, long edges_nativeObj, long dx_nativeObj, long dy_nativeObj);
+    // C++:  void cv::GeneralizedHough::setTemplate(Mat edges, Mat dx, Mat dy, Point templCenter =
+    // Point(-1, -1))
+    private static native void setTemplate_2(
+            long nativeObj,
+            long edges_nativeObj,
+            long dx_nativeObj,
+            long dy_nativeObj,
+            double templCenter_x,
+            double templCenter_y);
+
+    private static native void setTemplate_3(
+            long nativeObj, long edges_nativeObj, long dx_nativeObj, long dy_nativeObj);
 
     // C++:  void cv::GeneralizedHough::detect(Mat image, Mat& positions, Mat& votes = Mat())
-    private static native void detect_0(long nativeObj, long image_nativeObj, long positions_nativeObj, long votes_nativeObj);
-    private static native void detect_1(long nativeObj, long image_nativeObj, long positions_nativeObj);
+    private static native void detect_0(
+            long nativeObj, long image_nativeObj, long positions_nativeObj, long votes_nativeObj);
 
-    // C++:  void cv::GeneralizedHough::detect(Mat edges, Mat dx, Mat dy, Mat& positions, Mat& votes = Mat())
-    private static native void detect_2(long nativeObj, long edges_nativeObj, long dx_nativeObj, long dy_nativeObj, long positions_nativeObj, long votes_nativeObj);
-    private static native void detect_3(long nativeObj, long edges_nativeObj, long dx_nativeObj, long dy_nativeObj, long positions_nativeObj);
+    private static native void detect_1(
+            long nativeObj, long image_nativeObj, long positions_nativeObj);
+
+    // C++:  void cv::GeneralizedHough::detect(Mat edges, Mat dx, Mat dy, Mat& positions, Mat& votes
+    // = Mat())
+    private static native void detect_2(
+            long nativeObj,
+            long edges_nativeObj,
+            long dx_nativeObj,
+            long dy_nativeObj,
+            long positions_nativeObj,
+            long votes_nativeObj);
+
+    private static native void detect_3(
+            long nativeObj,
+            long edges_nativeObj,
+            long dx_nativeObj,
+            long dy_nativeObj,
+            long positions_nativeObj);
 
     // C++:  void cv::GeneralizedHough::setCannyLowThresh(int cannyLowThresh)
     private static native void setCannyLowThresh_0(long nativeObj, int cannyLowThresh);
@@ -215,5 +242,4 @@ public class GeneralizedHough extends Algorithm {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

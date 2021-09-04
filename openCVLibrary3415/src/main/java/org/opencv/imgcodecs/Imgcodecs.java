@@ -3,20 +3,19 @@
 //
 package org.opencv.imgcodecs;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
 import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class Imgcodecs
 
 public class Imgcodecs {
 
     // C++: enum <unnamed>
-    public static final int
-            CV_LOAD_IMAGE_UNCHANGED = -1,
+    public static final int CV_LOAD_IMAGE_UNCHANGED = -1,
             CV_LOAD_IMAGE_GRAYSCALE = 0,
             CV_LOAD_IMAGE_COLOR = 1,
             CV_LOAD_IMAGE_ANYDEPTH = 2,
@@ -49,10 +48,8 @@ public class Imgcodecs {
             CV_CVTIMG_FLIP = 1,
             CV_CVTIMG_SWAP_RB = 2;
 
-
     // C++: enum ImreadModes (cv.ImreadModes)
-    public static final int
-            IMREAD_UNCHANGED = -1,
+    public static final int IMREAD_UNCHANGED = -1,
             IMREAD_GRAYSCALE = 0,
             IMREAD_COLOR = 1,
             IMREAD_ANYDEPTH = 2,
@@ -66,16 +63,11 @@ public class Imgcodecs {
             IMREAD_REDUCED_COLOR_8 = 65,
             IMREAD_IGNORE_ORIENTATION = 128;
 
-
     // C++: enum ImwriteEXRTypeFlags (cv.ImwriteEXRTypeFlags)
-    public static final int
-            IMWRITE_EXR_TYPE_HALF = 1,
-            IMWRITE_EXR_TYPE_FLOAT = 2;
-
+    public static final int IMWRITE_EXR_TYPE_HALF = 1, IMWRITE_EXR_TYPE_FLOAT = 2;
 
     // C++: enum ImwriteFlags (cv.ImwriteFlags)
-    public static final int
-            IMWRITE_JPEG_QUALITY = 1,
+    public static final int IMWRITE_JPEG_QUALITY = 1,
             IMWRITE_JPEG_PROGRESSIVE = 2,
             IMWRITE_JPEG_OPTIMIZE = 3,
             IMWRITE_JPEG_RST_INTERVAL = 4,
@@ -93,25 +85,20 @@ public class Imgcodecs {
             IMWRITE_TIFF_YDPI = 258,
             IMWRITE_TIFF_COMPRESSION = 259;
 
-
     // C++: enum ImwritePAMFlags (cv.ImwritePAMFlags)
-    public static final int
-            IMWRITE_PAM_FORMAT_NULL = 0,
+    public static final int IMWRITE_PAM_FORMAT_NULL = 0,
             IMWRITE_PAM_FORMAT_BLACKANDWHITE = 1,
             IMWRITE_PAM_FORMAT_GRAYSCALE = 2,
             IMWRITE_PAM_FORMAT_GRAYSCALE_ALPHA = 3,
             IMWRITE_PAM_FORMAT_RGB = 4,
             IMWRITE_PAM_FORMAT_RGB_ALPHA = 5;
 
-
     // C++: enum ImwritePNGFlags (cv.ImwritePNGFlags)
-    public static final int
-            IMWRITE_PNG_STRATEGY_DEFAULT = 0,
+    public static final int IMWRITE_PNG_STRATEGY_DEFAULT = 0,
             IMWRITE_PNG_STRATEGY_FILTERED = 1,
             IMWRITE_PNG_STRATEGY_HUFFMAN_ONLY = 2,
             IMWRITE_PNG_STRATEGY_RLE = 3,
             IMWRITE_PNG_STRATEGY_FIXED = 4;
-
 
     //
     // C++:  Mat cv::imread(String filename, int flags = IMREAD_COLOR)
@@ -120,90 +107,55 @@ public class Imgcodecs {
     /**
      * Loads an image from a file.
      *
-     *  imread
+     * <p>imread
      *
-     * The function imread loads an image from the specified file and returns it. If the image cannot be
-     * read (because of missing file, improper permissions, unsupported or invalid format), the function
-     * returns an empty matrix ( Mat::data==NULL ).
+     * <p>The function imread loads an image from the specified file and returns it. If the image
+     * cannot be read (because of missing file, improper permissions, unsupported or invalid
+     * format), the function returns an empty matrix ( Mat::data==NULL ).
      *
-     * Currently, the following file formats are supported:
+     * <p>Currently, the following file formats are supported:
      *
      * <ul>
-     *   <li>
-     *    Windows bitmaps - \*.bmp, \*.dib (always supported)
-     *   </li>
-     *   <li>
-     *    JPEG files - \*.jpeg, \*.jpg, \*.jpe (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    JPEG 2000 files - \*.jp2 (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Portable Network Graphics - \*.png (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    WebP - \*.webp (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Portable image format - \*.pbm, \*.pgm, \*.ppm \*.pxm, \*.pnm (always supported)
-     *   </li>
-     *   <li>
-     *    Sun rasters - \*.sr, \*.ras (always supported)
-     *   </li>
-     *   <li>
-     *    TIFF files - \*.tiff, \*.tif (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    OpenEXR Image files - \*.exr (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Radiance HDR - \*.hdr, \*.pic (always supported)
-     *   </li>
-     *   <li>
-     *    Raster and Vector geospatial data supported by GDAL (see the *Note* section)
-     *   </li>
+     *   <li>Windows bitmaps - \*.bmp, \*.dib (always supported)
+     *   <li>JPEG files - \*.jpeg, \*.jpg, \*.jpe (see the *Note* section)
+     *   <li>JPEG 2000 files - \*.jp2 (see the *Note* section)
+     *   <li>Portable Network Graphics - \*.png (see the *Note* section)
+     *   <li>WebP - \*.webp (see the *Note* section)
+     *   <li>Portable image format - \*.pbm, \*.pgm, \*.ppm \*.pxm, \*.pnm (always supported)
+     *   <li>Sun rasters - \*.sr, \*.ras (always supported)
+     *   <li>TIFF files - \*.tiff, \*.tif (see the *Note* section)
+     *   <li>OpenEXR Image files - \*.exr (see the *Note* section)
+     *   <li>Radiance HDR - \*.hdr, \*.pic (always supported)
+     *   <li>Raster and Vector geospatial data supported by GDAL (see the *Note* section)
      * </ul>
      *
      * <b>Note:</b>
+     *
      * <ul>
-     *   <li>
-     *    The function determines the type of an image by the content, not by the file extension.
-     *   </li>
-     *   <li>
-     *    In the case of color images, the decoded images will have the channels stored in <b>B G R</b> order.
-     *   </li>
-     *   <li>
-     *    When using IMREAD_GRAYSCALE, the codec's internal grayscale conversion will be used, if available.
-     *     Results may differ to the output of cvtColor()
-     *   </li>
-     *   <li>
-     *    On Microsoft Windows\* OS and MacOSX\*, the codecs shipped with an OpenCV image (libjpeg,
-     *     libpng, libtiff, and libjasper) are used by default. So, OpenCV can always read JPEGs, PNGs,
-     *     and TIFFs. On MacOSX, there is also an option to use native MacOSX image readers. But beware
-     *     that currently these native image loaders give images with different pixel values because of
-     *     the color management embedded into MacOSX.
-     *   </li>
-     *   <li>
-     *    On Linux\*, BSD flavors and other Unix-like open-source operating systems, OpenCV looks for
-     *     codecs supplied with an OS image. Install the relevant packages (do not forget the development
-     *     files, for example, "libjpeg-dev", in Debian\* and Ubuntu\*) to get the codec support or turn
-     *     on the OPENCV_BUILD_3RDPARTY_LIBS flag in CMake.
-     *   </li>
-     *   <li>
-     *    In the case you set *WITH_GDAL* flag to true in CMake and REF: IMREAD_LOAD_GDAL to load the image,
-     *     then the [GDAL](http://www.gdal.org) driver will be used in order to decode the image, supporting
-     *     the following formats: [Raster](http://www.gdal.org/formats_list.html),
-     *     [Vector](http://www.gdal.org/ogr_formats.html).
-     *   </li>
-     *   <li>
-     *    If EXIF information is embedded in the image file, the EXIF orientation will be taken into account
-     *     and thus the image will be rotated accordingly except if the flags REF: IMREAD_IGNORE_ORIENTATION
-     *     or REF: IMREAD_UNCHANGED are passed.
-     *   </li>
-     *   <li>
-     *    By default number of pixels must be less than 2^30. Limit can be set using system
-     *     variable OPENCV_IO_MAX_IMAGE_PIXELS
-     *   </li>
+     *   <li>The function determines the type of an image by the content, not by the file extension.
+     *   <li>In the case of color images, the decoded images will have the channels stored in <b>B G
+     *       R</b> order.
+     *   <li>When using IMREAD_GRAYSCALE, the codec's internal grayscale conversion will be used, if
+     *       available. Results may differ to the output of cvtColor()
+     *   <li>On Microsoft Windows\* OS and MacOSX\*, the codecs shipped with an OpenCV image
+     *       (libjpeg, libpng, libtiff, and libjasper) are used by default. So, OpenCV can always
+     *       read JPEGs, PNGs, and TIFFs. On MacOSX, there is also an option to use native MacOSX
+     *       image readers. But beware that currently these native image loaders give images with
+     *       different pixel values because of the color management embedded into MacOSX.
+     *   <li>On Linux\*, BSD flavors and other Unix-like open-source operating systems, OpenCV looks
+     *       for codecs supplied with an OS image. Install the relevant packages (do not forget the
+     *       development files, for example, "libjpeg-dev", in Debian\* and Ubuntu\*) to get the
+     *       codec support or turn on the OPENCV_BUILD_3RDPARTY_LIBS flag in CMake.
+     *   <li>In the case you set *WITH_GDAL* flag to true in CMake and REF: IMREAD_LOAD_GDAL to load
+     *       the image, then the [GDAL](http://www.gdal.org) driver will be used in order to decode
+     *       the image, supporting the following formats:
+     *       [Raster](http://www.gdal.org/formats_list.html),
+     *       [Vector](http://www.gdal.org/ogr_formats.html).
+     *   <li>If EXIF information is embedded in the image file, the EXIF orientation will be taken
+     *       into account and thus the image will be rotated accordingly except if the flags REF:
+     *       IMREAD_IGNORE_ORIENTATION or REF: IMREAD_UNCHANGED are passed.
+     *   <li>By default number of pixels must be less than 2^30. Limit can be set using system
+     *       variable OPENCV_IO_MAX_IMAGE_PIXELS
      * </ul>
      *
      * @param filename Name of file to be loaded.
@@ -217,90 +169,55 @@ public class Imgcodecs {
     /**
      * Loads an image from a file.
      *
-     *  imread
+     * <p>imread
      *
-     * The function imread loads an image from the specified file and returns it. If the image cannot be
-     * read (because of missing file, improper permissions, unsupported or invalid format), the function
-     * returns an empty matrix ( Mat::data==NULL ).
+     * <p>The function imread loads an image from the specified file and returns it. If the image
+     * cannot be read (because of missing file, improper permissions, unsupported or invalid
+     * format), the function returns an empty matrix ( Mat::data==NULL ).
      *
-     * Currently, the following file formats are supported:
+     * <p>Currently, the following file formats are supported:
      *
      * <ul>
-     *   <li>
-     *    Windows bitmaps - \*.bmp, \*.dib (always supported)
-     *   </li>
-     *   <li>
-     *    JPEG files - \*.jpeg, \*.jpg, \*.jpe (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    JPEG 2000 files - \*.jp2 (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Portable Network Graphics - \*.png (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    WebP - \*.webp (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Portable image format - \*.pbm, \*.pgm, \*.ppm \*.pxm, \*.pnm (always supported)
-     *   </li>
-     *   <li>
-     *    Sun rasters - \*.sr, \*.ras (always supported)
-     *   </li>
-     *   <li>
-     *    TIFF files - \*.tiff, \*.tif (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    OpenEXR Image files - \*.exr (see the *Note* section)
-     *   </li>
-     *   <li>
-     *    Radiance HDR - \*.hdr, \*.pic (always supported)
-     *   </li>
-     *   <li>
-     *    Raster and Vector geospatial data supported by GDAL (see the *Note* section)
-     *   </li>
+     *   <li>Windows bitmaps - \*.bmp, \*.dib (always supported)
+     *   <li>JPEG files - \*.jpeg, \*.jpg, \*.jpe (see the *Note* section)
+     *   <li>JPEG 2000 files - \*.jp2 (see the *Note* section)
+     *   <li>Portable Network Graphics - \*.png (see the *Note* section)
+     *   <li>WebP - \*.webp (see the *Note* section)
+     *   <li>Portable image format - \*.pbm, \*.pgm, \*.ppm \*.pxm, \*.pnm (always supported)
+     *   <li>Sun rasters - \*.sr, \*.ras (always supported)
+     *   <li>TIFF files - \*.tiff, \*.tif (see the *Note* section)
+     *   <li>OpenEXR Image files - \*.exr (see the *Note* section)
+     *   <li>Radiance HDR - \*.hdr, \*.pic (always supported)
+     *   <li>Raster and Vector geospatial data supported by GDAL (see the *Note* section)
      * </ul>
      *
      * <b>Note:</b>
+     *
      * <ul>
-     *   <li>
-     *    The function determines the type of an image by the content, not by the file extension.
-     *   </li>
-     *   <li>
-     *    In the case of color images, the decoded images will have the channels stored in <b>B G R</b> order.
-     *   </li>
-     *   <li>
-     *    When using IMREAD_GRAYSCALE, the codec's internal grayscale conversion will be used, if available.
-     *     Results may differ to the output of cvtColor()
-     *   </li>
-     *   <li>
-     *    On Microsoft Windows\* OS and MacOSX\*, the codecs shipped with an OpenCV image (libjpeg,
-     *     libpng, libtiff, and libjasper) are used by default. So, OpenCV can always read JPEGs, PNGs,
-     *     and TIFFs. On MacOSX, there is also an option to use native MacOSX image readers. But beware
-     *     that currently these native image loaders give images with different pixel values because of
-     *     the color management embedded into MacOSX.
-     *   </li>
-     *   <li>
-     *    On Linux\*, BSD flavors and other Unix-like open-source operating systems, OpenCV looks for
-     *     codecs supplied with an OS image. Install the relevant packages (do not forget the development
-     *     files, for example, "libjpeg-dev", in Debian\* and Ubuntu\*) to get the codec support or turn
-     *     on the OPENCV_BUILD_3RDPARTY_LIBS flag in CMake.
-     *   </li>
-     *   <li>
-     *    In the case you set *WITH_GDAL* flag to true in CMake and REF: IMREAD_LOAD_GDAL to load the image,
-     *     then the [GDAL](http://www.gdal.org) driver will be used in order to decode the image, supporting
-     *     the following formats: [Raster](http://www.gdal.org/formats_list.html),
-     *     [Vector](http://www.gdal.org/ogr_formats.html).
-     *   </li>
-     *   <li>
-     *    If EXIF information is embedded in the image file, the EXIF orientation will be taken into account
-     *     and thus the image will be rotated accordingly except if the flags REF: IMREAD_IGNORE_ORIENTATION
-     *     or REF: IMREAD_UNCHANGED are passed.
-     *   </li>
-     *   <li>
-     *    By default number of pixels must be less than 2^30. Limit can be set using system
-     *     variable OPENCV_IO_MAX_IMAGE_PIXELS
-     *   </li>
+     *   <li>The function determines the type of an image by the content, not by the file extension.
+     *   <li>In the case of color images, the decoded images will have the channels stored in <b>B G
+     *       R</b> order.
+     *   <li>When using IMREAD_GRAYSCALE, the codec's internal grayscale conversion will be used, if
+     *       available. Results may differ to the output of cvtColor()
+     *   <li>On Microsoft Windows\* OS and MacOSX\*, the codecs shipped with an OpenCV image
+     *       (libjpeg, libpng, libtiff, and libjasper) are used by default. So, OpenCV can always
+     *       read JPEGs, PNGs, and TIFFs. On MacOSX, there is also an option to use native MacOSX
+     *       image readers. But beware that currently these native image loaders give images with
+     *       different pixel values because of the color management embedded into MacOSX.
+     *   <li>On Linux\*, BSD flavors and other Unix-like open-source operating systems, OpenCV looks
+     *       for codecs supplied with an OS image. Install the relevant packages (do not forget the
+     *       development files, for example, "libjpeg-dev", in Debian\* and Ubuntu\*) to get the
+     *       codec support or turn on the OPENCV_BUILD_3RDPARTY_LIBS flag in CMake.
+     *   <li>In the case you set *WITH_GDAL* flag to true in CMake and REF: IMREAD_LOAD_GDAL to load
+     *       the image, then the [GDAL](http://www.gdal.org) driver will be used in order to decode
+     *       the image, supporting the following formats:
+     *       [Raster](http://www.gdal.org/formats_list.html),
+     *       [Vector](http://www.gdal.org/ogr_formats.html).
+     *   <li>If EXIF information is embedded in the image file, the EXIF orientation will be taken
+     *       into account and thus the image will be rotated accordingly except if the flags REF:
+     *       IMREAD_IGNORE_ORIENTATION or REF: IMREAD_UNCHANGED are passed.
+     *   <li>By default number of pixels must be less than 2^30. Limit can be set using system
+     *       variable OPENCV_IO_MAX_IMAGE_PIXELS
      * </ul>
      *
      * @param filename Name of file to be loaded.
@@ -310,7 +227,6 @@ public class Imgcodecs {
         return new Mat(imread_1(filename));
     }
 
-
     //
     // C++:  bool cv::imreadmulti(String filename, vector_Mat& mats, int flags = IMREAD_ANYCOLOR)
     //
@@ -318,11 +234,12 @@ public class Imgcodecs {
     /**
      * Loads a multi-page image from a file.
      *
-     * The function imreadmulti loads a multi-page image from the specified file into a vector of Mat objects.
+     * <p>The function imreadmulti loads a multi-page image from the specified file into a vector of
+     * Mat objects.
+     *
      * @param filename Name of file to be loaded.
      * @param flags Flag that can take values of cv::ImreadModes, default with cv::IMREAD_ANYCOLOR.
-     * @param mats A vector of Mat objects holding each page, if more than one.
-     * SEE: cv::imread
+     * @param mats A vector of Mat objects holding each page, if more than one. SEE: cv::imread
      * @return automatically generated
      */
     public static boolean imreadmulti(String filename, List<Mat> mats, int flags) {
@@ -336,10 +253,11 @@ public class Imgcodecs {
     /**
      * Loads a multi-page image from a file.
      *
-     * The function imreadmulti loads a multi-page image from the specified file into a vector of Mat objects.
+     * <p>The function imreadmulti loads a multi-page image from the specified file into a vector of
+     * Mat objects.
+     *
      * @param filename Name of file to be loaded.
-     * @param mats A vector of Mat objects holding each page, if more than one.
-     * SEE: cv::imread
+     * @param mats A vector of Mat objects holding each page, if more than one. SEE: cv::imread
      * @return automatically generated
      */
     public static boolean imreadmulti(String filename, List<Mat> mats) {
@@ -350,7 +268,6 @@ public class Imgcodecs {
         return retVal;
     }
 
-
     //
     // C++:  bool cv::imwrite(String filename, Mat img, vector_int params = std::vector<int>())
     //
@@ -358,41 +275,40 @@ public class Imgcodecs {
     /**
      * Saves an image to a specified file.
      *
-     * The function imwrite saves the image to the specified file. The image format is chosen based on the
-     * filename extension (see cv::imread for the list of extensions). In general, only 8-bit
-     * single-channel or 3-channel (with 'BGR' channel order) images
-     * can be saved using this function, with these exceptions:
+     * <p>The function imwrite saves the image to the specified file. The image format is chosen
+     * based on the filename extension (see cv::imread for the list of extensions). In general, only
+     * 8-bit single-channel or 3-channel (with 'BGR' channel order) images can be saved using this
+     * function, with these exceptions:
      *
      * <ul>
-     *   <li>
-     *  16-bit unsigned (CV_16U) images can be saved in the case of PNG, JPEG 2000, and TIFF formats
-     *   </li>
-     *   <li>
-     *  32-bit float (CV_32F) images can be saved in TIFF, OpenEXR, and Radiance HDR formats; 3-channel
-     * (CV_32FC3) TIFF images will be saved using the LogLuv high dynamic range encoding (4 bytes per pixel)
-     *   </li>
-     *   <li>
-     *  PNG images with an alpha channel can be saved using this function. To do this, create
-     * 8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully transparent pixels
-     * should have alpha set to 0, fully opaque pixels should have alpha set to 255/65535 (see the code sample below).
-     *   </li>
-     *   <li>
-     *  Multiple images (vector of Mat) can be saved in TIFF format (see the code sample below).
-     *   </li>
+     *   <li>16-bit unsigned (CV_16U) images can be saved in the case of PNG, JPEG 2000, and TIFF
+     *       formats
+     *   <li>32-bit float (CV_32F) images can be saved in TIFF, OpenEXR, and Radiance HDR formats;
+     *       3-channel (CV_32FC3) TIFF images will be saved using the LogLuv high dynamic range
+     *       encoding (4 bytes per pixel)
+     *   <li>PNG images with an alpha channel can be saved using this function. To do this, create
+     *       8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully
+     *       transparent pixels should have alpha set to 0, fully opaque pixels should have alpha
+     *       set to 255/65535 (see the code sample below).
+     *   <li>Multiple images (vector of Mat) can be saved in TIFF format (see the code sample
+     *       below).
      * </ul>
      *
-     * If the image format is not supported, the image will be converted to 8-bit unsigned (CV_8U) and saved that way.
+     * If the image format is not supported, the image will be converted to 8-bit unsigned (CV_8U)
+     * and saved that way.
      *
-     * If the format, depth or channel order is different, use
-     * Mat::convertTo and cv::cvtColor to convert it before saving. Or, use the universal FileStorage I/O
-     * functions to save the image to XML or YAML format.
+     * <p>If the format, depth or channel order is different, use Mat::convertTo and cv::cvtColor to
+     * convert it before saving. Or, use the universal FileStorage I/O functions to save the image
+     * to XML or YAML format.
      *
-     * The sample below shows how to create a BGRA image, how to set custom compression parameters and save it to a PNG file.
-     * It also demonstrates how to save multiple images in a TIFF file:
-     * INCLUDE: snippets/imgcodecs_imwrite.cpp
+     * <p>The sample below shows how to create a BGRA image, how to set custom compression
+     * parameters and save it to a PNG file. It also demonstrates how to save multiple images in a
+     * TIFF file: INCLUDE: snippets/imgcodecs_imwrite.cpp
+     *
      * @param filename Name of the file.
      * @param img (Mat or vector of Mat) Image or Images to be saved.
-     * @param params Format-specific parameters encoded as pairs (paramId_1, paramValue_1, paramId_2, paramValue_2, ... .) see cv::ImwriteFlags
+     * @param params Format-specific parameters encoded as pairs (paramId_1, paramValue_1,
+     *     paramId_2, paramValue_2, ... .) see cv::ImwriteFlags
      * @return automatically generated
      */
     public static boolean imwrite(String filename, Mat img, MatOfInt params) {
@@ -403,38 +319,36 @@ public class Imgcodecs {
     /**
      * Saves an image to a specified file.
      *
-     * The function imwrite saves the image to the specified file. The image format is chosen based on the
-     * filename extension (see cv::imread for the list of extensions). In general, only 8-bit
-     * single-channel or 3-channel (with 'BGR' channel order) images
-     * can be saved using this function, with these exceptions:
+     * <p>The function imwrite saves the image to the specified file. The image format is chosen
+     * based on the filename extension (see cv::imread for the list of extensions). In general, only
+     * 8-bit single-channel or 3-channel (with 'BGR' channel order) images can be saved using this
+     * function, with these exceptions:
      *
      * <ul>
-     *   <li>
-     *  16-bit unsigned (CV_16U) images can be saved in the case of PNG, JPEG 2000, and TIFF formats
-     *   </li>
-     *   <li>
-     *  32-bit float (CV_32F) images can be saved in TIFF, OpenEXR, and Radiance HDR formats; 3-channel
-     * (CV_32FC3) TIFF images will be saved using the LogLuv high dynamic range encoding (4 bytes per pixel)
-     *   </li>
-     *   <li>
-     *  PNG images with an alpha channel can be saved using this function. To do this, create
-     * 8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully transparent pixels
-     * should have alpha set to 0, fully opaque pixels should have alpha set to 255/65535 (see the code sample below).
-     *   </li>
-     *   <li>
-     *  Multiple images (vector of Mat) can be saved in TIFF format (see the code sample below).
-     *   </li>
+     *   <li>16-bit unsigned (CV_16U) images can be saved in the case of PNG, JPEG 2000, and TIFF
+     *       formats
+     *   <li>32-bit float (CV_32F) images can be saved in TIFF, OpenEXR, and Radiance HDR formats;
+     *       3-channel (CV_32FC3) TIFF images will be saved using the LogLuv high dynamic range
+     *       encoding (4 bytes per pixel)
+     *   <li>PNG images with an alpha channel can be saved using this function. To do this, create
+     *       8-bit (or 16-bit) 4-channel image BGRA, where the alpha channel goes last. Fully
+     *       transparent pixels should have alpha set to 0, fully opaque pixels should have alpha
+     *       set to 255/65535 (see the code sample below).
+     *   <li>Multiple images (vector of Mat) can be saved in TIFF format (see the code sample
+     *       below).
      * </ul>
      *
-     * If the image format is not supported, the image will be converted to 8-bit unsigned (CV_8U) and saved that way.
+     * If the image format is not supported, the image will be converted to 8-bit unsigned (CV_8U)
+     * and saved that way.
      *
-     * If the format, depth or channel order is different, use
-     * Mat::convertTo and cv::cvtColor to convert it before saving. Or, use the universal FileStorage I/O
-     * functions to save the image to XML or YAML format.
+     * <p>If the format, depth or channel order is different, use Mat::convertTo and cv::cvtColor to
+     * convert it before saving. Or, use the universal FileStorage I/O functions to save the image
+     * to XML or YAML format.
      *
-     * The sample below shows how to create a BGRA image, how to set custom compression parameters and save it to a PNG file.
-     * It also demonstrates how to save multiple images in a TIFF file:
-     * INCLUDE: snippets/imgcodecs_imwrite.cpp
+     * <p>The sample below shows how to create a BGRA image, how to set custom compression
+     * parameters and save it to a PNG file. It also demonstrates how to save multiple images in a
+     * TIFF file: INCLUDE: snippets/imgcodecs_imwrite.cpp
+     *
      * @param filename Name of the file.
      * @param img (Mat or vector of Mat) Image or Images to be saved.
      * @return automatically generated
@@ -443,9 +357,9 @@ public class Imgcodecs {
         return imwrite_1(filename, img.nativeObj);
     }
 
-
     //
-    // C++:  bool cv::imwritemulti(String filename, vector_Mat img, vector_int params = std::vector<int>())
+    // C++:  bool cv::imwritemulti(String filename, vector_Mat img, vector_int params =
+    // std::vector<int>())
     //
 
     public static boolean imwritemulti(String filename, List<Mat> img, MatOfInt params) {
@@ -459,7 +373,6 @@ public class Imgcodecs {
         return imwritemulti_1(filename, img_mat.nativeObj);
     }
 
-
     //
     // C++:  Mat cv::imdecode(Mat buf, int flags)
     //
@@ -467,12 +380,15 @@ public class Imgcodecs {
     /**
      * Reads an image from a buffer in memory.
      *
-     * The function imdecode reads an image from the specified buffer in the memory. If the buffer is too short or
-     * contains invalid data, the function returns an empty matrix ( Mat::data==NULL ).
+     * <p>The function imdecode reads an image from the specified buffer in the memory. If the
+     * buffer is too short or contains invalid data, the function returns an empty matrix (
+     * Mat::data==NULL ).
      *
-     * See cv::imread for the list of supported formats and flags description.
+     * <p>See cv::imread for the list of supported formats and flags description.
      *
-     * <b>Note:</b> In the case of color images, the decoded images will have the channels stored in <b>B G R</b> order.
+     * <p><b>Note:</b> In the case of color images, the decoded images will have the channels stored
+     * in <b>B G R</b> order.
+     *
      * @param buf Input array or vector of bytes.
      * @param flags The same flags as in cv::imread, see cv::ImreadModes.
      * @return automatically generated
@@ -481,16 +397,17 @@ public class Imgcodecs {
         return new Mat(imdecode_0(buf.nativeObj, flags));
     }
 
-
     //
-    // C++:  bool cv::imencode(String ext, Mat img, vector_uchar& buf, vector_int params = std::vector<int>())
+    // C++:  bool cv::imencode(String ext, Mat img, vector_uchar& buf, vector_int params =
+    // std::vector<int>())
     //
 
     /**
      * Encodes an image into a memory buffer.
      *
-     * The function imencode compresses the image and stores it in the memory buffer that is resized to fit the
-     * result. See cv::imwrite for the list of supported formats and flags description.
+     * <p>The function imencode compresses the image and stores it in the memory buffer that is
+     * resized to fit the result. See cv::imwrite for the list of supported formats and flags
+     * description.
      *
      * @param ext File extension that defines the output format.
      * @param img Image to be written.
@@ -507,8 +424,9 @@ public class Imgcodecs {
     /**
      * Encodes an image into a memory buffer.
      *
-     * The function imencode compresses the image and stores it in the memory buffer that is resized to fit the
-     * result. See cv::imwrite for the list of supported formats and flags description.
+     * <p>The function imencode compresses the image and stores it in the memory buffer that is
+     * resized to fit the result. See cv::imwrite for the list of supported formats and flags
+     * description.
      *
      * @param ext File extension that defines the output format.
      * @param img Image to be written.
@@ -520,30 +438,38 @@ public class Imgcodecs {
         return imencode_1(ext, img.nativeObj, buf_mat.nativeObj);
     }
 
-
-
-
     // C++:  Mat cv::imread(String filename, int flags = IMREAD_COLOR)
     private static native long imread_0(String filename, int flags);
+
     private static native long imread_1(String filename);
 
     // C++:  bool cv::imreadmulti(String filename, vector_Mat& mats, int flags = IMREAD_ANYCOLOR)
-    private static native boolean imreadmulti_0(String filename, long mats_mat_nativeObj, int flags);
+    private static native boolean imreadmulti_0(
+            String filename, long mats_mat_nativeObj, int flags);
+
     private static native boolean imreadmulti_1(String filename, long mats_mat_nativeObj);
 
     // C++:  bool cv::imwrite(String filename, Mat img, vector_int params = std::vector<int>())
-    private static native boolean imwrite_0(String filename, long img_nativeObj, long params_mat_nativeObj);
+    private static native boolean imwrite_0(
+            String filename, long img_nativeObj, long params_mat_nativeObj);
+
     private static native boolean imwrite_1(String filename, long img_nativeObj);
 
-    // C++:  bool cv::imwritemulti(String filename, vector_Mat img, vector_int params = std::vector<int>())
-    private static native boolean imwritemulti_0(String filename, long img_mat_nativeObj, long params_mat_nativeObj);
+    // C++:  bool cv::imwritemulti(String filename, vector_Mat img, vector_int params =
+    // std::vector<int>())
+    private static native boolean imwritemulti_0(
+            String filename, long img_mat_nativeObj, long params_mat_nativeObj);
+
     private static native boolean imwritemulti_1(String filename, long img_mat_nativeObj);
 
     // C++:  Mat cv::imdecode(Mat buf, int flags)
     private static native long imdecode_0(long buf_nativeObj, int flags);
 
-    // C++:  bool cv::imencode(String ext, Mat img, vector_uchar& buf, vector_int params = std::vector<int>())
-    private static native boolean imencode_0(String ext, long img_nativeObj, long buf_mat_nativeObj, long params_mat_nativeObj);
-    private static native boolean imencode_1(String ext, long img_nativeObj, long buf_mat_nativeObj);
+    // C++:  bool cv::imencode(String ext, Mat img, vector_uchar& buf, vector_int params =
+    // std::vector<int>())
+    private static native boolean imencode_0(
+            String ext, long img_nativeObj, long buf_mat_nativeObj, long params_mat_nativeObj);
 
+    private static native boolean imencode_1(
+            String ext, long img_nativeObj, long buf_mat_nativeObj);
 }

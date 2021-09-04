@@ -20,9 +20,7 @@ public class FrameProcessTask implements Runnable {
         model = new NeuralModel(context, "Facenet-optimized.tflite");
     }
 
-    /**
-     * Get newest frame and proceed it. It will end only if user call setStop(true).
-     */
+    /** Get newest frame and proceed it. It will end only if user call setStop(true). */
     @Override
     public void run() {
         // On beggining change stop value to false
@@ -30,8 +28,7 @@ public class FrameProcessTask implements Runnable {
 
         while (true) {
             // Check if thread should stop.
-            if (stop)
-                return;
+            if (stop) return;
 
             // Get frame. Set frame to null to avoid doing same operation twice.
             Mat inputFrame = getFrame();
@@ -45,7 +42,7 @@ public class FrameProcessTask implements Runnable {
                 // TODO: we have to proceed this input and put some number to face, and apply
                 // TODO: face detection for frame operation.
 
-                //Pre process all images
+                // Pre process all images
                 ArrayList<Mat> faceImages = model.preProcessAllFaces(inputFrame, faces);
 
                 // Calculate vector for each face
@@ -66,7 +63,6 @@ public class FrameProcessTask implements Runnable {
             }
         }
     }
-
 
     /**
      * Thread safe function to get last frame.

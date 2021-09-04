@@ -3,32 +3,37 @@
 //
 package org.opencv.ml;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.opencv.core.Mat;
-import org.opencv.ml.TrainData;
-import org.opencv.utils.Converters;
+
+import java.util.List;
 
 // C++: class TrainData
 /**
  * Class encapsulating training data.
  *
- * Please note that the class only specifies the interface of training data, but not implementation.
- * All the statistical model classes in _ml_ module accepts Ptr&lt;TrainData&gt; as parameter. In other
- * words, you can create your own class derived from TrainData and pass smart pointer to the instance
- * of this class into StatModel::train.
+ * <p>Please note that the class only specifies the interface of training data, but not
+ * implementation. All the statistical model classes in _ml_ module accepts Ptr&lt;TrainData&gt; as
+ * parameter. In other words, you can create your own class derived from TrainData and pass smart
+ * pointer to the instance of this class into StatModel::train.
  *
- * SEE: REF: ml_intro_data
+ * <p>SEE: REF: ml_intro_data
  */
 public class TrainData {
 
     protected final long nativeObj;
-    protected TrainData(long addr) { nativeObj = addr; }
 
-    public long getNativeObjAddr() { return nativeObj; }
+    protected TrainData(long addr) {
+        nativeObj = addr;
+    }
+
+    public long getNativeObjAddr() {
+        return nativeObj;
+    }
 
     // internal usage only
-    public static TrainData __fromPtr__(long addr) { return new TrainData(addr); }
+    public static TrainData __fromPtr__(long addr) {
+        return new TrainData(addr);
+    }
 
     //
     // C++:  int cv::ml::TrainData::getLayout()
@@ -38,7 +43,6 @@ public class TrainData {
         return getLayout_0(nativeObj);
     }
 
-
     //
     // C++:  int cv::ml::TrainData::getNTrainSamples()
     //
@@ -46,7 +50,6 @@ public class TrainData {
     public int getNTrainSamples() {
         return getNTrainSamples_0(nativeObj);
     }
-
 
     //
     // C++:  int cv::ml::TrainData::getNTestSamples()
@@ -56,7 +59,6 @@ public class TrainData {
         return getNTestSamples_0(nativeObj);
     }
 
-
     //
     // C++:  int cv::ml::TrainData::getNSamples()
     //
@@ -64,7 +66,6 @@ public class TrainData {
     public int getNSamples() {
         return getNSamples_0(nativeObj);
     }
-
 
     //
     // C++:  int cv::ml::TrainData::getNVars()
@@ -74,7 +75,6 @@ public class TrainData {
         return getNVars_0(nativeObj);
     }
 
-
     //
     // C++:  int cv::ml::TrainData::getNAllVars()
     //
@@ -82,7 +82,6 @@ public class TrainData {
     public int getNAllVars() {
         return getNAllVars_0(nativeObj);
     }
-
 
     //
     // C++:  void cv::ml::TrainData::getSample(Mat varIdx, int sidx, float* buf)
@@ -92,7 +91,6 @@ public class TrainData {
         getSample_0(nativeObj, varIdx.nativeObj, sidx, buf);
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getSamples()
     //
@@ -100,7 +98,6 @@ public class TrainData {
     public Mat getSamples() {
         return new Mat(getSamples_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getMissing()
@@ -110,23 +107,23 @@ public class TrainData {
         return new Mat(getMissing_0(nativeObj));
     }
 
-
     //
-    // C++:  Mat cv::ml::TrainData::getTrainSamples(int layout = ROW_SAMPLE, bool compressSamples = true, bool compressVars = true)
+    // C++:  Mat cv::ml::TrainData::getTrainSamples(int layout = ROW_SAMPLE, bool compressSamples =
+    // true, bool compressVars = true)
     //
 
     /**
      * Returns matrix of train samples
      *
-     *     @param layout The requested layout. If it's different from the initial one, the matrix is
-     *         transposed. See ml::SampleTypes.
-     *     @param compressSamples if true, the function returns only the training samples (specified by
-     *         sampleIdx)
-     *     @param compressVars if true, the function returns the shorter training samples, containing only
-     *         the active variables.
-     *
-     *     In current implementation the function tries to avoid physical data copying and returns the
-     *     matrix stored inside TrainData (unless the transposition or compression is needed).
+     * @param layout The requested layout. If it's different from the initial one, the matrix is
+     *     transposed. See ml::SampleTypes.
+     * @param compressSamples if true, the function returns only the training samples (specified by
+     *     sampleIdx)
+     * @param compressVars if true, the function returns the shorter training samples, containing
+     *     only the active variables.
+     *     <p>In current implementation the function tries to avoid physical data copying and
+     *     returns the matrix stored inside TrainData (unless the transposition or compression is
+     *     needed).
      * @return automatically generated
      */
     public Mat getTrainSamples(int layout, boolean compressSamples, boolean compressVars) {
@@ -136,14 +133,13 @@ public class TrainData {
     /**
      * Returns matrix of train samples
      *
-     *     @param layout The requested layout. If it's different from the initial one, the matrix is
-     *         transposed. See ml::SampleTypes.
-     *     @param compressSamples if true, the function returns only the training samples (specified by
-     *         sampleIdx)
-     *         the active variables.
-     *
-     *     In current implementation the function tries to avoid physical data copying and returns the
-     *     matrix stored inside TrainData (unless the transposition or compression is needed).
+     * @param layout The requested layout. If it's different from the initial one, the matrix is
+     *     transposed. See ml::SampleTypes.
+     * @param compressSamples if true, the function returns only the training samples (specified by
+     *     sampleIdx) the active variables.
+     *     <p>In current implementation the function tries to avoid physical data copying and
+     *     returns the matrix stored inside TrainData (unless the transposition or compression is
+     *     needed).
      * @return automatically generated
      */
     public Mat getTrainSamples(int layout, boolean compressSamples) {
@@ -153,13 +149,11 @@ public class TrainData {
     /**
      * Returns matrix of train samples
      *
-     *     @param layout The requested layout. If it's different from the initial one, the matrix is
-     *         transposed. See ml::SampleTypes.
-     *         sampleIdx)
-     *         the active variables.
-     *
-     *     In current implementation the function tries to avoid physical data copying and returns the
-     *     matrix stored inside TrainData (unless the transposition or compression is needed).
+     * @param layout The requested layout. If it's different from the initial one, the matrix is
+     *     transposed. See ml::SampleTypes. sampleIdx) the active variables.
+     *     <p>In current implementation the function tries to avoid physical data copying and
+     *     returns the matrix stored inside TrainData (unless the transposition or compression is
+     *     needed).
      * @return automatically generated
      */
     public Mat getTrainSamples(int layout) {
@@ -169,18 +163,16 @@ public class TrainData {
     /**
      * Returns matrix of train samples
      *
-     *         transposed. See ml::SampleTypes.
-     *         sampleIdx)
-     *         the active variables.
+     * <p>transposed. See ml::SampleTypes. sampleIdx) the active variables.
      *
-     *     In current implementation the function tries to avoid physical data copying and returns the
-     *     matrix stored inside TrainData (unless the transposition or compression is needed).
+     * <p>In current implementation the function tries to avoid physical data copying and returns
+     * the matrix stored inside TrainData (unless the transposition or compression is needed).
+     *
      * @return automatically generated
      */
     public Mat getTrainSamples() {
         return new Mat(getTrainSamples_3(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getTrainResponses()
@@ -189,14 +181,14 @@ public class TrainData {
     /**
      * Returns the vector of responses
      *
-     *     The function returns ordered or the original categorical responses. Usually it's used in
-     *     regression algorithms.
+     * <p>The function returns ordered or the original categorical responses. Usually it's used in
+     * regression algorithms.
+     *
      * @return automatically generated
      */
     public Mat getTrainResponses() {
         return new Mat(getTrainResponses_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getTrainNormCatResponses()
@@ -205,15 +197,15 @@ public class TrainData {
     /**
      * Returns the vector of normalized categorical responses
      *
-     *     The function returns vector of responses. Each response is integer from {@code 0} to `&lt;number of
-     *     classes&gt;-1`. The actual label value can be retrieved then from the class label vector, see
-     *     TrainData::getClassLabels.
+     * <p>The function returns vector of responses. Each response is integer from {@code 0} to
+     * `&lt;number of classes&gt;-1`. The actual label value can be retrieved then from the class
+     * label vector, see TrainData::getClassLabels.
+     *
      * @return automatically generated
      */
     public Mat getTrainNormCatResponses() {
         return new Mat(getTrainNormCatResponses_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getTestResponses()
@@ -223,7 +215,6 @@ public class TrainData {
         return new Mat(getTestResponses_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getTestNormCatResponses()
     //
@@ -231,7 +222,6 @@ public class TrainData {
     public Mat getTestNormCatResponses() {
         return new Mat(getTestNormCatResponses_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getResponses()
@@ -241,7 +231,6 @@ public class TrainData {
         return new Mat(getResponses_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getNormCatResponses()
     //
@@ -249,7 +238,6 @@ public class TrainData {
     public Mat getNormCatResponses() {
         return new Mat(getNormCatResponses_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getSampleWeights()
@@ -259,7 +247,6 @@ public class TrainData {
         return new Mat(getSampleWeights_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getTrainSampleWeights()
     //
@@ -267,7 +254,6 @@ public class TrainData {
     public Mat getTrainSampleWeights() {
         return new Mat(getTrainSampleWeights_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getTestSampleWeights()
@@ -277,7 +263,6 @@ public class TrainData {
         return new Mat(getTestSampleWeights_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getVarIdx()
     //
@@ -285,7 +270,6 @@ public class TrainData {
     public Mat getVarIdx() {
         return new Mat(getVarIdx_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getVarType()
@@ -295,7 +279,6 @@ public class TrainData {
         return new Mat(getVarType_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getVarSymbolFlags()
     //
@@ -303,7 +286,6 @@ public class TrainData {
     public Mat getVarSymbolFlags() {
         return new Mat(getVarSymbolFlags_0(nativeObj));
     }
-
 
     //
     // C++:  int cv::ml::TrainData::getResponseType()
@@ -313,7 +295,6 @@ public class TrainData {
         return getResponseType_0(nativeObj);
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getTrainSampleIdx()
     //
@@ -321,7 +302,6 @@ public class TrainData {
     public Mat getTrainSampleIdx() {
         return new Mat(getTrainSampleIdx_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getTestSampleIdx()
@@ -331,7 +311,6 @@ public class TrainData {
         return new Mat(getTestSampleIdx_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::ml::TrainData::getValues(int vi, Mat sidx, float* values)
     //
@@ -339,7 +318,6 @@ public class TrainData {
     public void getValues(int vi, Mat sidx, float values) {
         getValues_0(nativeObj, vi, sidx.nativeObj, values);
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getDefaultSubstValues()
@@ -349,7 +327,6 @@ public class TrainData {
         return new Mat(getDefaultSubstValues_0(nativeObj));
     }
 
-
     //
     // C++:  int cv::ml::TrainData::getCatCount(int vi)
     //
@@ -358,7 +335,6 @@ public class TrainData {
         return getCatCount_0(nativeObj, vi);
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getClassLabels()
     //
@@ -366,13 +342,13 @@ public class TrainData {
     /**
      * Returns the vector of class labels
      *
-     *     The function returns vector of unique labels occurred in the responses.
+     * <p>The function returns vector of unique labels occurred in the responses.
+     *
      * @return automatically generated
      */
     public Mat getClassLabels() {
         return new Mat(getClassLabels_0(nativeObj));
     }
-
 
     //
     // C++:  Mat cv::ml::TrainData::getCatOfs()
@@ -382,7 +358,6 @@ public class TrainData {
         return new Mat(getCatOfs_0(nativeObj));
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getCatMap()
     //
@@ -391,14 +366,14 @@ public class TrainData {
         return new Mat(getCatMap_0(nativeObj));
     }
 
-
     //
     // C++:  void cv::ml::TrainData::setTrainTestSplit(int count, bool shuffle = true)
     //
 
     /**
-     * Splits the training data into the training and test parts
-     *     SEE: TrainData::setTrainTestSplitRatio
+     * Splits the training data into the training and test parts SEE:
+     * TrainData::setTrainTestSplitRatio
+     *
      * @param count automatically generated
      * @param shuffle automatically generated
      */
@@ -407,14 +382,14 @@ public class TrainData {
     }
 
     /**
-     * Splits the training data into the training and test parts
-     *     SEE: TrainData::setTrainTestSplitRatio
+     * Splits the training data into the training and test parts SEE:
+     * TrainData::setTrainTestSplitRatio
+     *
      * @param count automatically generated
      */
     public void setTrainTestSplit(int count) {
         setTrainTestSplit_1(nativeObj, count);
     }
-
 
     //
     // C++:  void cv::ml::TrainData::setTrainTestSplitRatio(double ratio, bool shuffle = true)
@@ -423,11 +398,11 @@ public class TrainData {
     /**
      * Splits the training data into the training and test parts
      *
-     *     The function selects a subset of specified relative size and then returns it as the training
-     *     set. If the function is not called, all the data is used for training. Please, note that for
-     *     each of TrainData::getTrain\* there is corresponding TrainData::getTest\*, so that the test
-     *     subset can be retrieved and processed as well.
-     *     SEE: TrainData::setTrainTestSplit
+     * <p>The function selects a subset of specified relative size and then returns it as the
+     * training set. If the function is not called, all the data is used for training. Please, note
+     * that for each of TrainData::getTrain\* there is corresponding TrainData::getTest\*, so that
+     * the test subset can be retrieved and processed as well. SEE: TrainData::setTrainTestSplit
+     *
      * @param ratio automatically generated
      * @param shuffle automatically generated
      */
@@ -438,17 +413,16 @@ public class TrainData {
     /**
      * Splits the training data into the training and test parts
      *
-     *     The function selects a subset of specified relative size and then returns it as the training
-     *     set. If the function is not called, all the data is used for training. Please, note that for
-     *     each of TrainData::getTrain\* there is corresponding TrainData::getTest\*, so that the test
-     *     subset can be retrieved and processed as well.
-     *     SEE: TrainData::setTrainTestSplit
+     * <p>The function selects a subset of specified relative size and then returns it as the
+     * training set. If the function is not called, all the data is used for training. Please, note
+     * that for each of TrainData::getTrain\* there is corresponding TrainData::getTest\*, so that
+     * the test subset can be retrieved and processed as well. SEE: TrainData::setTrainTestSplit
+     *
      * @param ratio automatically generated
      */
     public void setTrainTestSplitRatio(double ratio) {
         setTrainTestSplitRatio_1(nativeObj, ratio);
     }
-
 
     //
     // C++:  void cv::ml::TrainData::shuffleTrainTest()
@@ -458,19 +432,18 @@ public class TrainData {
         shuffleTrainTest_0(nativeObj);
     }
 
-
     //
     // C++:  Mat cv::ml::TrainData::getTestSamples()
     //
 
     /**
      * Returns matrix of test samples
+     *
      * @return automatically generated
      */
     public Mat getTestSamples() {
         return new Mat(getTestSamples_0(nativeObj));
     }
-
 
     //
     // C++:  void cv::ml::TrainData::getNames(vector_String names)
@@ -478,12 +451,12 @@ public class TrainData {
 
     /**
      * Returns vector of symbolic names captured in loadFromCSV()
+     *
      * @param names automatically generated
      */
     public void getNames(List<String> names) {
         getNames_0(nativeObj, names);
     }
-
 
     //
     // C++: static Mat cv::ml::TrainData::getSubVector(Mat vec, Mat idx)
@@ -491,14 +464,14 @@ public class TrainData {
 
     /**
      * Extract from 1D vector elements specified by passed indexes.
-     *     @param vec input vector (supported types: CV_32S, CV_32F, CV_64F)
-     *     @param idx 1D index vector
+     *
+     * @param vec input vector (supported types: CV_32S, CV_32F, CV_64F)
+     * @param idx 1D index vector
      * @return automatically generated
      */
     public static Mat getSubVector(Mat vec, Mat idx) {
         return new Mat(getSubVector_0(vec.nativeObj, idx.nativeObj));
     }
-
 
     //
     // C++: static Mat cv::ml::TrainData::getSubMatrix(Mat matrix, Mat idx, int layout)
@@ -506,142 +479,169 @@ public class TrainData {
 
     /**
      * Extract from matrix rows/cols specified by passed indexes.
-     *     @param matrix input matrix (supported types: CV_32S, CV_32F, CV_64F)
-     *     @param idx 1D index vector
-     *     @param layout specifies to extract rows (cv::ml::ROW_SAMPLES) or to extract columns (cv::ml::COL_SAMPLES)
+     *
+     * @param matrix input matrix (supported types: CV_32S, CV_32F, CV_64F)
+     * @param idx 1D index vector
+     * @param layout specifies to extract rows (cv::ml::ROW_SAMPLES) or to extract columns
+     *     (cv::ml::COL_SAMPLES)
      * @return automatically generated
      */
     public static Mat getSubMatrix(Mat matrix, Mat idx, int layout) {
         return new Mat(getSubMatrix_0(matrix.nativeObj, idx.nativeObj, layout));
     }
 
-
     //
-    // C++: static Ptr_TrainData cv::ml::TrainData::create(Mat samples, int layout, Mat responses, Mat varIdx = Mat(), Mat sampleIdx = Mat(), Mat sampleWeights = Mat(), Mat varType = Mat())
+    // C++: static Ptr_TrainData cv::ml::TrainData::create(Mat samples, int layout, Mat responses,
+    // Mat varIdx = Mat(), Mat sampleIdx = Mat(), Mat sampleWeights = Mat(), Mat varType = Mat())
     //
 
     /**
      * Creates training data from in-memory arrays.
      *
-     *     @param samples matrix of samples. It should have CV_32F type.
-     *     @param layout see ml::SampleTypes.
-     *     @param responses matrix of responses. If the responses are scalar, they should be stored as a
-     *         single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
-     *         former case the responses are considered as ordered by default; in the latter case - as
-     *         categorical)
-     *     @param varIdx vector specifying which variables to use for training. It can be an integer vector
-     *         (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a mask of
-     *         active variables.
-     *     @param sampleIdx vector specifying which samples to use for training. It can be an integer
-     *         vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a mask
-     *         of training samples.
-     *     @param sampleWeights optional vector with weights for each sample. It should have CV_32F type.
-     *     @param varType optional vector of type CV_8U and size `&lt;number_of_variables_in_samples&gt; +
-     *         &lt;number_of_variables_in_responses&gt;`, containing types of each input and output variable. See
-     *         ml::VariableTypes.
+     * @param samples matrix of samples. It should have CV_32F type.
+     * @param layout see ml::SampleTypes.
+     * @param responses matrix of responses. If the responses are scalar, they should be stored as a
+     *     single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
+     *     former case the responses are considered as ordered by default; in the latter case - as
+     *     categorical)
+     * @param varIdx vector specifying which variables to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a
+     *     mask of active variables.
+     * @param sampleIdx vector specifying which samples to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a
+     *     mask of training samples.
+     * @param sampleWeights optional vector with weights for each sample. It should have CV_32F
+     *     type.
+     * @param varType optional vector of type CV_8U and size `&lt;number_of_variables_in_samples&gt;
+     *     + &lt;number_of_variables_in_responses&gt;`, containing types of each input and output
+     *     variable. See ml::VariableTypes.
      * @return automatically generated
      */
-    public static TrainData create(Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx, Mat sampleWeights, Mat varType) {
-        return TrainData.__fromPtr__(create_0(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj, sampleIdx.nativeObj, sampleWeights.nativeObj, varType.nativeObj));
+    public static TrainData create(
+            Mat samples,
+            int layout,
+            Mat responses,
+            Mat varIdx,
+            Mat sampleIdx,
+            Mat sampleWeights,
+            Mat varType) {
+        return TrainData.__fromPtr__(
+                create_0(
+                        samples.nativeObj,
+                        layout,
+                        responses.nativeObj,
+                        varIdx.nativeObj,
+                        sampleIdx.nativeObj,
+                        sampleWeights.nativeObj,
+                        varType.nativeObj));
     }
 
     /**
      * Creates training data from in-memory arrays.
      *
-     *     @param samples matrix of samples. It should have CV_32F type.
-     *     @param layout see ml::SampleTypes.
-     *     @param responses matrix of responses. If the responses are scalar, they should be stored as a
-     *         single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
-     *         former case the responses are considered as ordered by default; in the latter case - as
-     *         categorical)
-     *     @param varIdx vector specifying which variables to use for training. It can be an integer vector
-     *         (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a mask of
-     *         active variables.
-     *     @param sampleIdx vector specifying which samples to use for training. It can be an integer
-     *         vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a mask
-     *         of training samples.
-     *     @param sampleWeights optional vector with weights for each sample. It should have CV_32F type.
-     *         &lt;number_of_variables_in_responses&gt;`, containing types of each input and output variable. See
-     *         ml::VariableTypes.
+     * @param samples matrix of samples. It should have CV_32F type.
+     * @param layout see ml::SampleTypes.
+     * @param responses matrix of responses. If the responses are scalar, they should be stored as a
+     *     single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
+     *     former case the responses are considered as ordered by default; in the latter case - as
+     *     categorical)
+     * @param varIdx vector specifying which variables to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a
+     *     mask of active variables.
+     * @param sampleIdx vector specifying which samples to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a
+     *     mask of training samples.
+     * @param sampleWeights optional vector with weights for each sample. It should have CV_32F
+     *     type. &lt;number_of_variables_in_responses&gt;`, containing types of each input and
+     *     output variable. See ml::VariableTypes.
      * @return automatically generated
      */
-    public static TrainData create(Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx, Mat sampleWeights) {
-        return TrainData.__fromPtr__(create_1(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj, sampleIdx.nativeObj, sampleWeights.nativeObj));
+    public static TrainData create(
+            Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx, Mat sampleWeights) {
+        return TrainData.__fromPtr__(
+                create_1(
+                        samples.nativeObj,
+                        layout,
+                        responses.nativeObj,
+                        varIdx.nativeObj,
+                        sampleIdx.nativeObj,
+                        sampleWeights.nativeObj));
     }
 
     /**
      * Creates training data from in-memory arrays.
      *
-     *     @param samples matrix of samples. It should have CV_32F type.
-     *     @param layout see ml::SampleTypes.
-     *     @param responses matrix of responses. If the responses are scalar, they should be stored as a
-     *         single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
-     *         former case the responses are considered as ordered by default; in the latter case - as
-     *         categorical)
-     *     @param varIdx vector specifying which variables to use for training. It can be an integer vector
-     *         (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a mask of
-     *         active variables.
-     *     @param sampleIdx vector specifying which samples to use for training. It can be an integer
-     *         vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a mask
-     *         of training samples.
-     *         &lt;number_of_variables_in_responses&gt;`, containing types of each input and output variable. See
-     *         ml::VariableTypes.
+     * @param samples matrix of samples. It should have CV_32F type.
+     * @param layout see ml::SampleTypes.
+     * @param responses matrix of responses. If the responses are scalar, they should be stored as a
+     *     single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
+     *     former case the responses are considered as ordered by default; in the latter case - as
+     *     categorical)
+     * @param varIdx vector specifying which variables to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a
+     *     mask of active variables.
+     * @param sampleIdx vector specifying which samples to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a
+     *     mask of training samples. &lt;number_of_variables_in_responses&gt;`, containing types of
+     *     each input and output variable. See ml::VariableTypes.
      * @return automatically generated
      */
-    public static TrainData create(Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx) {
-        return TrainData.__fromPtr__(create_2(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj, sampleIdx.nativeObj));
+    public static TrainData create(
+            Mat samples, int layout, Mat responses, Mat varIdx, Mat sampleIdx) {
+        return TrainData.__fromPtr__(
+                create_2(
+                        samples.nativeObj,
+                        layout,
+                        responses.nativeObj,
+                        varIdx.nativeObj,
+                        sampleIdx.nativeObj));
     }
 
     /**
      * Creates training data from in-memory arrays.
      *
-     *     @param samples matrix of samples. It should have CV_32F type.
-     *     @param layout see ml::SampleTypes.
-     *     @param responses matrix of responses. If the responses are scalar, they should be stored as a
-     *         single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
-     *         former case the responses are considered as ordered by default; in the latter case - as
-     *         categorical)
-     *     @param varIdx vector specifying which variables to use for training. It can be an integer vector
-     *         (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a mask of
-     *         active variables.
-     *         vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a mask
-     *         of training samples.
-     *         &lt;number_of_variables_in_responses&gt;`, containing types of each input and output variable. See
-     *         ml::VariableTypes.
+     * @param samples matrix of samples. It should have CV_32F type.
+     * @param layout see ml::SampleTypes.
+     * @param responses matrix of responses. If the responses are scalar, they should be stored as a
+     *     single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
+     *     former case the responses are considered as ordered by default; in the latter case - as
+     *     categorical)
+     * @param varIdx vector specifying which variables to use for training. It can be an integer
+     *     vector (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a
+     *     mask of active variables. vector (CV_32S) containing 0-based sample indices or byte
+     *     vector (CV_8U) containing a mask of training samples.
+     *     &lt;number_of_variables_in_responses&gt;`, containing types of each input and output
+     *     variable. See ml::VariableTypes.
      * @return automatically generated
      */
     public static TrainData create(Mat samples, int layout, Mat responses, Mat varIdx) {
-        return TrainData.__fromPtr__(create_3(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj));
+        return TrainData.__fromPtr__(
+                create_3(samples.nativeObj, layout, responses.nativeObj, varIdx.nativeObj));
     }
 
     /**
      * Creates training data from in-memory arrays.
      *
-     *     @param samples matrix of samples. It should have CV_32F type.
-     *     @param layout see ml::SampleTypes.
-     *     @param responses matrix of responses. If the responses are scalar, they should be stored as a
-     *         single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
-     *         former case the responses are considered as ordered by default; in the latter case - as
-     *         categorical)
-     *         (CV_32S) containing 0-based variable indices or byte vector (CV_8U) containing a mask of
-     *         active variables.
-     *         vector (CV_32S) containing 0-based sample indices or byte vector (CV_8U) containing a mask
-     *         of training samples.
-     *         &lt;number_of_variables_in_responses&gt;`, containing types of each input and output variable. See
-     *         ml::VariableTypes.
+     * @param samples matrix of samples. It should have CV_32F type.
+     * @param layout see ml::SampleTypes.
+     * @param responses matrix of responses. If the responses are scalar, they should be stored as a
+     *     single row or as a single column. The matrix should have type CV_32F or CV_32S (in the
+     *     former case the responses are considered as ordered by default; in the latter case - as
+     *     categorical) (CV_32S) containing 0-based variable indices or byte vector (CV_8U)
+     *     containing a mask of active variables. vector (CV_32S) containing 0-based sample indices
+     *     or byte vector (CV_8U) containing a mask of training samples.
+     *     &lt;number_of_variables_in_responses&gt;`, containing types of each input and output
+     *     variable. See ml::VariableTypes.
      * @return automatically generated
      */
     public static TrainData create(Mat samples, int layout, Mat responses) {
         return TrainData.__fromPtr__(create_4(samples.nativeObj, layout, responses.nativeObj));
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  int cv::ml::TrainData::getLayout()
     private static native int getLayout_0(long nativeObj);
@@ -662,7 +662,8 @@ public class TrainData {
     private static native int getNAllVars_0(long nativeObj);
 
     // C++:  void cv::ml::TrainData::getSample(Mat varIdx, int sidx, float* buf)
-    private static native void getSample_0(long nativeObj, long varIdx_nativeObj, int sidx, float buf);
+    private static native void getSample_0(
+            long nativeObj, long varIdx_nativeObj, int sidx, float buf);
 
     // C++:  Mat cv::ml::TrainData::getSamples()
     private static native long getSamples_0(long nativeObj);
@@ -670,10 +671,16 @@ public class TrainData {
     // C++:  Mat cv::ml::TrainData::getMissing()
     private static native long getMissing_0(long nativeObj);
 
-    // C++:  Mat cv::ml::TrainData::getTrainSamples(int layout = ROW_SAMPLE, bool compressSamples = true, bool compressVars = true)
-    private static native long getTrainSamples_0(long nativeObj, int layout, boolean compressSamples, boolean compressVars);
-    private static native long getTrainSamples_1(long nativeObj, int layout, boolean compressSamples);
+    // C++:  Mat cv::ml::TrainData::getTrainSamples(int layout = ROW_SAMPLE, bool compressSamples =
+    // true, bool compressVars = true)
+    private static native long getTrainSamples_0(
+            long nativeObj, int layout, boolean compressSamples, boolean compressVars);
+
+    private static native long getTrainSamples_1(
+            long nativeObj, int layout, boolean compressSamples);
+
     private static native long getTrainSamples_2(long nativeObj, int layout);
+
     private static native long getTrainSamples_3(long nativeObj);
 
     // C++:  Mat cv::ml::TrainData::getTrainResponses()
@@ -722,7 +729,8 @@ public class TrainData {
     private static native long getTestSampleIdx_0(long nativeObj);
 
     // C++:  void cv::ml::TrainData::getValues(int vi, Mat sidx, float* values)
-    private static native void getValues_0(long nativeObj, int vi, long sidx_nativeObj, float values);
+    private static native void getValues_0(
+            long nativeObj, int vi, long sidx_nativeObj, float values);
 
     // C++:  Mat cv::ml::TrainData::getDefaultSubstValues()
     private static native long getDefaultSubstValues_0(long nativeObj);
@@ -741,10 +749,13 @@ public class TrainData {
 
     // C++:  void cv::ml::TrainData::setTrainTestSplit(int count, bool shuffle = true)
     private static native void setTrainTestSplit_0(long nativeObj, int count, boolean shuffle);
+
     private static native void setTrainTestSplit_1(long nativeObj, int count);
 
     // C++:  void cv::ml::TrainData::setTrainTestSplitRatio(double ratio, bool shuffle = true)
-    private static native void setTrainTestSplitRatio_0(long nativeObj, double ratio, boolean shuffle);
+    private static native void setTrainTestSplitRatio_0(
+            long nativeObj, double ratio, boolean shuffle);
+
     private static native void setTrainTestSplitRatio_1(long nativeObj, double ratio);
 
     // C++:  void cv::ml::TrainData::shuffleTrainTest()
@@ -760,16 +771,41 @@ public class TrainData {
     private static native long getSubVector_0(long vec_nativeObj, long idx_nativeObj);
 
     // C++: static Mat cv::ml::TrainData::getSubMatrix(Mat matrix, Mat idx, int layout)
-    private static native long getSubMatrix_0(long matrix_nativeObj, long idx_nativeObj, int layout);
+    private static native long getSubMatrix_0(
+            long matrix_nativeObj, long idx_nativeObj, int layout);
 
-    // C++: static Ptr_TrainData cv::ml::TrainData::create(Mat samples, int layout, Mat responses, Mat varIdx = Mat(), Mat sampleIdx = Mat(), Mat sampleWeights = Mat(), Mat varType = Mat())
-    private static native long create_0(long samples_nativeObj, int layout, long responses_nativeObj, long varIdx_nativeObj, long sampleIdx_nativeObj, long sampleWeights_nativeObj, long varType_nativeObj);
-    private static native long create_1(long samples_nativeObj, int layout, long responses_nativeObj, long varIdx_nativeObj, long sampleIdx_nativeObj, long sampleWeights_nativeObj);
-    private static native long create_2(long samples_nativeObj, int layout, long responses_nativeObj, long varIdx_nativeObj, long sampleIdx_nativeObj);
-    private static native long create_3(long samples_nativeObj, int layout, long responses_nativeObj, long varIdx_nativeObj);
-    private static native long create_4(long samples_nativeObj, int layout, long responses_nativeObj);
+    // C++: static Ptr_TrainData cv::ml::TrainData::create(Mat samples, int layout, Mat responses,
+    // Mat varIdx = Mat(), Mat sampleIdx = Mat(), Mat sampleWeights = Mat(), Mat varType = Mat())
+    private static native long create_0(
+            long samples_nativeObj,
+            int layout,
+            long responses_nativeObj,
+            long varIdx_nativeObj,
+            long sampleIdx_nativeObj,
+            long sampleWeights_nativeObj,
+            long varType_nativeObj);
+
+    private static native long create_1(
+            long samples_nativeObj,
+            int layout,
+            long responses_nativeObj,
+            long varIdx_nativeObj,
+            long sampleIdx_nativeObj,
+            long sampleWeights_nativeObj);
+
+    private static native long create_2(
+            long samples_nativeObj,
+            int layout,
+            long responses_nativeObj,
+            long varIdx_nativeObj,
+            long sampleIdx_nativeObj);
+
+    private static native long create_3(
+            long samples_nativeObj, int layout, long responses_nativeObj, long varIdx_nativeObj);
+
+    private static native long create_4(
+            long samples_nativeObj, int layout, long responses_nativeObj);
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

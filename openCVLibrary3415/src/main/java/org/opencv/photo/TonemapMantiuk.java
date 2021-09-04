@@ -3,7 +3,6 @@
 //
 package org.opencv.photo;
 
-import org.opencv.photo.Tonemap;
 
 // C++: class TonemapMantiuk
 /**
@@ -11,14 +10,18 @@ import org.opencv.photo.Tonemap;
  * transforms contrast values to HVS response and scales the response. After this the image is
  * reconstructed from new contrast values.
  *
- * For more information see CITE: MM06 .
+ * <p>For more information see CITE: MM06 .
  */
 public class TonemapMantiuk extends Tonemap {
 
-    protected TonemapMantiuk(long addr) { super(addr); }
+    protected TonemapMantiuk(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static TonemapMantiuk __fromPtr__(long addr) { return new TonemapMantiuk(addr); }
+    public static TonemapMantiuk __fromPtr__(long addr) {
+        return new TonemapMantiuk(addr);
+    }
 
     //
     // C++:  float cv::TonemapMantiuk::getScale()
@@ -28,7 +31,6 @@ public class TonemapMantiuk extends Tonemap {
         return getScale_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::TonemapMantiuk::setScale(float scale)
     //
@@ -36,7 +38,6 @@ public class TonemapMantiuk extends Tonemap {
     public void setScale(float scale) {
         setScale_0(nativeObj, scale);
     }
-
 
     //
     // C++:  float cv::TonemapMantiuk::getSaturation()
@@ -46,7 +47,6 @@ public class TonemapMantiuk extends Tonemap {
         return getSaturation_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::TonemapMantiuk::setSaturation(float saturation)
     //
@@ -55,13 +55,10 @@ public class TonemapMantiuk extends Tonemap {
         setSaturation_0(nativeObj, saturation);
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  float cv::TonemapMantiuk::getScale()
     private static native float getScale_0(long nativeObj);
@@ -77,5 +74,4 @@ public class TonemapMantiuk extends Tonemap {
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

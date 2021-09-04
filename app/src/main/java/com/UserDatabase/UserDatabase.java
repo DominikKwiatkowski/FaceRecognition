@@ -1,5 +1,7 @@
 package com.UserDatabase;
 
+import static org.junit.Assert.assertEquals;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -7,6 +9,8 @@ import com.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+
+import common.VectorOperations;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,12 +21,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-
-import common.VectorOperations;
-
-import static org.junit.Assert.assertEquals;
 
 public class UserDatabase {
     private final String LogTag = "Database";
@@ -38,14 +37,13 @@ public class UserDatabase {
     private final Type userDatabaseType;
     private Map<String, UserRecord> usersRecords;
 
-
     public UserDatabase(Context appContext, String databaseName, int vectorLength) {
         this.AppContext = appContext;
-        this.DatabaseFile = new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
+        this.DatabaseFile =
+                new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
         this.Id = databaseName;
         this.VectorLength = vectorLength;
-        this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {
-        }.getType();
+        this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {}.getType();
 
         usersRecords = new HashMap<String, UserRecord>();
 
@@ -54,8 +52,8 @@ public class UserDatabase {
     }
 
     /**
-     * Find closest record from the database. Algorithm and time complexity is dependent
-     * on database type.
+     * Find closest record from the database. Algorithm and time complexity is dependent on database
+     * type.
      *
      * @param vector of n-dimensions, for which the closest equivalent wil be found.
      * @return closest UserRecord.
@@ -68,7 +66,11 @@ public class UserDatabase {
 
             for (String user : usersRecords.keySet()) {
                 double prevMinDist = minDist;
-                minDist = Math.min(minDist, VectorOperations.cosineSimilarity(vector, usersRecords.get(user).vector));
+                minDist =
+                        Math.min(
+                                minDist,
+                                VectorOperations.cosineSimilarity(
+                                        vector, usersRecords.get(user).vector));
 
                 if (minDist < prevMinDist) {
                     closestRecord = usersRecords.get(user);
@@ -98,7 +100,8 @@ public class UserDatabase {
             }
 
             // Serialize database immediately
-            // TODO: Later on it might be reasonable to save database on application closure (faster)
+            // TODO: Later on it might be reasonable to save database on application closure
+            // (faster)
             saveDatabase();
         } else {
             throw new AssertionError("Incorrect vector length");
@@ -116,7 +119,8 @@ public class UserDatabase {
             usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
-            // TODO: Later on it might be reasonable to save database on application closure (faster)
+            // TODO: Later on it might be reasonable to save database on application closure
+            // (faster)
             saveDatabase();
         } else {
             throw new AssertionError("Incorrect vector length");
@@ -124,8 +128,7 @@ public class UserDatabase {
     }
 
     /**
-     * Remove userRecord by user name.
-     * Grants that there will be no user with given user name.
+     * Remove userRecord by user name. Grants that there will be no user with given user name.
      *
      * @param userName of the user to remove.
      */
@@ -138,8 +141,8 @@ public class UserDatabase {
     }
 
     /**
-     * Remove userRecord by UserRecord object.
-     * Grants that there will be no user with given user name.
+     * Remove userRecord by UserRecord object. Grants that there will be no user with given user
+     * name.
      *
      * @param userRecord to remove.
      */
@@ -183,9 +186,7 @@ public class UserDatabase {
         return usersSet.toArray(new String[0]);
     }
 
-    /**
-     * Deserialize user database.
-     */
+    /** Deserialize user database. */
     public void loadDatabase() {
         StringBuilder databaseString = new StringBuilder();
 
@@ -212,7 +213,8 @@ public class UserDatabase {
         String serializedUserRecords = databaseJson.get("UserRecords").getAsString();
 
         // Validate database
-        // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
+        // TODO: Later it might be better to throw exception here (in order to display dialog box or
+        // sth)
         assertEquals("Wrong type of database", Id, loadedId);
         assertEquals("Wrong size of database", VectorLength, loadedVectorLength);
 
@@ -223,9 +225,7 @@ public class UserDatabase {
         Log.d(LogTag, "Database file successfully loaded");
     }
 
-    /**
-     * Serialize user database.
-     */
+    /** Serialize user database. */
     public void saveDatabase() {
 
         // Serialize userRecords to Json
@@ -251,9 +251,7 @@ public class UserDatabase {
         Log.d(LogTag, "Database file successfully saved");
     }
 
-    /**
-     * Load sample database from resource files.
-     */
+    /** Load sample database from resource files. */
     public void loadSampleDatabase() {
         // Load sample_database.json from resources to a String
         String resourceString;
@@ -280,7 +278,8 @@ public class UserDatabase {
         String serializedUserRecords = databaseJson.get("UserRecords").getAsString();
 
         // Validate database
-        // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
+        // TODO: Later it might be better to throw exception here (in order to display dialog box or
+        // sth)
         assertEquals("Wrong type of database", Id, loadedId);
         assertEquals("Wrong size of database", VectorLength, loadedVectorLength);
 

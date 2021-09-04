@@ -3,19 +3,19 @@
 //
 package org.opencv.video;
 
-import org.opencv.video.DenseOpticalFlow;
-import org.opencv.video.FarnebackOpticalFlow;
 
 // C++: class FarnebackOpticalFlow
-/**
- * Class computing a dense optical flow using the Gunnar Farneback's algorithm.
- */
+/** Class computing a dense optical flow using the Gunnar Farneback's algorithm. */
 public class FarnebackOpticalFlow extends DenseOpticalFlow {
 
-    protected FarnebackOpticalFlow(long addr) { super(addr); }
+    protected FarnebackOpticalFlow(long addr) {
+        super(addr);
+    }
 
     // internal usage only
-    public static FarnebackOpticalFlow __fromPtr__(long addr) { return new FarnebackOpticalFlow(addr); }
+    public static FarnebackOpticalFlow __fromPtr__(long addr) {
+        return new FarnebackOpticalFlow(addr);
+    }
 
     //
     // C++:  int cv::FarnebackOpticalFlow::getNumLevels()
@@ -25,7 +25,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getNumLevels_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setNumLevels(int numLevels)
     //
@@ -33,7 +32,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setNumLevels(int numLevels) {
         setNumLevels_0(nativeObj, numLevels);
     }
-
 
     //
     // C++:  double cv::FarnebackOpticalFlow::getPyrScale()
@@ -43,7 +41,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getPyrScale_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setPyrScale(double pyrScale)
     //
@@ -51,7 +48,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setPyrScale(double pyrScale) {
         setPyrScale_0(nativeObj, pyrScale);
     }
-
 
     //
     // C++:  bool cv::FarnebackOpticalFlow::getFastPyramids()
@@ -61,7 +57,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getFastPyramids_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setFastPyramids(bool fastPyramids)
     //
@@ -69,7 +64,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setFastPyramids(boolean fastPyramids) {
         setFastPyramids_0(nativeObj, fastPyramids);
     }
-
 
     //
     // C++:  int cv::FarnebackOpticalFlow::getWinSize()
@@ -79,7 +73,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getWinSize_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setWinSize(int winSize)
     //
@@ -87,7 +80,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setWinSize(int winSize) {
         setWinSize_0(nativeObj, winSize);
     }
-
 
     //
     // C++:  int cv::FarnebackOpticalFlow::getNumIters()
@@ -97,7 +89,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getNumIters_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setNumIters(int numIters)
     //
@@ -105,7 +96,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setNumIters(int numIters) {
         setNumIters_0(nativeObj, numIters);
     }
-
 
     //
     // C++:  int cv::FarnebackOpticalFlow::getPolyN()
@@ -115,7 +105,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getPolyN_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setPolyN(int polyN)
     //
@@ -123,7 +112,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setPolyN(int polyN) {
         setPolyN_0(nativeObj, polyN);
     }
-
 
     //
     // C++:  double cv::FarnebackOpticalFlow::getPolySigma()
@@ -133,7 +121,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getPolySigma_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setPolySigma(double polySigma)
     //
@@ -141,7 +128,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     public void setPolySigma(double polySigma) {
         setPolySigma_0(nativeObj, polySigma);
     }
-
 
     //
     // C++:  int cv::FarnebackOpticalFlow::getFlags()
@@ -151,7 +137,6 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return getFlags_0(nativeObj);
     }
 
-
     //
     // C++:  void cv::FarnebackOpticalFlow::setFlags(int flags)
     //
@@ -160,32 +145,70 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         setFlags_0(nativeObj, flags);
     }
 
-
     //
-    // C++: static Ptr_FarnebackOpticalFlow cv::FarnebackOpticalFlow::create(int numLevels = 5, double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int polyN = 5, double polySigma = 1.1, int flags = 0)
+    // C++: static Ptr_FarnebackOpticalFlow cv::FarnebackOpticalFlow::create(int numLevels = 5,
+    // double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int
+    // polyN = 5, double polySigma = 1.1, int flags = 0)
     //
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN, double polySigma, int flags) {
-        return FarnebackOpticalFlow.__fromPtr__(create_0(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma, flags));
+    public static FarnebackOpticalFlow create(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN,
+            double polySigma,
+            int flags) {
+        return FarnebackOpticalFlow.__fromPtr__(
+                create_0(
+                        numLevels,
+                        pyrScale,
+                        fastPyramids,
+                        winSize,
+                        numIters,
+                        polyN,
+                        polySigma,
+                        flags));
     }
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN, double polySigma) {
-        return FarnebackOpticalFlow.__fromPtr__(create_1(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma));
+    public static FarnebackOpticalFlow create(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN,
+            double polySigma) {
+        return FarnebackOpticalFlow.__fromPtr__(
+                create_1(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN, polySigma));
     }
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN) {
-        return FarnebackOpticalFlow.__fromPtr__(create_2(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN));
+    public static FarnebackOpticalFlow create(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN) {
+        return FarnebackOpticalFlow.__fromPtr__(
+                create_2(numLevels, pyrScale, fastPyramids, winSize, numIters, polyN));
     }
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters) {
-        return FarnebackOpticalFlow.__fromPtr__(create_3(numLevels, pyrScale, fastPyramids, winSize, numIters));
+    public static FarnebackOpticalFlow create(
+            int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters) {
+        return FarnebackOpticalFlow.__fromPtr__(
+                create_3(numLevels, pyrScale, fastPyramids, winSize, numIters));
     }
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids, int winSize) {
-        return FarnebackOpticalFlow.__fromPtr__(create_4(numLevels, pyrScale, fastPyramids, winSize));
+    public static FarnebackOpticalFlow create(
+            int numLevels, double pyrScale, boolean fastPyramids, int winSize) {
+        return FarnebackOpticalFlow.__fromPtr__(
+                create_4(numLevels, pyrScale, fastPyramids, winSize));
     }
 
-    public static FarnebackOpticalFlow create(int numLevels, double pyrScale, boolean fastPyramids) {
+    public static FarnebackOpticalFlow create(
+            int numLevels, double pyrScale, boolean fastPyramids) {
         return FarnebackOpticalFlow.__fromPtr__(create_5(numLevels, pyrScale, fastPyramids));
     }
 
@@ -201,13 +224,10 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
         return FarnebackOpticalFlow.__fromPtr__(create_8());
     }
 
-
     @Override
     protected void finalize() throws Throwable {
         delete(nativeObj);
     }
-
-
 
     // C++:  int cv::FarnebackOpticalFlow::getNumLevels()
     private static native int getNumLevels_0(long nativeObj);
@@ -257,18 +277,50 @@ public class FarnebackOpticalFlow extends DenseOpticalFlow {
     // C++:  void cv::FarnebackOpticalFlow::setFlags(int flags)
     private static native void setFlags_0(long nativeObj, int flags);
 
-    // C++: static Ptr_FarnebackOpticalFlow cv::FarnebackOpticalFlow::create(int numLevels = 5, double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int polyN = 5, double polySigma = 1.1, int flags = 0)
-    private static native long create_0(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN, double polySigma, int flags);
-    private static native long create_1(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN, double polySigma);
-    private static native long create_2(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters, int polyN);
-    private static native long create_3(int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters);
-    private static native long create_4(int numLevels, double pyrScale, boolean fastPyramids, int winSize);
+    // C++: static Ptr_FarnebackOpticalFlow cv::FarnebackOpticalFlow::create(int numLevels = 5,
+    // double pyrScale = 0.5, bool fastPyramids = false, int winSize = 13, int numIters = 10, int
+    // polyN = 5, double polySigma = 1.1, int flags = 0)
+    private static native long create_0(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN,
+            double polySigma,
+            int flags);
+
+    private static native long create_1(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN,
+            double polySigma);
+
+    private static native long create_2(
+            int numLevels,
+            double pyrScale,
+            boolean fastPyramids,
+            int winSize,
+            int numIters,
+            int polyN);
+
+    private static native long create_3(
+            int numLevels, double pyrScale, boolean fastPyramids, int winSize, int numIters);
+
+    private static native long create_4(
+            int numLevels, double pyrScale, boolean fastPyramids, int winSize);
+
     private static native long create_5(int numLevels, double pyrScale, boolean fastPyramids);
+
     private static native long create_6(int numLevels, double pyrScale);
+
     private static native long create_7(int numLevels);
+
     private static native long create_8();
 
     // native support for java finalize()
     private static native void delete(long nativeObj);
-
 }

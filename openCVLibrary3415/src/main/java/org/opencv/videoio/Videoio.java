@@ -3,15 +3,12 @@
 //
 package org.opencv.videoio;
 
-
-
 // C++: class Videoio
 
 public class Videoio {
 
     // C++: enum <unnamed>
-    public static final int
-            CV_CAP_ANY = 0,
+    public static final int CV_CAP_ANY = 0,
             CV_CAP_MIL = 100,
             CV_CAP_VFW = 200,
             CV_CAP_V4L = 200,
@@ -35,8 +32,8 @@ public class Videoio {
             CV_CAP_OPENNI = 900,
             CV_CAP_OPENNI_ASUS = 910,
             CV_CAP_ANDROID = 1000,
-            CV_CAP_ANDROID_BACK = CV_CAP_ANDROID+99,
-            CV_CAP_ANDROID_FRONT = CV_CAP_ANDROID+98,
+            CV_CAP_ANDROID_BACK = CV_CAP_ANDROID + 99,
+            CV_CAP_ANDROID_FRONT = CV_CAP_ANDROID + 98,
             CV_CAP_XIAPI = 1100,
             CV_CAP_AVFOUNDATION = 1200,
             CV_CAP_GIGANETIX = 1300,
@@ -99,7 +96,10 @@ public class Videoio {
             CV_CAP_OPENNI_DEPTH_GENERATOR = 1 << 31,
             CV_CAP_OPENNI_IMAGE_GENERATOR = 1 << 30,
             CV_CAP_OPENNI_IR_GENERATOR = 1 << 29,
-            CV_CAP_OPENNI_GENERATORS_MASK = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_OPENNI_IR_GENERATOR,
+            CV_CAP_OPENNI_GENERATORS_MASK =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR
+                            + CV_CAP_OPENNI_IMAGE_GENERATOR
+                            + CV_CAP_OPENNI_IR_GENERATOR,
             CV_CAP_PROP_OPENNI_OUTPUT_MODE = 100,
             CV_CAP_PROP_OPENNI_FRAME_MAX_DEPTH = 101,
             CV_CAP_PROP_OPENNI_BASELINE = 102,
@@ -113,14 +113,22 @@ public class Videoio {
             CV_CAP_PROP_OPENNI_GENERATOR_PRESENT = 109,
             CV_CAP_PROP_OPENNI2_SYNC = 110,
             CV_CAP_PROP_OPENNI2_MIRROR = 111,
-            CV_CAP_OPENNI_IMAGE_GENERATOR_PRESENT = CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE = CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_OUTPUT_MODE,
-            CV_CAP_OPENNI_DEPTH_GENERATOR_PRESENT = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CV_CAP_OPENNI_DEPTH_GENERATOR_BASELINE = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_BASELINE,
-            CV_CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_FOCAL_LENGTH,
-            CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_REGISTRATION,
-            CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON = CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_REGISTRATION,
-            CV_CAP_OPENNI_IR_GENERATOR_PRESENT = CV_CAP_OPENNI_IR_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CV_CAP_OPENNI_IMAGE_GENERATOR_PRESENT =
+                    CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CV_CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE =
+                    CV_CAP_OPENNI_IMAGE_GENERATOR + CV_CAP_PROP_OPENNI_OUTPUT_MODE,
+            CV_CAP_OPENNI_DEPTH_GENERATOR_PRESENT =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CV_CAP_OPENNI_DEPTH_GENERATOR_BASELINE =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_BASELINE,
+            CV_CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_FOCAL_LENGTH,
+            CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_REGISTRATION,
+            CV_CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON =
+                    CV_CAP_OPENNI_DEPTH_GENERATOR + CV_CAP_PROP_OPENNI_REGISTRATION,
+            CV_CAP_OPENNI_IR_GENERATOR_PRESENT =
+                    CV_CAP_OPENNI_IR_GENERATOR + CV_CAP_PROP_OPENNI_GENERATOR_PRESENT,
             CV_CAP_GSTREAMER_QUEUE_LENGTH = 200,
             CV_CAP_PROP_PVAPI_MULTICASTIP = 300,
             CV_CAP_PROP_PVAPI_FRAMESTARTTRIGGERMODE = 301,
@@ -309,7 +317,8 @@ public class Videoio {
             CV_CAP_PROP_INTELPERC_DEPTH_FOCAL_LENGTH_VERT = 11007,
             CV_CAP_INTELPERC_DEPTH_GENERATOR = 1 << 29,
             CV_CAP_INTELPERC_IMAGE_GENERATOR = 1 << 28,
-            CV_CAP_INTELPERC_GENERATORS_MASK = CV_CAP_INTELPERC_DEPTH_GENERATOR + CV_CAP_INTELPERC_IMAGE_GENERATOR,
+            CV_CAP_INTELPERC_GENERATORS_MASK =
+                    CV_CAP_INTELPERC_DEPTH_GENERATOR + CV_CAP_INTELPERC_IMAGE_GENERATOR,
             CV_CAP_MODE_BGR = 0,
             CV_CAP_MODE_RGB = 1,
             CV_CAP_MODE_GRAY = 2,
@@ -349,7 +358,10 @@ public class Videoio {
             CAP_OPENNI_DEPTH_GENERATOR = 1 << 31,
             CAP_OPENNI_IMAGE_GENERATOR = 1 << 30,
             CAP_OPENNI_IR_GENERATOR = 1 << 29,
-            CAP_OPENNI_GENERATORS_MASK = CAP_OPENNI_DEPTH_GENERATOR + CAP_OPENNI_IMAGE_GENERATOR + CAP_OPENNI_IR_GENERATOR,
+            CAP_OPENNI_GENERATORS_MASK =
+                    CAP_OPENNI_DEPTH_GENERATOR
+                            + CAP_OPENNI_IMAGE_GENERATOR
+                            + CAP_OPENNI_IR_GENERATOR,
             CAP_PROP_OPENNI_OUTPUT_MODE = 100,
             CAP_PROP_OPENNI_FRAME_MAX_DEPTH = 101,
             CAP_PROP_OPENNI_BASELINE = 102,
@@ -363,14 +375,22 @@ public class Videoio {
             CAP_PROP_OPENNI_GENERATOR_PRESENT = 109,
             CAP_PROP_OPENNI2_SYNC = 110,
             CAP_PROP_OPENNI2_MIRROR = 111,
-            CAP_OPENNI_IMAGE_GENERATOR_PRESENT = CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE = CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_OUTPUT_MODE,
-            CAP_OPENNI_DEPTH_GENERATOR_PRESENT = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
-            CAP_OPENNI_DEPTH_GENERATOR_BASELINE = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_BASELINE,
-            CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_FOCAL_LENGTH,
-            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
-            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON = CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
-            CAP_OPENNI_IR_GENERATOR_PRESENT = CAP_OPENNI_IR_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_IMAGE_GENERATOR_PRESENT =
+                    CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_IMAGE_GENERATOR_OUTPUT_MODE =
+                    CAP_OPENNI_IMAGE_GENERATOR + CAP_PROP_OPENNI_OUTPUT_MODE,
+            CAP_OPENNI_DEPTH_GENERATOR_PRESENT =
+                    CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
+            CAP_OPENNI_DEPTH_GENERATOR_BASELINE =
+                    CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_BASELINE,
+            CAP_OPENNI_DEPTH_GENERATOR_FOCAL_LENGTH =
+                    CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_FOCAL_LENGTH,
+            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION =
+                    CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
+            CAP_OPENNI_DEPTH_GENERATOR_REGISTRATION_ON =
+                    CAP_OPENNI_DEPTH_GENERATOR + CAP_PROP_OPENNI_REGISTRATION,
+            CAP_OPENNI_IR_GENERATOR_PRESENT =
+                    CAP_OPENNI_IR_GENERATOR + CAP_PROP_OPENNI_GENERATOR_PRESENT,
             CAP_OPENNI_DEPTH_MAP = 0,
             CAP_OPENNI_POINT_CLOUD_MAP = 1,
             CAP_OPENNI_DISPARITY_MAP = 2,
@@ -579,7 +599,8 @@ public class Videoio {
             CAP_PROP_INTELPERC_DEPTH_FOCAL_LENGTH_VERT = 11007,
             CAP_INTELPERC_DEPTH_GENERATOR = 1 << 29,
             CAP_INTELPERC_IMAGE_GENERATOR = 1 << 28,
-            CAP_INTELPERC_GENERATORS_MASK = CAP_INTELPERC_DEPTH_GENERATOR + CAP_INTELPERC_IMAGE_GENERATOR,
+            CAP_INTELPERC_GENERATORS_MASK =
+                    CAP_INTELPERC_DEPTH_GENERATOR + CAP_INTELPERC_IMAGE_GENERATOR,
             CAP_INTELPERC_DEPTH_MAP = 0,
             CAP_INTELPERC_UVDEPTH_MAP = 1,
             CAP_INTELPERC_IR_MAP = 2,
@@ -597,10 +618,8 @@ public class Videoio {
             CAP_PROP_IMAGES_BASE = 18000,
             CAP_PROP_IMAGES_LAST = 19000;
 
-
     // C++: enum VideoCaptureAPIs (cv.VideoCaptureAPIs)
-    public static final int
-            CAP_ANY = 0,
+    public static final int CAP_ANY = 0,
             CAP_VFW = 200,
             CAP_V4L = 200,
             CAP_V4L2 = 200,
@@ -633,18 +652,14 @@ public class Videoio {
             CAP_INTEL_MFX = 2300,
             CAP_XINE = 2400;
 
-
     // C++: enum VideoCaptureModes (cv.VideoCaptureModes)
-    public static final int
-            CAP_MODE_BGR = 0,
+    public static final int CAP_MODE_BGR = 0,
             CAP_MODE_RGB = 1,
             CAP_MODE_GRAY = 2,
             CAP_MODE_YUYV = 3;
 
-
     // C++: enum VideoCaptureProperties (cv.VideoCaptureProperties)
-    public static final int
-            CAP_PROP_POS_MSEC = 0,
+    public static final int CAP_PROP_POS_MSEC = 0,
             CAP_PROP_POS_FRAMES = 1,
             CAP_PROP_POS_AVI_RATIO = 2,
             CAP_PROP_FRAME_WIDTH = 3,
@@ -694,13 +709,10 @@ public class Videoio {
             CAP_PROP_ORIENTATION_META = 48,
             CAP_PROP_ORIENTATION_AUTO = 49;
 
-
     // C++: enum VideoWriterProperties (cv.VideoWriterProperties)
-    public static final int
-            VIDEOWRITER_PROP_QUALITY = 1,
+    public static final int VIDEOWRITER_PROP_QUALITY = 1,
             VIDEOWRITER_PROP_FRAMEBYTES = 2,
             VIDEOWRITER_PROP_NSTRIPES = 3;
-
 
     //
     // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
@@ -708,6 +720,7 @@ public class Videoio {
 
     /**
      * Returns backend API name or "unknown"
+     *
      * @param api backend ID (#VideoCaptureAPIs)
      * @return automatically generated
      */
@@ -715,13 +728,11 @@ public class Videoio {
         return getBackendName_0(api);
     }
 
-
     //
     // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getBackends()
     //
 
     // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
 
     //
     // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getCameraBackends()
@@ -729,13 +740,11 @@ public class Videoio {
 
     // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
 
-
     //
     // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getStreamBackends()
     //
 
     // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
-
 
     //
     // C++:  vector_VideoCaptureAPIs cv::videoio_registry::getWriterBackends()
@@ -743,10 +752,6 @@ public class Videoio {
 
     // Return type 'vector_VideoCaptureAPIs' is not supported, skipping the function
 
-
-
-
     // C++:  String cv::videoio_registry::getBackendName(VideoCaptureAPIs api)
     private static native String getBackendName_0(int api);
-
 }

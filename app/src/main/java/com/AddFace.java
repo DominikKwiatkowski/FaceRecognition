@@ -43,8 +43,8 @@ public class AddFace extends AppCompatActivity {
 
         currentFaceImage = findViewById(R.id.selectedImage);
         addButton = findViewById(R.id.addUser);
-        //addButton.setClickable(false);
-        //addButton.setAlpha(0.5f);
+        addButton.setClickable(false);
+        addButton.setAlpha(0.5f);
 
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
@@ -56,8 +56,7 @@ public class AddFace extends AppCompatActivity {
                 getApplicationContext(),        // App specific internal storage location
                 "Facenet",        // Model name TODO: temporary
                 128                // Vector size TODO: temporary
-        );             // Vector size TODO: temporary);
-
+        );
     }
 
     @Override
@@ -81,7 +80,7 @@ public class AddFace extends AppCompatActivity {
         finish();
     }
 
-    public void add(View view) {
+    public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
         if(username.isEmpty() || currentFaceVector == null)
@@ -92,28 +91,37 @@ public class AddFace extends AppCompatActivity {
     }
 
     /**
-     * TODO
-     * ...
+     * Process choosen photo using NeuralModel, display found face, save face vector
+     *
+     * @param photo uri to photo of face which will be preprocessed
      */
     private void processImage(Uri photo) {
         InputStream stream = null;
         try {
+            // Open file in stream
             stream = getContentResolver().openInputStream(photo);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        // Decode photo to Bitmap
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
         bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bmp = BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
+        // Convert Bitmap to Mat
         Mat image = new Mat();
         Utils.bitmapToMat(bmp, image);
+        // Find face in photo
         Mat face = model.preProcessOneFace(image);
+        // Convert face with Math to bitmap for ImageView
         bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(face, bmp);
+        // Display found face on screen in ImageView
         currentFaceImage.setImageBitmap(bmp);
         currentFaceVector = model.resizeAndProcess(face)[0];
-        //addButton.setClickable(true);
-        //addButton.setAlpha(1f);
+        // Unlock "add" button
+        addButton.setClickable(true);
+        addButton.setAlpha(1f);
     }
 
 }

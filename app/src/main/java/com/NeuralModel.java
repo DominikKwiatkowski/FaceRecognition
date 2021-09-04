@@ -1,5 +1,5 @@
 package com;
-
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -38,7 +38,7 @@ import static org.opencv.imgproc.Imgproc.warpAffine;
 public class NeuralModel {
     private final int inputSize = 160;
     private final int outputSize = 128;
-
+    private static NeuralModel instance;
     private final String nameOfModel;
     private final String TAG = "NeuralModelClass ";
     private final CascadeClassifier faceCascade = new CascadeClassifier();
@@ -53,26 +53,43 @@ public class NeuralModel {
     private Interpreter model;
 
     /**
-     * Class constructor.
-     *
-     * @param context     actual Activity
-     * @param nameOfModel name of model to be used. All models must be inside ml folder
-     */
-    public NeuralModel(Context context, String nameOfModel) {
+    * Class constructor.
+    *
+    * @param context actual Activity
+    * @param nameOfModel name of model to be used. All models must be inside ml folder.
+    */
+    private NeuralModel(Context context, String nameOfModel){
         this.context = context;
         this.nameOfModel = nameOfModel;
 
-        try {
-            model = new Interpreter(FileUtil.loadMappedFile(context,
-                    this.nameOfModel));
-        } catch (IOException e) {
+        try{
+            model = new Interpreter(FileUtil.loadMappedFile(context, this.nameOfModel));
+        }
+        catch (IOException e){
             Log.e(TAG + nameOfModel, "Error reading model", e);
         }
-
         res = context.getResources();
-
         loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
         loadClassifier(R.raw.haarcascade_eye, eyeCascade);
+    }
+  
+    /**
+    * Singleton instance getter. Initializes NeuralModel instance if not initialized earlier.
+    * Returns static NeuralModel instace.
+    * 
+    * @param context - app/activity context.
+    * @param nameOfModel - name of model to be used. All models must be inside ml folder.
+    * @return instance - singleton NeuralModel instance.
+    */
+    public static NeuralModel getInstance(Context context, String nameOfModel){
+        if(instance == null) {
+            synchronized (NeuralModel.class) {
+                if(instance == null) {
+                    instance = new NeuralModel(context, nameOfModel);
+                }
+            }
+        }
+        return instance;
     }
 
     /**
@@ -87,15 +104,22 @@ public class NeuralModel {
         if (image == null) {
             throw new NullPointerException("Image can't be null");
         }
-
         TensorImage tImage = new TensorImage(DataType.UINT8);
         Bitmap bitmap = Bitmap.createBitmap(image.width(), image.height(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(image, bitmap);
         tImage.load(bitmap);
         tImage = imageProcessor.process(tImage);
-
         return tImage;
     }
+
+     /**
+     * Resize and process image*
+     * @param image image to be prepared.
+     * @return probabilityBuffer Buffer of face properties.
+     */
+    public float[][] resizeAndProcess(Mat image) {
+        return processImage(changeImageRes(image));
+     }
 
     /**
      * Receive target image and serialize it to image's vector using neural network model.
@@ -141,8 +165,7 @@ public class NeuralModel {
 
             classifier.load(cascadeFile.getAbsolutePath());
             Log.i(TAG + nameOfModel, "Cascade loaded successfully");
-
-        } catch (IOException e) {
+            } catch (IOException e) {
             Log.e(TAG + nameOfModel, "Cascade not found");
         }
     }
@@ -173,14 +196,11 @@ public class NeuralModel {
      */
     public Mat preProcessOneFace(Mat face, Rect detectedFaces) {
         Rect[] eyeArray = findEyesOnImg(face);
-
         if (eyeArray.length == 2) {
             face = rotateImageByEye(face, eyeArray);
         }
-
         Rect[] faceArray = detectAllFaces(face).toArray();
         assertEquals("Wrong image, more than 1 face", 1, faceArray.length);
-
         return face.submat(faceArray[0]);
     }
 

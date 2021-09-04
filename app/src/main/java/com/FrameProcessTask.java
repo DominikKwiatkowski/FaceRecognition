@@ -17,7 +17,8 @@ public class FrameProcessTask implements Runnable {
 
     public FrameProcessTask(Context context) {
         // Neural model load.
-        model = new NeuralModel(context, "Facenet-optimized.tflite");
+        model = NeuralModel.getInstance(context,
+                "Facenet-optimized.tflite");
     }
 
     /**

@@ -194,7 +194,7 @@ public class NeuralModel {
      * @param detectedFaces Rect of this face
      * @return Matrix of preprocessed face
      */
-    public Mat preProcessOneFace(Mat face, Rect detectedFaces) {
+    public Mat preProcessOneFace(Mat face) {
         Rect[] eyeArray = findEyesOnImg(face);
         if (eyeArray.length == 2) {
             face = rotateImageByEye(face, eyeArray);

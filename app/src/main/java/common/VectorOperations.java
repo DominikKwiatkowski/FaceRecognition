@@ -24,7 +24,7 @@ public final class VectorOperations {
         for (float item : vector)
             div += item * item;
 
-        double sqrt = Math.sqrt(div);
+        div = Math.sqrt(div);
 
         for (int i = 0; i < vector.length; i++)
             normalizedVector[i] = (float) (vector[i] / div);

@@ -36,6 +36,8 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class FaceRecognition extends AppCompatActivity {
+    private static final int PICK_PHOTO = 100;
+
     static {
         System.loadLibrary("opencv_java3");
     }
@@ -122,7 +124,7 @@ public class FaceRecognition extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result for browsing storage made in getFile function.
-        if (requestCode == 100 && resultCode == RESULT_OK) {
+        if (requestCode == PICK_PHOTO && resultCode == RESULT_OK) {
             if(data == null)
                 return;
             fileUri = data.getData();

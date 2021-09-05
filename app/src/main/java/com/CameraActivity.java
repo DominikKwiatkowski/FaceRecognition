@@ -55,8 +55,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
 
-        // Neural model load.
-        model = NeuralModel.getInstance(this, "Facenet-optimized.tflite");
         // Create thread class.
         frameProcessTask = new FrameProcessTask(this);
 

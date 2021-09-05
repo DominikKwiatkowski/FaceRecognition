@@ -190,11 +190,10 @@ public class NeuralModel {
     /**
      * Try to rotate face and trim rest of photo.
      *
-     * @param face          image of face which will be preprocessed
-     * @param detectedFaces Rect of this face
+     * @param face image of face which will be preprocessed
      * @return Matrix of preprocessed face
      */
-    public Mat preProcessOneFace(Mat face, Rect detectedFaces) {
+    public Mat preProcessOneFace(Mat face) {
         Rect[] eyeArray = findEyesOnImg(face);
         if (eyeArray.length == 2) {
             face = rotateImageByEye(face, eyeArray);

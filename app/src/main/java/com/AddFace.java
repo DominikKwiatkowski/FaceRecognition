@@ -69,6 +69,11 @@ public class AddFace extends AppCompatActivity {
         }
     }
 
+    /**
+     * Start file chooser activity with image constraint.
+     *
+     * @param view - current view.
+     */
     public void choosePhoto(View view) {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -76,11 +81,20 @@ public class AddFace extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO);
     }
 
-
+    /**
+     * Exit activity without adding user.
+     *
+     * @param view - current view.
+     */
     public void cancel(View view) {
         finish();
     }
 
+    /**
+     * Create UserRecord with data from last processed image and user input.
+     *
+     * @param view - current view.
+     */
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
@@ -92,9 +106,9 @@ public class AddFace extends AppCompatActivity {
     }
 
     /**
-     * Process choosen photo using NeuralModel, display found face, save face vector
+     * Process chosen photo using NeuralModel, display found face, save face vector.
      *
-     * @param photo uri to photo of face which will be preprocessed
+     * @param photo uri to photo of face which will be preprocessed.
      */
     private void processImage(Uri photo) {
         InputStream stream = null;

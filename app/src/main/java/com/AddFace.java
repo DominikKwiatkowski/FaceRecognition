@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.UserDatabase.UserDatabase;
 import com.UserDatabase.UserRecord;
@@ -24,6 +25,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import common.ToastWrapper;
 
 public class AddFace extends AppCompatActivity {
 
@@ -37,6 +40,9 @@ public class AddFace extends AppCompatActivity {
     UserDatabase userDatabase = null;
     // Vector representation of face found on selected photo
     float[] currentFaceVector = null;
+
+    // ToastWrapper Instance
+    ToastWrapper toastWrapper = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,10 @@ public class AddFace extends AppCompatActivity {
                 "Facenet",        // Model name TODO: temporary
                 128                // Vector size TODO: temporary
         );
+
+        //  Create ToastWrapper Instance
+        toastWrapper = new ToastWrapper(this);
+
     }
 
     @Override
@@ -98,10 +108,14 @@ public class AddFace extends AppCompatActivity {
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
-        if(username.isEmpty() || currentFaceVector == null)
+        if(username.isEmpty() || currentFaceVector == null){
+            toastWrapper.showToast("Nie wprowadzono nazwy!", Toast.LENGTH_SHORT);
             return;
+        }
+
         UserRecord userRecord = new UserRecord(username, currentFaceVector);
         userDatabase.addUserRecord(userRecord);
+        toastWrapper.showToast(String.format("Dodano użytkownika %s.", username), Toast.LENGTH_SHORT);
         finish();
     }
 

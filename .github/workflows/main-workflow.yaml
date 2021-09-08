@@ -9,8 +9,8 @@ on:
 
 jobs:
 
-  build-and-test:
-    name: Build the standalone app and run tests
+  build-and-utest:
+    name: Build the standalone app and run unit tests
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,52 @@ jobs:
           arch: x86
           disable-animations: true
           script: ./gradlew connectedCheck --stacktrace
+
+  instrumented-tests:
+    runs-on: macos-latest   # It is recommended to run this action on a macOS to take advantage of hardware acceleration support provided by HAXM.
+    name: Run instrumented tests on emulator with Gradle
+    needs: build-and-utest
+    strategy:
+      matrix:
+        api-level: [26, 30]
+        target: [default]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedCheck

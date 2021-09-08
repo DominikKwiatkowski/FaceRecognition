@@ -18,7 +18,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import common.VectorOperations;
@@ -56,9 +55,9 @@ public class UserDatabase {
     }
 
     public static UserDatabase getInstance(Context appContext, String databaseName, int vectorLength) {
-        if(instance == null) {
+        if (instance == null) {
             synchronized (NeuralModel.class) {
-                if(instance == null) {
+                if (instance == null) {
                     instance = new UserDatabase(appContext, databaseName, vectorLength);
                 }
             }

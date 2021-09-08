@@ -25,8 +25,8 @@ jobs:
         run: ./gradlew app:build
 
   unit-test:
-    name: Run unit tests
-    runs-on: ubuntu-latest with Gradle
+    name: Run unit tests with Gradle
+    runs-on: ubuntu-latest
     needs: build        # Require build to run
 
     steps:
@@ -43,7 +43,7 @@ jobs:
   instrumented-tests:
     name: Run instrumented tests on emulator with Gradle
     runs-on: macos-latest   # It is recommended to run this action on a macOS to take advantage of hardware acceleration support provided by HAXM
-    needs: build        # Require build to run
+    needs: build      # Require build to run
 
     strategy:
       matrix:

@@ -1,6 +1,6 @@
-# FaceRecognition
+# Android face recognition
 
-## authors:
-* Jakub Fedorowicz
-* Maciej Zakrzewski
-* Dominik Kwiatkowski
+BSc Thesis on Gdansk University of Technology.
+Android app implementing modern face recognition algorithm based on neural networks.
+
+Currently WIP

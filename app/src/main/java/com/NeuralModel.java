@@ -1,5 +1,4 @@
 package com;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import common.FaceProcessingException;
 
 import static java.lang.Math.atan2;
 import static org.junit.Assert.assertEquals;
@@ -193,13 +194,17 @@ public class NeuralModel {
      * @param face image of face which will be preprocessed
      * @return Matrix of preprocessed face
      */
-    public Mat preProcessOneFace(Mat face) {
+    public Mat preProcessOneFace(Mat face) throws FaceProcessingException {
         Rect[] eyeArray = findEyesOnImg(face);
         if (eyeArray.length == 2) {
             face = rotateImageByEye(face, eyeArray);
         }
         Rect[] faceArray = detectAllFaces(face).toArray();
-        assertEquals("Wrong image, more than 1 face", 1, faceArray.length);
+        if (faceArray.length == 0)
+            throw new FaceProcessingException(FaceProcessingException.NO_FACES);
+        else if (faceArray.length > 1)
+            throw new FaceProcessingException(FaceProcessingException.MORE_THAN_ONE_FACE);
+        // assertEquals("Wrong image, more than 1 face", 1, faceArray.length);
         return face.submat(faceArray[0]);
     }
 

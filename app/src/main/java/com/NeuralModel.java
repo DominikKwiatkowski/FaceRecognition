@@ -1,4 +1,5 @@
 package com;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -37,9 +38,9 @@ import static org.opencv.imgproc.Imgproc.warpAffine;
  * Represents neural model. User can define which one will be used.
  */
 public class NeuralModel {
+    private static NeuralModel instance;
     private final int inputSize = 160;
     private final int outputSize = 128;
-    private static NeuralModel instance;
     private final String nameOfModel;
     private final String TAG = "NeuralModelClass ";
     private final CascadeClassifier faceCascade = new CascadeClassifier();
@@ -54,38 +55,37 @@ public class NeuralModel {
     private Interpreter model;
 
     /**
-    * Class constructor.
-    *
-    * @param context actual Activity
-    * @param nameOfModel name of model to be used. All models must be inside ml folder.
-    */
-    private NeuralModel(Context context, String nameOfModel){
+     * Class constructor.
+     *
+     * @param context     actual Activity
+     * @param nameOfModel name of model to be used. All models must be inside ml folder.
+     */
+    private NeuralModel(Context context, String nameOfModel) {
         this.context = context;
         this.nameOfModel = nameOfModel;
 
-        try{
+        try {
             model = new Interpreter(FileUtil.loadMappedFile(context, this.nameOfModel));
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             Log.e(TAG + nameOfModel, "Error reading model", e);
         }
         res = context.getResources();
         loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
         loadClassifier(R.raw.haarcascade_eye, eyeCascade);
     }
-  
+
     /**
-    * Singleton instance getter. Initializes NeuralModel instance if not initialized earlier.
-    * Returns static NeuralModel instace.
-    * 
-    * @param context - app/activity context.
-    * @param nameOfModel - name of model to be used. All models must be inside ml folder.
-    * @return instance - singleton NeuralModel instance.
-    */
-    public static NeuralModel getInstance(Context context, String nameOfModel){
-        if(instance == null) {
+     * Singleton instance getter. Initializes NeuralModel instance if not initialized earlier.
+     * Returns static NeuralModel instace.
+     *
+     * @param context     - app/activity context.
+     * @param nameOfModel - name of model to be used. All models must be inside ml folder.
+     * @return instance - singleton NeuralModel instance.
+     */
+    public static NeuralModel getInstance(Context context, String nameOfModel) {
+        if (instance == null) {
             synchronized (NeuralModel.class) {
-                if(instance == null) {
+                if (instance == null) {
                     instance = new NeuralModel(context, nameOfModel);
                 }
             }
@@ -113,14 +113,15 @@ public class NeuralModel {
         return tImage;
     }
 
-     /**
+    /**
      * Resize and process image*
+     *
      * @param image image to be prepared.
      * @return probabilityBuffer Buffer of face properties.
      */
     public float[][] resizeAndProcess(Mat image) {
         return processImage(changeImageRes(image));
-     }
+    }
 
     /**
      * Receive target image and serialize it to image's vector using neural network model.
@@ -166,7 +167,7 @@ public class NeuralModel {
 
             classifier.load(cascadeFile.getAbsolutePath());
             Log.i(TAG + nameOfModel, "Cascade loaded successfully");
-            } catch (IOException e) {
+        } catch (IOException e) {
             Log.e(TAG + nameOfModel, "Cascade not found");
         }
     }

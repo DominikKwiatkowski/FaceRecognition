@@ -1,26 +1,25 @@
 package com;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import org.opencv.android.Utils;
-import org.opencv.imgcodecs.Imgcodecs;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.UserDatabase.UserDatabase;
 import com.UserDatabase.UserRecord;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,16 +34,15 @@ public class AddFace extends AppCompatActivity {
     private static final int TAKE_PHOTO = 2;
     ImageView currentFaceImage = null;
     Button addButton = null;
-    private Imgcodecs imageCodecs = null;
     // NeuralModel singleton reference
     NeuralModel model = null;
     // UserDatabase singleton reference
     UserDatabase userDatabase = null;
     // Vector representation of face found on selected photo
     float[] currentFaceVector = null;
-
     // ToastWrapper Instance
     ToastWrapper toastWrapper = null;
+    private Imgcodecs imageCodecs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +76,8 @@ public class AddFace extends AppCompatActivity {
         // Process picked image
         if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
             processPhoto(resolveContentToBitmap(data.getData()));
-        }
-        else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null){
-            try{
+        } else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+            try {
                 String filename = data.getStringExtra("UserPhoto");
                 FileInputStream fis = getApplicationContext().openFileInput(filename);
                 Bitmap photo = BitmapFactory.decodeStream(fis);
@@ -132,7 +129,7 @@ public class AddFace extends AppCompatActivity {
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
-        if(username.isEmpty() || currentFaceVector == null){
+        if (username.isEmpty() || currentFaceVector == null) {
             toastWrapper.showToast("Nie wprowadzono nazwy!", Toast.LENGTH_SHORT);
             return;
         }
@@ -179,7 +176,7 @@ public class AddFace extends AppCompatActivity {
         Mat face;
         try {
             face = model.preProcessOneFace(image);
-        } catch (FaceProcessingException fpe){
+        } catch (FaceProcessingException fpe) {
             fpe.printStackTrace();
             toastWrapper.showToast("Brak lub więcej niż jedna twarz na zdjęciu.", Toast.LENGTH_SHORT);
             return;

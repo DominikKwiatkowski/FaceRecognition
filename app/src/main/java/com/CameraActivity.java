@@ -23,7 +23,6 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -178,20 +177,19 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.enableView();
     }
 
-    public void takePhoto(View view){
+    public void takePhoto(View view) {
         Mat frame = frameProcessTask.getFrame();
         Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(frame, frameBmp);
 
-        try{
+        try {
             String filename = "cachedImage";
             FileOutputStream fos = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
             frameBmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
             Intent resultData = new Intent();
             resultData.putExtra("UserPhoto", filename);
             setResult(RESULT_OK, resultData);
-        }
-        catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 

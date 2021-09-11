@@ -76,7 +76,10 @@ public class AddFace extends AppCompatActivity {
         // Process picked image
         if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
             processPhoto(resolveContentToBitmap(data.getData()));
-        } else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+        }
+        // Process photo taken from camera
+        else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+            // Get filename from activity result, read photo from internal app storage and process it
             try {
                 String filename = data.getStringExtra("UserPhoto");
                 FileInputStream fis = getApplicationContext().openFileInput(filename);

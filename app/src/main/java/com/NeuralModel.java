@@ -205,7 +205,6 @@ public class NeuralModel {
             throw new FaceProcessingException(FaceProcessingException.NO_FACES);
         else if (faceArray.length > 1)
             throw new FaceProcessingException(FaceProcessingException.MORE_THAN_ONE_FACE);
-        // assertEquals("Wrong image, more than 1 face", 1, faceArray.length);
         return face.submat(faceArray[0]);
     }
 

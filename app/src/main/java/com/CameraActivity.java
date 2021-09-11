@@ -177,6 +177,12 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.enableView();
     }
 
+    /**
+     * Save last frame to file in internal app storage, insert filename in
+     * activity result and finish activity.
+     *
+     * @param view curremt view
+     */
     public void takePhoto(View view) {
         Mat frame = frameProcessTask.getFrame();
         Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);

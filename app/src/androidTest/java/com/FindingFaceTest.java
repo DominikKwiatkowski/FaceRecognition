@@ -39,7 +39,7 @@ public class FindingFaceTest {
      * @param face expected face position
      * @return true if result is correct
      */
-    boolean photoIsCorect(Mat image, Rect face) {
+    boolean photoIsCorrect(Mat image, Rect face) {
         Rect[] result = model.detectAllFaces(image).toArray();
 
         if (result.length != 1) {
@@ -99,7 +99,7 @@ public class FindingFaceTest {
         // Test checks.
         assertTrue(OpenCVLoader.initDebug());
         for (int i = 0; i < testCases; i++) {
-            assertTrue(photoIsCorect(images[i], faces[i]));
+            assertTrue(photoIsCorrect(images[i], faces[i]));
         }
     }
 }

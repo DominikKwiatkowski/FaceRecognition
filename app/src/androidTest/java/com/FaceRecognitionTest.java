@@ -41,7 +41,7 @@ public class FaceRecognitionTest {
         NeuralModel model = NeuralModel.
                 getInstance(appContext, "Facenet-optimized.tflite");
 
-        // Load images
+        // Load images. Image 2 and 3 are images of same person.
         try {
             photos[0] = Utils.loadResource(appContext, R.drawable.face1);
             photos[1] = Utils.loadResource(appContext, R.drawable.face2);

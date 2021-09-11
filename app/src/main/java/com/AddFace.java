@@ -1,42 +1,48 @@
 package com;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import org.opencv.android.Utils;
-import org.opencv.imgcodecs.Imgcodecs;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.UserDatabase.UserDatabase;
 import com.UserDatabase.UserRecord;
 
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import common.FaceProcessingException;
+import common.ToastWrapper;
 
 public class AddFace extends AppCompatActivity {
 
     private static final int PICK_PHOTO = 1;
+    private static final int TAKE_PHOTO = 2;
     ImageView currentFaceImage = null;
     Button addButton = null;
-    private Imgcodecs imageCodecs = null;
     // NeuralModel singleton reference
     NeuralModel model = null;
     // UserDatabase singleton reference
     UserDatabase userDatabase = null;
     // Vector representation of face found on selected photo
     float[] currentFaceVector = null;
+    // ToastWrapper Instance
+    ToastWrapper toastWrapper = null;
+    private Imgcodecs imageCodecs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,10 @@ public class AddFace extends AppCompatActivity {
                 "Facenet",        // Model name TODO: temporary
                 128                // Vector size TODO: temporary
         );
+
+        //  Create ToastWrapper Instance
+        toastWrapper = new ToastWrapper(getApplicationContext());
+
     }
 
     @Override
@@ -65,7 +75,20 @@ public class AddFace extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // Process picked image
         if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            processImage(data.getData());
+            processPhoto(resolveContentToBitmap(data.getData()));
+        }
+        // Process photo taken from camera
+        else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+            // Get filename from activity result, read photo from internal app storage and process it
+            try {
+                String filename = data.getStringExtra("UserPhoto");
+                FileInputStream fis = getApplicationContext().openFileInput(filename);
+                Bitmap photo = BitmapFactory.decodeStream(fis);
+                processPhoto(photo);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -79,6 +102,17 @@ public class AddFace extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO);
+    }
+
+    /**
+     * Start CameraActivity with in photo taking mode.
+     *
+     * @param view - current view.
+     */
+    public void takePhoto(View view) {
+        Intent takePhotoIntent = new Intent(this, CameraActivity.class);
+        takePhotoIntent.putExtra("TakePhotoMode", true);
+        startActivityForResult(takePhotoIntent, TAKE_PHOTO);
     }
 
     /**
@@ -98,36 +132,58 @@ public class AddFace extends AppCompatActivity {
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
-        if(username.isEmpty() || currentFaceVector == null)
+        if (username.isEmpty() || currentFaceVector == null) {
+            toastWrapper.showToast("Nie wprowadzono nazwy!", Toast.LENGTH_SHORT);
             return;
+        }
+
         UserRecord userRecord = new UserRecord(username, currentFaceVector);
         userDatabase.addUserRecord(userRecord);
+        toastWrapper.showToast(String.format("Dodano użytkownika %s.", username), Toast.LENGTH_SHORT);
         finish();
     }
 
     /**
-     * Process chosen photo using NeuralModel, display found face, save face vector.
+     * Resolve photo uri to bitmap
      *
-     * @param photo uri to photo of face which will be preprocessed.
+     * @param photo - uri to image.
+     * @return Bitmap of resolved image.
      */
-    private void processImage(Uri photo) {
+    private Bitmap resolveContentToBitmap(Uri photo) {
         InputStream stream = null;
         try {
             // Open file in stream
             stream = getContentResolver().openInputStream(photo);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         // Decode photo to Bitmap
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
         bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bmp = BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
+        return bmp;
+    }
+
+
+    /**
+     * Process chosen photo using NeuralModel, display found face, save face vector.
+     *
+     * @param photo Bitmap of face which will be preprocessed.
+     */
+    private void processPhoto(Bitmap photo) {
+        Bitmap bmp = photo;
         // Convert Bitmap to Mat
         Mat image = new Mat();
         Utils.bitmapToMat(bmp, image);
         // Find face in photo
-        Mat face = model.preProcessOneFace(image);
+        Mat face;
+        try {
+            face = model.preProcessOneFace(image);
+        } catch (FaceProcessingException fpe) {
+            fpe.printStackTrace();
+            toastWrapper.showToast("Brak lub więcej niż jedna twarz na zdjęciu.", Toast.LENGTH_SHORT);
+            return;
+        }
         // Convert face with Math to bitmap for ImageView
         bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(face, bmp);

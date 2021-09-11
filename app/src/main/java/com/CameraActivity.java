@@ -1,5 +1,8 @@
 package com;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
@@ -17,6 +21,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -32,6 +38,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     private CameraBridgeViewBase mOpenCvCameraView;
     private FrameProcessTask frameProcessTask;
+    private Button takePhotoButton;
 
     /**
      * Method to get and set stuff after view creation.
@@ -66,6 +73,11 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
                 swapCamera();
             }
         });
+
+        takePhotoButton = findViewById(R.id.takePhotoButton);
+        boolean addUserMode = getIntent().getBooleanExtra("TakePhotoMode", false);
+        takePhotoButton.setActivated(addUserMode);
+
     }
 
     /**
@@ -164,4 +176,30 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.setCameraIndex(CameraIndex);
         mOpenCvCameraView.enableView();
     }
+
+    /**
+     * Save last frame to file in internal app storage, insert filename in
+     * activity result and finish activity.
+     *
+     * @param view curremt view
+     */
+    public void takePhoto(View view) {
+        Mat frame = frameProcessTask.getFrame();
+        Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(frame, frameBmp);
+
+        try {
+            String filename = "cachedImage";
+            FileOutputStream fos = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
+            frameBmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            Intent resultData = new Intent();
+            resultData.putExtra("UserPhoto", filename);
+            setResult(RESULT_OK, resultData);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        finish();
+    }
+
 }

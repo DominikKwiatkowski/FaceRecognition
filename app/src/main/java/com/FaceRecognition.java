@@ -43,10 +43,7 @@ public class FaceRecognition extends AppCompatActivity {
     }
 
     final ArrayList<String> permissions = new ArrayList<>();
-    private final int numOfPhotos = 3;
     // Result from neural network is 2-dimension array, so we create numOfPhotos of them.
-    float[][][] result = new float[numOfPhotos][][];
-    Mat[] photos = new Mat[numOfPhotos];
     private NeuralModel model = null;
     private UserDatabase userDatabase = null;
     private Uri fileUri = null;
@@ -83,14 +80,6 @@ public class FaceRecognition extends AppCompatActivity {
         // Load NeuralModel
         model = NeuralModel.getInstance(getApplicationContext(),"Facenet-optimized.tflite");
         // model = new NeuralModel(this, "Facenet-optimized.tflite");
-        // Load test images from resources
-        try {
-            photos[0] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu1);
-            photos[1] = Utils.loadResource(this.getApplicationContext(), R.drawable.macius);
-            photos[2] = Utils.loadResource(this.getApplicationContext(), R.drawable.kwiaciu2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // Initialize database
         // TODO: Temporary. Later on it should be moved to the model selection menu
@@ -101,19 +90,6 @@ public class FaceRecognition extends AppCompatActivity {
                 128                // Vector size TODO: temporary
         );
 
-    }
-
-    /**
-     * @param first  array of floats from neural model, on which norm will be calculated.
-     * @param second array of floats from neural model, on which norm will be calculated.
-     * @return difference between this 2 arrases.
-     */
-    private Double norm(float[] first, float[] second) {
-        float ans = 0;
-        for (int i = 0; i < first.length; i++) {
-            ans += pow(first[i] - second[i], 2);
-        }
-        return sqrt(ans);
     }
 
     /**
@@ -214,25 +190,6 @@ public class FaceRecognition extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * calculateButton onClick callback.
-     *
-     * @param view - application's view
-     */
-    public void calculateButtonOnClick(View view) {
-        // Process and proceed all test photos
-        for (int i = 0; i < photos.length; i++) {
-            MatOfRect faces = model.detectAllFaces(photos[i]);
-            ArrayList<Mat> faceImages = model.preProcessAllFaces(photos[i], faces);
-            TensorImage image = model.changeImageRes(faceImages.get(0));
-            result[i] = model.processImage(image);
-        }
-
-        // Print difference result
-        Log.i("score1-3", norm(result[0][0], result[2][0]).toString());
-        Log.i("score2-3", norm(result[1][0], result[2][0]).toString());
     }
 
     /**

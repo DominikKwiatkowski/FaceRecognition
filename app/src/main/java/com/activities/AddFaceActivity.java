@@ -1,7 +1,8 @@
-package com;
+package com.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,10 +13,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.UserDatabase.UserDatabase;
-import com.UserDatabase.UserRecord;
+import com.R;
+import com.common.FaceProcessingException;
+import com.common.ToastWrapper;
+import com.libs.facerecognition.NeuralModel;
+import com.libs.userdatabase.UserDatabase;
+import com.libs.userdatabase.UserRecord;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -25,24 +32,52 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import common.FaceProcessingException;
-import common.ToastWrapper;
+public class AddFaceActivity extends AppCompatActivity {
 
-public class AddFace extends AppCompatActivity {
-
-    private static final int PICK_PHOTO = 1;
-    private static final int TAKE_PHOTO = 2;
-    ImageView currentFaceImage = null;
-    Button addButton = null;
-    // NeuralModel singleton reference
-    NeuralModel model = null;
-    // UserDatabase singleton reference
-    UserDatabase userDatabase = null;
-    // Vector representation of face found on selected photo
-    float[] currentFaceVector = null;
-    // ToastWrapper Instance
-    ToastWrapper toastWrapper = null;
     private Imgcodecs imageCodecs = null;
+    private ImageView currentFaceImage = null;
+    private Button addButton = null;
+
+    // NeuralModel singleton reference
+    private NeuralModel model = null;
+
+    // UserDatabase singleton reference
+    private UserDatabase userDatabase = null;
+
+    // Vector representation of face found on selected photo
+    private float[] currentFaceVector = null;
+
+    // ToastWrapper Instance
+    private ToastWrapper toastWrapper = null;
+
+    // ChoosePhoto Intent launcher
+    ActivityResultLauncher<Intent> choosePhotoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // Process picked image
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    processPhoto(resolveContentToBitmap(result.getData().getData()));
+                }
+            });
+
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    ActivityResultLauncher<Intent> takePhotoLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // Process photo taken from camera
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    // Get filename from activity result, read photo from internal app storage and process it
+                    try {
+                        String filename = result.getData().getStringExtra("UserPhoto");
+                        FileInputStream fis = getApplicationContext().openFileInput(filename);
+                        Bitmap photo = BitmapFactory.decodeStream(fis);
+                        processPhoto(photo);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,46 +85,27 @@ public class AddFace extends AppCompatActivity {
         setContentView(R.layout.activity_add_face);
         currentFaceImage = findViewById(R.id.selectedImage);
         addButton = findViewById(R.id.addUser);
+
         // Disable add button before photo selected
         addButton.setClickable(false);
         addButton.setAlpha(0.5f);
+
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
+
         // Get network model instance
         model = NeuralModel.getInstance(getApplicationContext(),
                 "Facenet-optimized.tflite");
+
         // Get database instance
         userDatabase = UserDatabase.getInstance(
-                getApplicationContext(),        // App specific internal storage location
-                "Facenet",        // Model name TODO: temporary
-                128                // Vector size TODO: temporary
+                getApplicationContext(),
+                "Facenet",
+                128
         );
 
-        //  Create ToastWrapper Instance
+        // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Process picked image
-        if (requestCode == PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            processPhoto(resolveContentToBitmap(data.getData()));
-        }
-        // Process photo taken from camera
-        else if (requestCode == TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            // Get filename from activity result, read photo from internal app storage and process it
-            try {
-                String filename = data.getStringExtra("UserPhoto");
-                FileInputStream fis = getApplicationContext().openFileInput(filename);
-                Bitmap photo = BitmapFactory.decodeStream(fis);
-                processPhoto(photo);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
     /**
@@ -101,7 +117,7 @@ public class AddFace extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO);
+        choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
     /**
@@ -112,7 +128,7 @@ public class AddFace extends AppCompatActivity {
     public void takePhoto(View view) {
         Intent takePhotoIntent = new Intent(this, CameraActivity.class);
         takePhotoIntent.putExtra("TakePhotoMode", true);
-        startActivityForResult(takePhotoIntent, TAKE_PHOTO);
+        takePhotoLauncher.launch(takePhotoIntent);
     }
 
     /**
@@ -132,14 +148,16 @@ public class AddFace extends AppCompatActivity {
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
+        Resources res = getResources();
+
         if (username.isEmpty() || currentFaceVector == null) {
-            toastWrapper.showToast("Nie wprowadzono nazwy!", Toast.LENGTH_SHORT);
+            toastWrapper.showToast(res.getString(R.string.addface_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
             return;
         }
 
         UserRecord userRecord = new UserRecord(username, currentFaceVector);
         userDatabase.addUserRecord(userRecord);
-        toastWrapper.showToast(String.format("Dodano użytkownika %s.", username), Toast.LENGTH_SHORT);
+        toastWrapper.showToast(String.format(res.getString(R.string.addface_UserAdded_toast), username), Toast.LENGTH_SHORT);
         finish();
     }
 
@@ -157,11 +175,11 @@ public class AddFace extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         // Decode photo to Bitmap
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
         bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
-        return bmp;
+        return BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
     }
 
 
@@ -171,28 +189,33 @@ public class AddFace extends AppCompatActivity {
      * @param photo Bitmap of face which will be preprocessed.
      */
     private void processPhoto(Bitmap photo) {
+        Resources res = getResources();
         Bitmap bmp = photo;
+
         // Convert Bitmap to Mat
         Mat image = new Mat();
         Utils.bitmapToMat(bmp, image);
+
         // Find face in photo
         Mat face;
         try {
             face = model.preProcessOneFace(image);
         } catch (FaceProcessingException fpe) {
             fpe.printStackTrace();
-            toastWrapper.showToast("Brak lub więcej niż jedna twarz na zdjęciu.", Toast.LENGTH_SHORT);
+            toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
             return;
         }
+
         // Convert face with Math to bitmap for ImageView
         bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(face, bmp);
+
         // Display found face on screen in ImageView
         currentFaceImage.setImageBitmap(bmp);
         currentFaceVector = model.resizeAndProcess(face)[0];
+
         // Unlock "add" button
         addButton.setClickable(true);
         addButton.setAlpha(1f);
     }
-
 }

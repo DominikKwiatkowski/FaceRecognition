@@ -1,13 +1,14 @@
-package com.UserDatabase;
+package com.libs.userdatabase;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.NeuralModel;
 import com.R;
+import com.common.VectorOperations;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.libs.facerecognition.NeuralModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,21 +21,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import common.VectorOperations;
-
 import static org.junit.Assert.assertEquals;
 
 public class UserDatabase {
     private static UserDatabase instance;
     private final String LogTag = "Database";
+
     // Application context to access resources and directory of app-specific storage
     private final Context AppContext;
+
     // Path of database file
     private final File DatabaseFile;
+
     // Database identifier, to ensure safe loading
     private final String Id;
+
     // Vector target length, to validate database inputs
     private final int VectorLength;
+
     // Database type stored for json serialization
     private final Type userDatabaseType;
     private Map<String, UserRecord> usersRecords;
@@ -69,8 +73,8 @@ public class UserDatabase {
      * Find closest record from the database. Algorithm and time complexity is dependent
      * on database type.
      *
-     * @param vector of n-dimensions, for which the closest equivalent wil be found.
-     * @return closest UserRecord.
+     * @param vector of n-dimensions, for which the closest equivalent wil be found
+     * @return closest UserRecord
      */
     public UserRecord findClosestRecord(float[] vector) {
         // Check correctness of vector length
@@ -96,7 +100,7 @@ public class UserDatabase {
     /**
      * Add new UserRecord to the database.
      *
-     * @param userRecord to add to database.
+     * @param userRecord to add to database
      */
     public void addUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
@@ -120,7 +124,7 @@ public class UserDatabase {
     /**
      * Add UserRecord to the database. If user already exists, override it's data.
      *
-     * @param userRecord to add to database.
+     * @param userRecord to add to database
      */
     public void forceAddUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
@@ -139,7 +143,7 @@ public class UserDatabase {
      * Remove userRecord by user name.
      * Grants that there will be no user with given user name.
      *
-     * @param userName of the user to remove.
+     * @param userName of the user to remove
      */
     public void removeUserRecord(String userName) {
         usersRecords.remove(userName);
@@ -153,7 +157,7 @@ public class UserDatabase {
      * Remove userRecord by UserRecord object.
      * Grants that there will be no user with given user name.
      *
-     * @param userRecord to remove.
+     * @param userRecord to remove
      */
     public void removeUserRecord(UserRecord userRecord) {
         usersRecords.remove(userRecord.username);
@@ -166,8 +170,8 @@ public class UserDatabase {
     /**
      * Get userRecord by user name.
      *
-     * @param userName of the searched user.
-     * @return UserRecord if found. Null if user does not exist.
+     * @param userName of the searched user
+     * @return UserRecord if found. Null if user does not exist
      */
     public UserRecord getUserRecord(String userName) {
         return usersRecords.get(userName);
@@ -176,8 +180,8 @@ public class UserDatabase {
     /**
      * Get vector by user name.
      *
-     * @param userName of the searched user.
-     * @return vector if found. Null if user does not exist.
+     * @param userName of the searched user
+     * @return vector if found. Null if user does not exist
      */
     public float[] getUserVector(String userName) {
         return usersRecords.get(userName).vector;
@@ -186,7 +190,7 @@ public class UserDatabase {
     /**
      * Get list of all users.
      *
-     * @return array of users names.
+     * @return array of users names
      */
     public String[] getUsersArray() {
         // Receive set of keys and convert it to array
@@ -271,6 +275,7 @@ public class UserDatabase {
         String resourceString;
         InputStream is = AppContext.getResources().openRawResource(R.raw.sample_database);
         int size = 0;
+
         try {
             size = is.available();
             byte[] buffer = new byte[size];

@@ -1,4 +1,4 @@
-package common;
+package com.common;
 
 import java.lang.Math;
 

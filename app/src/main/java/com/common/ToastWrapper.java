@@ -1,4 +1,4 @@
-package common;
+package com.common;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -16,17 +16,17 @@ public final class ToastWrapper {
      *
      * @param context app or activity context.
      */
-    public ToastWrapper(Context context){
+    public ToastWrapper(Context context) {
         this.context = context;
     }
 
     /**
      * Show toast.
      *
-     * @param text Toast text.
+     * @param text     Toast text
      * @param duration duration of toast
      */
-    public void showToast(String text, int duration){
+    public void showToast(String text, int duration) {
         Toast.makeText(context, text, duration).show();
     }
 

@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.libs.facerecognition.NeuralModel;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opencv.android.OpenCVLoader;
@@ -17,26 +19,28 @@ import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Instrumented test for detecting faces on images. All result have some margin check, due to
- * different method may be used.
+ * Instrumented test for detecting faces on images. All results have some margin due to the possibility
+ * of using different methods.
  */
 @RunWith(AndroidJUnit4.class)
-public class FindingFaceTest {
+public class FindFaceTest {
+
     // Number of margin percentage
-    static final int margin = 10;
-    static final int testCases = 2;
+    private static final int margin = 10;
+    private static final int testCases = 2;
 
     static {
         System.loadLibrary("opencv_java3");
     }
 
-    NeuralModel model;
+    private NeuralModel model;
 
     /**
-     * Function to check if results are correct. WE use margin, which is equal to margin field.
-     * It is possible to test only photo with one face on it.
-     * @param image image on which we will find faces
-     * @param face expected face position
+     * Function to check if results are correct. We use margin, which is equal to margin field.
+     * It is only possible to test photo with one face on it.
+     *
+     * @param image image to find faces on
+     * @param face  expected face position
      * @return true if result is correct
      */
     boolean photoIsCorrect(Mat image, Rect face) {
@@ -75,7 +79,7 @@ public class FindingFaceTest {
 
     @Test
     /**
-     * Check if face detector find face on image and position of face is close where it should be.
+     * Check if face detector found the face on the image and if position of face is close to where it should be.
      */
     public void performTest() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();

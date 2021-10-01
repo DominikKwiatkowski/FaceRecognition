@@ -1,4 +1,4 @@
-package com.UserDatabase;
+package com.libs.userdatabase;
 
 import androidx.annotation.NonNull;
 

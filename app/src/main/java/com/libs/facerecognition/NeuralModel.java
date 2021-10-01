@@ -1,9 +1,12 @@
-package com;
+package com.libs.facerecognition;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.util.Log;
+
+import com.R;
+import com.common.FaceProcessingException;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -27,8 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import common.FaceProcessingException;
-
 import static java.lang.Math.atan2;
 import static org.junit.Assert.assertEquals;
 import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
@@ -42,7 +43,7 @@ public class NeuralModel {
     private final int inputSize = 160;
     private final int outputSize = 128;
     private final String nameOfModel;
-    private final String TAG = "NeuralModelClass ";
+    private final String TAG = "NeuralModelClass";
     private final CascadeClassifier faceCascade = new CascadeClassifier();
     private final CascadeClassifier eyeCascade = new CascadeClassifier();
     Resources res;
@@ -58,7 +59,7 @@ public class NeuralModel {
      * Class constructor.
      *
      * @param context     actual Activity
-     * @param nameOfModel name of model to be used. All models must be inside ml folder.
+     * @param nameOfModel name of model to be used. All models must be inside ml folder
      */
     private NeuralModel(Context context, String nameOfModel) {
         this.context = context;
@@ -69,6 +70,7 @@ public class NeuralModel {
         } catch (IOException e) {
             Log.e(TAG + nameOfModel, "Error reading model", e);
         }
+
         res = context.getResources();
         loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
         loadClassifier(R.raw.haarcascade_eye, eyeCascade);
@@ -76,11 +78,11 @@ public class NeuralModel {
 
     /**
      * Singleton instance getter. Initializes NeuralModel instance if not initialized earlier.
-     * Returns static NeuralModel instace.
+     * Returns static NeuralModel instance.
      *
-     * @param context     - app/activity context.
-     * @param nameOfModel - name of model to be used. All models must be inside ml folder.
-     * @return instance - singleton NeuralModel instance.
+     * @param context     - app/activity context
+     * @param nameOfModel - name of model to be used. All models must be inside ml folder
+     * @return instance - singleton NeuralModel instance
      */
     public static NeuralModel getInstance(Context context, String nameOfModel) {
         if (instance == null) {
@@ -105,19 +107,20 @@ public class NeuralModel {
         if (image == null) {
             throw new NullPointerException("Image can't be null");
         }
+
         TensorImage tImage = new TensorImage(DataType.UINT8);
         Bitmap bitmap = Bitmap.createBitmap(image.width(), image.height(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(image, bitmap);
         tImage.load(bitmap);
-        tImage = imageProcessor.process(tImage);
-        return tImage;
+
+        return imageProcessor.process(tImage);
     }
 
     /**
-     * Resize and process image*
+     * Resize and process image
      *
-     * @param image image to be prepared.
-     * @return probabilityBuffer Buffer of face properties.
+     * @param image image to be prepared
+     * @return probabilityBuffer Buffer of face properties
      */
     public float[][] resizeAndProcess(Mat image) {
         return processImage(changeImageRes(image));
@@ -137,7 +140,7 @@ public class NeuralModel {
 
         float[][] probabilityBuffer = new float[1][outputSize];
         model.run(tImage.getBuffer(), probabilityBuffer);
-        Log.i(TAG + nameOfModel, "proceeded image successfully");
+        Log.i(TAG + nameOfModel, "Processed image successfully");
 
         return probabilityBuffer;
     }
@@ -197,14 +200,17 @@ public class NeuralModel {
      */
     public Mat preProcessOneFace(Mat face) throws FaceProcessingException {
         Rect[] eyeArray = findEyesOnImg(face);
+
         if (eyeArray.length == 2) {
             face = rotateImageByEye(face, eyeArray);
         }
+
         Rect[] faceArray = detectAllFaces(face).toArray();
         if (faceArray.length == 0)
             throw new FaceProcessingException(FaceProcessingException.NO_FACES);
         else if (faceArray.length > 1)
             throw new FaceProcessingException(FaceProcessingException.MORE_THAN_ONE_FACE);
+
         return face.submat(faceArray[0]);
     }
 
@@ -213,18 +219,17 @@ public class NeuralModel {
      *
      * @param frame         image with many faces which will be preprocessed
      * @param detectedFaces Rect of this face
-     * @return Matrix of all faces after trimming and rotatiton
+     * @return Matrix of all faces after trimming and rotation
      */
     public ArrayList<Mat> preProcessAllFaces(Mat frame, MatOfRect detectedFaces) {
-        ArrayList<Mat> cutFaces;
-        cutFaces = new ArrayList();
+        ArrayList<Mat> cutFaces = new ArrayList<>();
 
         for (Rect face : detectedFaces.toArray()) {
             Mat faceImg = frame.submat(face);
             Rect[] eyeArray = findEyesOnImg(faceImg);
 
             if (eyeArray.length != 2) {
-                // Sth go wrong, we should stop preprocessing
+                // Sth went wrong, preprocessing should be stopped
                 cutFaces.add(faceImg);
             } else {
                 cutFaces.add(rotateImageByEye(faceImg, eyeArray));
@@ -235,11 +240,11 @@ public class NeuralModel {
     }
 
     /**
-     * Rotate image by eye.
+     * Rotate the image relative to the eyes.
      *
-     * @param image    image with face which will rotated
-     * @param eyeArray Array of eyes. It has to have 2 elements
-     * @return image after rotation
+     * @param image    image with face to be transformed
+     * @param eyeArray Array of rectangles marking eyes. Has to be two-element
+     * @return rotated image
      */
     private Mat rotateImageByEye(Mat image, Rect[] eyeArray) {
         assertEquals("Wrong number of eyes", 2, eyeArray.length);
@@ -262,9 +267,9 @@ public class NeuralModel {
     }
 
     /**
-     * Find all eyes on image.
+     * Find eyes on image.
      *
-     * @param faceImg image with face on which eyes will be spotted
+     * @param faceImg image with face, on which eyes will be spotted
      * @return Array of Rect of all eyes on image
      */
     private Rect[] findEyesOnImg(Mat faceImg) {

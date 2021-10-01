@@ -2,6 +2,9 @@ package com.UserDatabase;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.libs.userdatabase.UserDatabase;
+import com.libs.userdatabase.UserRecord;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;

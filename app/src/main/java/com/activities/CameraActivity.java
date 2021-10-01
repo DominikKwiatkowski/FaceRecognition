@@ -1,4 +1,4 @@
-package com;
+package com.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.R;
+import com.libs.imgprocessing.FrameProcessTask;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
@@ -28,13 +31,7 @@ import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
-    static {
-        System.loadLibrary("opencv_java3");
-    }
-
-    Executor singleThreadExecutor = Executors.newSingleThreadExecutor();
-
-
+    private Executor singleThreadExecutor = Executors.newSingleThreadExecutor();
     private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     private CameraBridgeViewBase mOpenCvCameraView;
     private FrameProcessTask frameProcessTask;
@@ -47,25 +44,20 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // Activity creation.
+        // Initialize activity
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_camera);
-
-        // Load OpenCv.
-        if (OpenCVLoader.initDebug()) {
-            Log.d("OPENCV", "OpenCv loaded succesfully");
-        }
 
         // Camera setup.
         mOpenCvCameraView = findViewById(R.id.java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
 
-        // Create thread class.
+        // Create thread class
         frameProcessTask = new FrameProcessTask(this);
 
-        // Set camera change button.
+        // Set camera change button
         Button CameraChange = findViewById(R.id.cameraChange);
         CameraChange.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +69,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         takePhotoButton = findViewById(R.id.takePhotoButton);
         boolean addUserMode = getIntent().getBooleanExtra("TakePhotoMode", false);
         takePhotoButton.setActivated(addUserMode);
-
     }
 
     /**
@@ -100,6 +91,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     public void onDestroy() {
         super.onDestroy();
+
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -129,20 +121,20 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
-        // Set and get synchronized data.
+        // Set and get synchronized data
         frameProcessTask.setFrame(inputFrame);
         MatOfRect faces = frameProcessTask.getFaces();
 
-        // Until we will proceed first image, we can't proceed results.
+        // Until we will proceed first image, we can't proceed results
         if (faces != null) {
             // Draw rectangle for each face found in photo.
             for (Rect face : faces.toArray()) {
                 Imgproc.rectangle(
-                        inputFrame,                                                 // Image
-                        new Point(face.x, face.y),                                  //p1
-                        new Point(face.x + face.width, face.y + face.height),//p2
-                        new Scalar(0, 0, 255),                                     //color
-                        5                                                //Thickness
+                        inputFrame,                                                      // Image
+                        new Point(face.x, face.y),                                       // p1
+                        new Point(face.x + face.width, face.y + face.height),            // p2
+                        new Scalar(0, 0, 255),                                           // color
+                        5                                                                // Thickness
                 );
             }
         }
@@ -161,7 +153,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     }
 
     /**
-     * Change camera, front->back, back->front.
+     * Swap camera mode
      */
     public void swapCamera() {
         // Change camera index
@@ -171,7 +163,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             CameraIndex = CameraBridgeViewBase.CAMERA_ID_FRONT;
         }
 
-        // disable old camera, change camera, enable new camera
+        // Disable old camera, change camera, enable new camera
         mOpenCvCameraView.disableView();
         mOpenCvCameraView.setCameraIndex(CameraIndex);
         mOpenCvCameraView.enableView();
@@ -181,7 +173,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      * Save last frame to file in internal app storage, insert filename in
      * activity result and finish activity.
      *
-     * @param view curremt view
+     * @param view current view
      */
     public void takePhoto(View view) {
         Mat frame = frameProcessTask.getFrame();
@@ -201,5 +193,4 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         finish();
     }
-
 }

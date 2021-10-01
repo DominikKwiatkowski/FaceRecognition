@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFace">
+    tools:context=".activities.AddFaceActivity">
 
   <ImageView
       android:id="@+id/selectedImage"
@@ -21,7 +21,7 @@
       android:layout_width="302dp"
       android:layout_height="44dp"
       android:layout_marginTop="84dp"
-      android:hint="Nazwa użytkownika"
+      android:hint="@string/addface_Username_hint"
       android:inputType="text"
       android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"

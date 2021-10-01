@@ -5,6 +5,10 @@ import android.content.Context;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.common.FaceProcessingException;
+import com.common.VectorOperations;
+import com.libs.facerecognition.NeuralModel;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opencv.android.OpenCVLoader;
@@ -14,14 +18,13 @@ import org.tensorflow.lite.support.image.TensorImage;
 
 import java.io.IOException;
 
-import common.VectorOperations;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Class to test recognition of faces.
  */
 @RunWith(AndroidJUnit4.class)
-public class FaceRecognitionTest {
+public class MainActivityTest {
     static {
         System.loadLibrary("opencv_java3");
     }
@@ -32,7 +35,7 @@ public class FaceRecognitionTest {
      * are closer then vector of strange one.
      */
     @Test
-    public void performTest() {
+    public void performTest() throws FaceProcessingException {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertTrue(OpenCVLoader.initDebug());
         final int numOfPhotos = 3;
@@ -59,9 +62,9 @@ public class FaceRecognitionTest {
         }
 
         // Check if same person is closer than other one
-        assertTrue(VectorOperations.euclideanDistance(result[0],result[1]) >
-                    VectorOperations.euclideanDistance(result[1],result[2]));
-        assertTrue(VectorOperations.euclideanDistance(result[0],result[2]) >
-                    VectorOperations.euclideanDistance(result[1],result[2]));
+        assertTrue(VectorOperations.euclideanDistance(result[0], result[1]) >
+                VectorOperations.euclideanDistance(result[1], result[2]));
+        assertTrue(VectorOperations.euclideanDistance(result[0], result[2]) >
+                VectorOperations.euclideanDistance(result[1], result[2]));
     }
 }

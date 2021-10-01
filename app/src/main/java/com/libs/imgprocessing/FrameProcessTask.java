@@ -1,6 +1,8 @@
-package com;
+package com.libs.imgprocessing;
 
 import android.content.Context;
+
+import com.libs.facerecognition.NeuralModel;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -26,7 +28,7 @@ public class FrameProcessTask implements Runnable {
      */
     @Override
     public void run() {
-        // On beggining change stop value to false
+        // On beginning change stop value to false
         setStop(false);
 
         while (true) {

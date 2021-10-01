@@ -38,7 +38,6 @@ public class FrameProcessTask implements Runnable {
 
             // Get frame. Set frame to null to avoid doing same operation twice.
             Mat inputFrame = getFrame();
-            setFrame(null);
 
             if (inputFrame != null) {
                 MatOfRect faces = model.detectAllFaces(inputFrame);

@@ -8,6 +8,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.common.FaceProcessingException;
 import com.common.VectorOperations;
 import com.libs.facerecognition.NeuralModel;
+import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.ModelType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +43,7 @@ public class MainActivityTest {
         final int numOfPhotos = 3;
         float[][] result = new float[numOfPhotos][];
         Mat[] photos = new Mat[numOfPhotos];
-        NeuralModel model = NeuralModel.
-                getInstance(appContext, "Facenet-optimized.tflite");
+        NeuralModel model = GlobalData.getModel(ModelType.FACENET_USER, appContext).neuralModel;
 
         // Load images. Image 2 and 3 are images of same person.
         try {

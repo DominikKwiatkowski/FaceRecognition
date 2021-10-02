@@ -36,6 +36,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     private CameraBridgeViewBase mOpenCvCameraView;
     private FrameProcessTask frameProcessTask;
     private Button takePhotoButton;
+    private boolean saveNextFrame = false;
+    private final String Tag = "CameraActivity";
 
     /**
      * Method to get and set stuff after view creation.
@@ -68,7 +70,9 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         takePhotoButton = findViewById(R.id.takePhotoButton);
         boolean addUserMode = getIntent().getBooleanExtra("TakePhotoMode", false);
-        takePhotoButton.setActivated(addUserMode);
+        if(addUserMode) {
+            takePhotoButton.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -92,6 +96,10 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     public void onDestroy() {
         super.onDestroy();
 
+        // Stop processing frames.
+        frameProcessTask.setStop(true);
+
+        // Disable camera.
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
     }
@@ -121,6 +129,12 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
+        // Check if camera should take picture.
+        if(saveNextFrame){
+            savePhoto(inputFrame);
+            return inputFrame;
+        }
+
         // Set and get synchronized data
         frameProcessTask.setFrame(inputFrame);
         MatOfRect faces = frameProcessTask.getFaces();
@@ -170,13 +184,25 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     }
 
     /**
-     * Save last frame to file in internal app storage, insert filename in
-     * activity result and finish activity.
+     * Set flag to save next frame to memory.
      *
      * @param view current view
      */
     public void takePhoto(View view) {
-        Mat frame = frameProcessTask.getFrame();
+        saveNextFrame = true;
+    }
+
+    /**
+     * Save given frame to file in internal app storage, insert filename in
+     * activity result and finish activity.
+     *
+     * @param frame to be saved
+     */
+    private void savePhoto(Mat frame){
+        if(frame == null){
+            Log.e(Tag, "Trying to save null image.");
+            throw new NullPointerException();
+        }
         Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(frame, frameBmp);
 

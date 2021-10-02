@@ -36,8 +36,9 @@ public class FrameProcessTask implements Runnable {
 
         while (true) {
             // Check if thread should stop.
-            if (stop)
+            if (stop) {
                 return;
+            }
 
             // Get frame. Set frame to null to avoid doing same operation twice.
             Mat inputFrame = getFrame();

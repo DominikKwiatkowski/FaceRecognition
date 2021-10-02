@@ -7,12 +7,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "inz"
+        applicationId "com.pg.face_recognition"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        applicationId "opencv.org"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

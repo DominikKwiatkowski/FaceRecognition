@@ -2,8 +2,8 @@ package com.UserDatabase;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.libs.userdatabase.UserDatabase;
-import com.libs.userdatabase.UserRecord;
+import com.libs.globaldata.userdatabase.UserDatabase;
+import com.libs.globaldata.userdatabase.UserRecord;
 
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class UserDatabaseTests {
         // Sample instrumented databse test to present functionality - will redo later
         UserDatabase userDatabase = UserDatabase.getInstance(
                 InstrumentationRegistry.getInstrumentation().getContext(),        // App specific internal storage location
-                "Facenet",        // Model name TODO: temporary
+                "Facenet",        // ModelObject name TODO: temporary
                 1                // Vector size TODO: temporary
         );
 

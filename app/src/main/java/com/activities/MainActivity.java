@@ -7,12 +7,9 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +17,10 @@ import androidx.core.app.ActivityCompat;
 
 import com.R;
 import com.libs.facerecognition.NeuralModel;
-import com.libs.userdatabase.UserDatabase;
+import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.ModelType;
+import com.libs.globaldata.userdatabase.UserDatabase;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -30,9 +30,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NeuralModel model = null;
-    private UserDatabase userDatabase = null;
-    private Uri fileUri = null;
+    // TODO: remove after basic workflow is finished
+    ModelObject modelObject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,24 +45,14 @@ public class MainActivity extends AppCompatActivity {
         );
         validatePermissions(targetPermissions);
 
-        // TODO: All of this needs to be moved along with Model Selection functionality
-
         // Load OpenCv
         if (OpenCVLoader.initDebug()) {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
+        // TODO: remove after basic workflow is finished
         // Load NeuralModel
-        model = NeuralModel.getInstance(getApplicationContext(), "Facenet-optimized.tflite");
-
-        // Initialize database
-        // TODO: Temporary. Later on it should be moved to the model selection menu
-        //  (database will be defined per model).
-        userDatabase = UserDatabase.getInstance(
-                getApplicationContext(),        // App specific internal storage location
-                "Facenet",        // Model name TODO: temporary
-                128                // Vector size TODO: temporary
-        );
+        modelObject = GlobalData.getModel(ModelType.FACENET_USER, getApplicationContext());
     }
 
     /**
@@ -137,13 +126,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.sampleDatabase:
-                userDatabase.loadSampleDatabase();
+                // TODO: remove after all basic workflow is finished
+                modelObject.userDatabase.loadSampleDatabase(getApplicationContext());
                 break;
             case R.id.loadDatabase:
-                userDatabase.loadDatabase();
+                // TODO: remove after all basic workflow is finished
+                modelObject.userDatabase.loadDatabase();
                 break;
             case R.id.saveDatabase:
-                userDatabase.saveDatabase();
+                // TODO: remove after all basic workflow is finished
+                modelObject.userDatabase.saveDatabase();
+                break;
+            case R.id.clearModel:
+                // TODO: remove after all basic workflow is finished
+                modelObject.clear();
                 break;
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);

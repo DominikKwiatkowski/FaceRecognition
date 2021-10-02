@@ -20,9 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
+import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.ModelType;
 import com.libs.facerecognition.NeuralModel;
-import com.libs.userdatabase.UserDatabase;
-import com.libs.userdatabase.UserRecord;
+import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.userdatabase.UserDatabase;
+import com.libs.globaldata.userdatabase.UserRecord;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -93,16 +96,13 @@ public class AddFaceActivity extends AppCompatActivity {
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
 
+        ModelObject modelObject = GlobalData.getModel(ModelType.FACENET_USER, getApplicationContext());
+
         // Get network model instance
-        model = NeuralModel.getInstance(getApplicationContext(),
-                "Facenet-optimized.tflite");
+        model = modelObject.neuralModel;
 
         // Get database instance
-        userDatabase = UserDatabase.getInstance(
-                getApplicationContext(),
-                "Facenet",
-                128
-        );
+        userDatabase = modelObject.userDatabase;
 
         // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());

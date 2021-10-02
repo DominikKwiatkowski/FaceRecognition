@@ -1,7 +1,6 @@
 package com.libs.facerecognition;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -39,60 +38,51 @@ import static org.opencv.imgproc.Imgproc.warpAffine;
  * Represents neural model. User can define which one will be used.
  */
 public class NeuralModel {
-    private static NeuralModel instance;
-    private final int inputSize = 160;
-    private final int outputSize = 128;
-    private final String nameOfModel;
-    private final String TAG = "NeuralModelClass";
+    public final String Tag;
+
+    protected final String modelFilename;
+    private final int inputSize;
+    private final int outputSize;
+
     private final CascadeClassifier faceCascade = new CascadeClassifier();
     private final CascadeClassifier eyeCascade = new CascadeClassifier();
-    Resources res;
-    ImageProcessor imageProcessor =
-            new ImageProcessor.Builder()
-                    .add(new ResizeOp(inputSize, inputSize, ResizeOp.ResizeMethod.BILINEAR))
-                    .add(new NormalizeOp(127.5f, 127.5f))
-                    .build();
-    Context context;
+    private final ImageProcessor imageProcessor;
     private Interpreter model;
 
     /**
      * Class constructor.
      *
-     * @param context     actual Activity
-     * @param nameOfModel name of model to be used. All models must be inside ml folder
+     * @param modelFilename name of the model's file to be used. All models must be inside ml folder
      */
-    private NeuralModel(Context context, String nameOfModel) {
-        this.context = context;
-        this.nameOfModel = nameOfModel;
+    protected NeuralModel(String Tag, String modelFilename, Context context) {
+        this.Tag = Tag;
+        this.modelFilename = modelFilename;
 
         try {
-            model = new Interpreter(FileUtil.loadMappedFile(context, this.nameOfModel));
+            model = new Interpreter(FileUtil.loadMappedFile(context, this.modelFilename), new Interpreter.Options());
         } catch (IOException e) {
-            Log.e(TAG + nameOfModel, "Error reading model", e);
+            Log.e(this.Tag + modelFilename, "Error reading model", e);
         }
 
-        res = context.getResources();
-        loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade);
-        loadClassifier(R.raw.haarcascade_eye, eyeCascade);
+        inputSize = model.getInputTensor(0).shape()[1];
+        outputSize = model.getOutputTensor(0).shape()[1];
+
+        imageProcessor = new ImageProcessor.Builder()
+                        .add(new ResizeOp(inputSize, inputSize, ResizeOp.ResizeMethod.BILINEAR))
+                        .add(new NormalizeOp(127.5f, 127.5f))
+                        .build();
+
+        loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade, context);
+        loadClassifier(R.raw.haarcascade_eye, eyeCascade, context);
     }
 
     /**
-     * Singleton instance getter. Initializes NeuralModel instance if not initialized earlier.
-     * Returns static NeuralModel instance.
+     * Get model's output size.
      *
-     * @param context     - app/activity context
-     * @param nameOfModel - name of model to be used. All models must be inside ml folder
-     * @return instance - singleton NeuralModel instance
+     * @return size of the output of the model
      */
-    public static NeuralModel getInstance(Context context, String nameOfModel) {
-        if (instance == null) {
-            synchronized (NeuralModel.class) {
-                if (instance == null) {
-                    instance = new NeuralModel(context, nameOfModel);
-                }
-            }
-        }
-        return instance;
+    public int getOutputSize() {
+        return outputSize;
     }
 
     /**
@@ -140,7 +130,7 @@ public class NeuralModel {
 
         float[][] probabilityBuffer = new float[1][outputSize];
         model.run(tImage.getBuffer(), probabilityBuffer);
-        Log.i(TAG + nameOfModel, "Processed image successfully");
+        Log.i(Tag + modelFilename, "Processed image successfully");
 
         return probabilityBuffer;
     }
@@ -150,8 +140,9 @@ public class NeuralModel {
      *
      * @param resourceId image classifier id in resources space
      * @param classifier object of classifier to be loaded into
+     * @param context - app/activity context
      */
-    private void loadClassifier(int resourceId, CascadeClassifier classifier) {
+    private void loadClassifier(int resourceId, CascadeClassifier classifier, Context context) {
         try {
             InputStream is = context.getResources().openRawResource(resourceId);
             File cascadeDir = context.getDir("cascade", Context.MODE_PRIVATE);
@@ -169,9 +160,9 @@ public class NeuralModel {
             os.close();
 
             classifier.load(cascadeFile.getAbsolutePath());
-            Log.i(TAG + nameOfModel, "Cascade loaded successfully");
+            Log.i(Tag + modelFilename, "Cascade loaded successfully");
         } catch (IOException e) {
-            Log.e(TAG + nameOfModel, "Cascade not found");
+            Log.e(Tag + modelFilename, "Cascade not found");
         }
     }
 

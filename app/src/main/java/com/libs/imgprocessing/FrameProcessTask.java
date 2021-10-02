@@ -2,7 +2,9 @@ package com.libs.imgprocessing;
 
 import android.content.Context;
 
+import com.libs.globaldata.ModelType;
 import com.libs.facerecognition.NeuralModel;
+import com.libs.globaldata.GlobalData;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -19,8 +21,8 @@ public class FrameProcessTask implements Runnable {
 
     public FrameProcessTask(Context context) {
         // Neural model load.
-        model = NeuralModel.getInstance(context,
-                "Facenet-optimized.tflite");
+        // TODO: change after model choice functionality will be added
+        model = GlobalData.getModel(ModelType.FACENET_USER, context).neuralModel;
     }
 
     /**
@@ -38,7 +40,7 @@ public class FrameProcessTask implements Runnable {
 
             // Get frame. Set frame to null to avoid doing same operation twice.
             Mat inputFrame = getFrame();
-            setFrame(null);
+            // setFrame(null);
 
             if (inputFrame != null) {
                 MatOfRect faces = model.detectAllFaces(inputFrame);

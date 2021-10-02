@@ -85,7 +85,7 @@ public class FindFaceTest {
     public void performTest() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         // Name of model does not have any impact on results, it is never used.
-        NeuralModel model = GlobalData.getModel(appContext,
+        model = GlobalData.getModel(appContext,
                 appContext.getResources().getString(R.string.model_Facenet),
                 appContext.getResources().getString(R.string.model_filename_Facenet)).neuralModel;
 

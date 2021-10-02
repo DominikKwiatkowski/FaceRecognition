@@ -37,7 +37,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     private FrameProcessTask frameProcessTask;
     private Button takePhotoButton;
     private boolean saveNextFrame = false;
-    private String TAG = "CameraActivity";
+    private final String Tag = "CameraActivity";
 
     /**
      * Method to get and set stuff after view creation.
@@ -129,7 +129,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
-        // Check if camera should make picture.
+        // Check if camera should take picture.
         if(saveNextFrame){
             savePhoto(inputFrame);
             return inputFrame;
@@ -200,7 +200,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     private void savePhoto(Mat frame){
         if(frame == null){
-            Log.w(TAG, "Trying to save null image.");
+            Log.e(Tag, "Trying to save null image.");
             throw new NullPointerException();
         }
         Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);

@@ -14,16 +14,15 @@ public class GlobalData {
      *
      * @param context       - app/activity context
      * @param modelName     - name of the neural network model
-     * @param modelFilename - filename of the neural network model
      * @return instance - singleton ModelObject instance
      */
-    public static ModelObject getModel(Context context, String modelName, String modelFilename) {
+    public static ModelObject getModel(Context context, String modelName) {
         ModelObject model = modelsStorage.get(modelName);
 
         if (model == null) {
             synchronized (ModelObject.class) {
                 if (model == null) {
-                    model = new ModelObject(context, modelName, modelFilename);
+                    model = new ModelObject(context, modelName);
                     modelsStorage.put(modelName, model);
                 }
             }

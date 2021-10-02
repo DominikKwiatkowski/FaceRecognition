@@ -20,11 +20,10 @@ public class FrameProcessTask implements Runnable {
     private boolean stop = false;
 
     public FrameProcessTask(Context context) {
-        // Neural model load.
+        // Load neural model
         // TODO: change after model choice functionality will be added
         model = GlobalData.getModel(context,
-                context.getResources().getString(R.string.model_Facenet),
-                context.getResources().getString(R.string.model_filename_Facenet)).neuralModel;
+                context.getResources().getString(R.string.model_Facenet)).neuralModel;
     }
 
     /**
@@ -42,7 +41,7 @@ public class FrameProcessTask implements Runnable {
 
             // Get frame. Set frame to null to avoid doing same operation twice.
             Mat inputFrame = getFrame();
-            // setFrame(null);
+            setFrame(null);
 
             if (inputFrame != null) {
                 MatOfRect faces = model.detectAllFaces(inputFrame);

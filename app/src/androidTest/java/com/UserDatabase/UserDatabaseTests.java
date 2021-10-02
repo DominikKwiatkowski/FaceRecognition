@@ -24,8 +24,7 @@ public class UserDatabaseTests {
 
         // Sample instrumented database test to present functionality - will redo later
         ModelObject modelObject = GlobalData.getModel(appContext,
-                appContext.getResources().getString(R.string.model_Facenet),
-                appContext.getResources().getString(R.string.model_filename_Facenet));
+                appContext.getResources().getString(R.string.model_Facenet));
 
         UserDatabase userDatabase = modelObject.userDatabase;
 

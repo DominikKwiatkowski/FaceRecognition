@@ -16,18 +16,15 @@ public class NeuralModelProvider {
      *
      * @param context       - app/activity context
      * @param modelTag      - tag of the neural network model
-     * @param modelFilename - filename of the neural network model
      * @return instance - singleton FaceNetModel instance
      */
-    public static NeuralModel getInstance(Context context, String modelTag, String modelFilename) {
+    public static NeuralModel getInstance(Context context, String modelTag) {
         NeuralModel neuralModel = neuralModelsStorage.get(modelTag);
-
-        context.getResources().getString(R.string.model_Facenet);
 
         if (neuralModel == null) {
             synchronized (NeuralModel.class) {
                 if (neuralModel == null) {
-                    neuralModel = new NeuralModel(modelTag, modelFilename, context);
+                    neuralModel = new NeuralModel(modelTag, modelTag + ".tflite", context);
                 }
             }
         }

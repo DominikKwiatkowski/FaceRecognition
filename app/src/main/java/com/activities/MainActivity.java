@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO: remove after basic workflow is finished
         // Load NeuralModel
         modelObject = GlobalData.getModel(getApplicationContext(),
-                getResources().getString(R.string.model_Facenet),
-                getResources().getString(R.string.model_filename_Facenet));
+                getResources().getString(R.string.model_Facenet));
     }
 
     /**

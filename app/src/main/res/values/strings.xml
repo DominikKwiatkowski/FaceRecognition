@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">FaceRecognition</string>
 
-    <string name="model_Facenet">"FaceNet"</string>
-    <string name="model_filename_Facenet">"Facenet-optimized.tflite"</string>
+    <string name="model_Facenet">"Facenet"</string>
 
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 

@@ -96,8 +96,7 @@ public class AddFaceActivity extends AppCompatActivity {
         imageCodecs = new Imgcodecs();
 
         ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
-                getResources().getString(R.string.model_Facenet),
-                getResources().getString(R.string.model_filename_Facenet));
+                getResources().getString(R.string.model_Facenet));
 
         // Get network model instance
         model = modelObject.neuralModel;

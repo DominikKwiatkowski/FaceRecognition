@@ -200,7 +200,7 @@ public class UserDatabase {
         } catch (IOException e) {
             Log.e(Tag, "Cannot load database");
             e.printStackTrace();
-            throw new AssertionError("Cannot load database");
+            return;
         }
 
         // Deserialize database string

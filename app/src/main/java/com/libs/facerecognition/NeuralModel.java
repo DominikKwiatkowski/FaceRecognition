@@ -61,7 +61,7 @@ public class NeuralModel {
         try {
             model = new Interpreter(FileUtil.loadMappedFile(context, this.modelFilename), new Interpreter.Options());
         } catch (IOException e) {
-            Log.e(this.Tag + modelFilename, "Error reading model", e);
+            Log.e(this.Tag, "Error reading model", e);
         }
 
         inputSize = model.getInputTensor(0).shape()[1];
@@ -160,9 +160,9 @@ public class NeuralModel {
             os.close();
 
             classifier.load(cascadeFile.getAbsolutePath());
-            Log.i(Tag + modelFilename, "Cascade loaded successfully");
+            Log.i(Tag, "Cascade loaded successfully");
         } catch (IOException e) {
-            Log.e(Tag + modelFilename, "Cascade not found");
+            Log.e(Tag , "Cascade not found");
         }
     }
 

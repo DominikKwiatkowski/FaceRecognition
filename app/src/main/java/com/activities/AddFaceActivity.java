@@ -21,7 +21,6 @@ import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
 import com.libs.globaldata.ModelObject;
-import com.libs.globaldata.ModelType;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.userdatabase.UserDatabase;
@@ -96,7 +95,9 @@ public class AddFaceActivity extends AppCompatActivity {
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
 
-        ModelObject modelObject = GlobalData.getModel(ModelType.FACENET_USER, getApplicationContext());
+        ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
+                getResources().getString(R.string.model_Facenet),
+                getResources().getString(R.string.model_filename_Facenet));
 
         // Get network model instance
         model = modelObject.neuralModel;

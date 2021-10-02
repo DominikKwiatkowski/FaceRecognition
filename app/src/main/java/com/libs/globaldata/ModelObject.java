@@ -3,7 +3,7 @@ package com.libs.globaldata;
 import android.content.Context;
 
 import com.libs.facerecognition.NeuralModel;
-import com.libs.facerecognition.models.FaceNetModel;
+import com.libs.facerecognition.NeuralModelProvider;
 import com.libs.globaldata.userdatabase.UserDatabase;
 
 public class ModelObject {
@@ -14,24 +14,13 @@ public class ModelObject {
      * ModelObject constructor. Depending on the type, acquires proper neural network model.
      * Always creates new database with the unique filename assigned.
      *
-     * @param modelType - type of the neural network
-     * @param context   - app/activity context
+     * @param context       - app/activity context
+     * @param modelName     - name of the neural network model
+     * @param modelFilename - filename of the neural network model
      */
-    ModelObject(ModelType modelType, Context context) {
-        switch (modelType) {
-            case FACENET_USER:
-                neuralModel = FaceNetModel.getInstance(context);
-                userDatabase = new UserDatabase(context, neuralModel.Tag + "_user", neuralModel.getOutputSize());
-                break;
-            case FACENET_BENCHMARK:
-                neuralModel = FaceNetModel.getInstance(context);
-                userDatabase = new UserDatabase(context, neuralModel.Tag + "_benchmark", neuralModel.getOutputSize());
-                break;
-            default:
-                neuralModel = null;
-                userDatabase = null;
-                throw new AssertionError("Incorrect model type.");
-        }
+    ModelObject(Context context, String modelName, String modelFilename) {
+        neuralModel = NeuralModelProvider.getInstance(context, modelName, modelFilename);
+        userDatabase = new UserDatabase(context, modelName, neuralModel.getOutputSize());
     }
 
     /**

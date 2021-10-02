@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,11 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.R;
-import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
-import com.libs.globaldata.ModelType;
-import com.libs.globaldata.userdatabase.UserDatabase;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -52,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: remove after basic workflow is finished
         // Load NeuralModel
-        modelObject = GlobalData.getModel(ModelType.FACENET_USER, getApplicationContext());
+        modelObject = GlobalData.getModel(getApplicationContext(),
+                getResources().getString(R.string.model_Facenet),
+                getResources().getString(R.string.model_filename_Facenet));
     }
 
     /**
@@ -79,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Handle user's response to permissions request.
      *
-     * @param requestCode  code of permission request
-     * @param permissions  name of permission which was requested
+     * @param requestCode    code of permission request
+     * @param permissions    name of permission which was requested
      * @param grantedResults request results
      */
     @Override

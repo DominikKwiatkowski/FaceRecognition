@@ -2,7 +2,7 @@ package com.libs.imgprocessing;
 
 import android.content.Context;
 
-import com.libs.globaldata.ModelType;
+import com.R;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 
@@ -22,7 +22,9 @@ public class FrameProcessTask implements Runnable {
     public FrameProcessTask(Context context) {
         // Neural model load.
         // TODO: change after model choice functionality will be added
-        model = GlobalData.getModel(ModelType.FACENET_USER, context).neuralModel;
+        model = GlobalData.getModel(context,
+                context.getResources().getString(R.string.model_Facenet),
+                context.getResources().getString(R.string.model_filename_Facenet)).neuralModel;
     }
 
     /**

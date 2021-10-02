@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">FaceRecognition</string>
 
+    <string name="model_Facenet">"Facenet"</string>
+
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 
     <string name="addface_Username_hint">Nazwa użytkownika</string>
     <string name="addface_UsernameNotGiven_toast">Nie wprowadzono nazwy!</string>
-    <string name="addface_UserAdded_toast">Dodano użytkownika %s.</string>
-    <string name="addface_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu."</string>
+    <string name="addface_UserAdded_toast">Dodano użytkownika %s</string>
+    <string name="addface_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.libs.userdatabase;
+package com.libs.globaldata.userdatabase;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,7 +8,6 @@ import com.common.VectorOperations;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.libs.facerecognition.NeuralModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,31 +23,26 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class UserDatabase {
-    private static UserDatabase instance;
-    private final String LogTag = "Database";
-
-    // Application context to access resources and directory of app-specific storage
-    private final Context AppContext;
+    private final String Tag = "Database";
 
     // Path of database file
-    private final File DatabaseFile;
+    private final File databaseFile;
 
     // Database identifier, to ensure safe loading
-    private final String Id;
+    private final String id;
 
     // Vector target length, to validate database inputs
-    private final int VectorLength;
+    private final int vectorLength;
 
     // Database type stored for json serialization
     private final Type userDatabaseType;
     private Map<String, UserRecord> usersRecords;
 
-
-    private UserDatabase(Context appContext, String databaseName, int vectorLength) {
-        this.AppContext = appContext;
-        this.DatabaseFile = new File(appContext.getFilesDir(), LogTag + "_" + databaseName + ".json");
-        this.Id = databaseName;
-        this.VectorLength = vectorLength;
+    public UserDatabase(Context context, String databaseName, int vectorLength) {
+        this.databaseFile = new File(context.getFilesDir(), Tag + "_" + databaseName + ".json");
+        Log.d(Tag, databaseFile.getAbsolutePath());
+        this.id = databaseName;
+        this.vectorLength = vectorLength;
         this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {
         }.getType();
 
@@ -56,17 +50,6 @@ public class UserDatabase {
 
         // Load Database on creation
         loadDatabase();
-    }
-
-    public static UserDatabase getInstance(Context appContext, String databaseName, int vectorLength) {
-        if (instance == null) {
-            synchronized (NeuralModel.class) {
-                if (instance == null) {
-                    instance = new UserDatabase(appContext, databaseName, vectorLength);
-                }
-            }
-        }
-        return instance;
     }
 
     /**
@@ -78,7 +61,7 @@ public class UserDatabase {
      */
     public UserRecord findClosestRecord(float[] vector) {
         // Check correctness of vector length
-        if (vector.length == VectorLength) {
+        if (vector.length == vectorLength) {
             UserRecord closestRecord = null;
             double minDist = Double.MAX_VALUE;
 
@@ -97,6 +80,7 @@ public class UserDatabase {
         }
     }
 
+
     /**
      * Add new UserRecord to the database.
      *
@@ -104,7 +88,7 @@ public class UserDatabase {
      */
     public void addUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
-        if (userRecord.vector.length == VectorLength) {
+        if (userRecord.vector.length == vectorLength) {
             if (!usersRecords.containsKey(userRecord.username)) {
                 // If user doesn't exist in database, insert the record
                 usersRecords.put(userRecord.username, userRecord);
@@ -128,7 +112,7 @@ public class UserDatabase {
      */
     public void forceAddUserRecord(UserRecord userRecord) {
         // Check correctness of vector length
-        if (userRecord.vector.length == VectorLength) {
+        if (userRecord.vector.length == vectorLength) {
             usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
@@ -206,7 +190,7 @@ public class UserDatabase {
         StringBuilder databaseString = new StringBuilder();
 
         // Read the content of file
-        try (FileInputStream fileInputStream = new FileInputStream(DatabaseFile)) {
+        try (FileInputStream fileInputStream = new FileInputStream(databaseFile)) {
             int ch = fileInputStream.read();
 
             while (ch != -1) {
@@ -214,7 +198,7 @@ public class UserDatabase {
                 ch = fileInputStream.read();
             }
         } catch (IOException e) {
-            Log.e(LogTag, "Cannot load database");
+            Log.e(Tag, "Cannot load database");
             e.printStackTrace();
             return;
         }
@@ -229,14 +213,14 @@ public class UserDatabase {
 
         // Validate database
         // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
-        assertEquals("Wrong type of database", Id, loadedId);
-        assertEquals("Wrong size of database", VectorLength, loadedVectorLength);
+        assertEquals("Wrong type of database", id, loadedId);
+        assertEquals("Wrong size of database", vectorLength, loadedVectorLength);
 
         // Load users records
         usersRecords.clear();
         usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
 
-        Log.d(LogTag, "Database file successfully loaded");
+        Log.d(Tag, "Database file loaded");
     }
 
     /**
@@ -250,30 +234,43 @@ public class UserDatabase {
 
         // Complete Json object with database header data
         JsonObject databaseJson = new JsonObject();
-        databaseJson.addProperty("Id", Id);
-        databaseJson.addProperty("VectorLength", VectorLength);
+        databaseJson.addProperty("Id", id);
+        databaseJson.addProperty("VectorLength", vectorLength);
         databaseJson.addProperty("UserRecords", serializedUserRecords);
 
         // Write json object to file
         String databaseString = databaseJson.toString();
-        try (FileOutputStream fos = new FileOutputStream(DatabaseFile)) {
+        try (FileOutputStream fos = new FileOutputStream(databaseFile)) {
             fos.write(databaseString.getBytes());
         } catch (IOException e) {
-            Log.e(LogTag, "Cannot save database");
+            Log.e(Tag, "Cannot save database");
             e.printStackTrace();
-            return;
+            throw new AssertionError("Cannot save database");
         }
 
-        Log.d(LogTag, "Database file successfully saved");
+        Log.d(Tag, "Database file saved");
+    }
+
+    /**
+     * Removes database file if created.
+     */
+    public void clearFile() {
+        if (databaseFile.exists()) {
+            if (databaseFile.delete()) {
+                Log.d(Tag, "Database file removed.");
+            } else {
+                throw new AssertionError("Cannot remove the database file");
+            }
+        }
     }
 
     /**
      * Load sample database from resource files.
      */
-    public void loadSampleDatabase() {
+    public void loadSampleDatabase(Context context) {
         // Load sample_database.json from resources to a String
         String resourceString;
-        InputStream is = AppContext.getResources().openRawResource(R.raw.sample_database);
+        InputStream is = context.getResources().openRawResource(R.raw.sample_database);
         int size = 0;
 
         try {
@@ -283,9 +280,9 @@ public class UserDatabase {
             is.close();
             resourceString = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            Log.e(LogTag, "Cannot load resource");
+            Log.e(Tag, "Cannot load sample database");
             e.printStackTrace();
-            return;
+            throw new AssertionError("Cannot load sample database");
         }
 
         // Deserialize database string
@@ -298,13 +295,13 @@ public class UserDatabase {
 
         // Validate database
         // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
-        assertEquals("Wrong type of database", Id, loadedId);
-        assertEquals("Wrong size of database", VectorLength, loadedVectorLength);
+        assertEquals("Wrong type of database", id, loadedId);
+        assertEquals("Wrong size of database", vectorLength, loadedVectorLength);
 
         // Load users records
         usersRecords.clear();
         usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
 
-        Log.d(LogTag, "Database file successfully loaded form resources");
+        Log.d(Tag, "Sample database file loaded form resources");
     }
 }

@@ -2,7 +2,9 @@ package com.libs.imgprocessing;
 
 import android.content.Context;
 
+import com.R;
 import com.libs.facerecognition.NeuralModel;
+import com.libs.globaldata.GlobalData;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -18,9 +20,10 @@ public class FrameProcessTask implements Runnable {
     private boolean stop = false;
 
     public FrameProcessTask(Context context) {
-        // Neural model load.
-        model = NeuralModel.getInstance(context,
-                "Facenet-optimized.tflite");
+        // Load neural model
+        // TODO: change after model choice functionality will be added
+        model = GlobalData.getModel(context,
+                context.getResources().getString(R.string.model_Facenet)).neuralModel;
     }
 
     /**

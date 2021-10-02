@@ -1,11 +1,18 @@
 package com.UserDatabase;
 
+import android.content.Context;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.libs.userdatabase.UserDatabase;
-import com.libs.userdatabase.UserRecord;
+import com.R;
+import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.userdatabase.UserDatabase;
+import com.libs.globaldata.userdatabase.UserRecord;
 
 import org.junit.Test;
+
+import java.util.Random;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -13,18 +20,25 @@ public class UserDatabaseTests {
 
     @Test
     public void saveAndLoadTest() {
-        // Sample instrumented databse test to present functionality - will redo later
-        UserDatabase userDatabase = UserDatabase.getInstance(
-                InstrumentationRegistry.getInstrumentation().getContext(),        // App specific internal storage location
-                "Facenet",        // Model name TODO: temporary
-                1                // Vector size TODO: temporary
-        );
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        userDatabase.addUserRecord(new UserRecord("Test", new float[]{(float) 13.37}));
+        // Sample instrumented database test to present functionality - will redo later
+        ModelObject modelObject = GlobalData.getModel(appContext,
+                appContext.getResources().getString(R.string.model_Facenet));
+
+        UserDatabase userDatabase = modelObject.userDatabase;
+
+        Random random = new Random();
+        float[] vector = new float[modelObject.neuralModel.getOutputSize()];
+        for (int i = 0; i < vector.length; i++) {
+            vector[i] = random.nextFloat();
+        }
+
+        userDatabase.addUserRecord(new UserRecord("user", vector));
         userDatabase.saveDatabase();
         userDatabase.loadDatabase();
         String[] users = userDatabase.getUsersArray();
 
-        assertArrayEquals(users, new String[]{"Test"});
+        assertArrayEquals(users, new String[]{"user"});
     }
 }

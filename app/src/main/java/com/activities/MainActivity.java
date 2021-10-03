@@ -142,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);
                 startActivity(addFaceIntent);
                 break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                break;
 
         }
         return super.onOptionsItemSelected(item);

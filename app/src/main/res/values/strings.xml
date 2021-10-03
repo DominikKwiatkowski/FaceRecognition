@@ -2,6 +2,10 @@
     <string name="app_name">FaceRecognition</string>
 
     <string name="model_Facenet">"Facenet"</string>
+    <string name="model_DeepID">"DeepID"</string>
+    <string name="model_DeepFace">"DeepFace"</string>
+    <string name="model_OpenFace">"OpenFace"</string>
+    <string name="model_VGGFace">"VGG-Face"</string>
 
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 

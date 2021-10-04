@@ -60,14 +60,15 @@ public class UserDatabase {
      * @return closest UserRecord
      */
     public UserRecord findClosestRecord(float[] vector) {
-        // Check correctness of vector length
-        if (vector.length == vectorLength) {
+        if (validateVector(vector)) {
             UserRecord closestRecord = null;
             double minDist = Double.MAX_VALUE;
 
             for (String user : usersRecords.keySet()) {
                 double prevMinDist = minDist;
-                minDist = Math.min(minDist, VectorOperations.cosineSimilarity(vector, usersRecords.get(user).vector));
+                minDist = Math.min(minDist, VectorOperations.cosineSimilarity(
+                        VectorOperations.l2Normalize(vector),
+                        VectorOperations.l2Normalize(usersRecords.get(user).vector)));
 
                 if (minDist < prevMinDist) {
                     closestRecord = usersRecords.get(user);
@@ -80,6 +81,32 @@ public class UserDatabase {
         }
     }
 
+    /**
+     * Validate given vector's data to check, if it matches database characteristics:
+     * validate vector's size in relation to database's vector size
+     * validate vector values to make sure that there are no infinities and nans in it.
+     *
+     * @param vector to validate
+     * @return True if userRecord is valid, False otherwise
+     */
+    private boolean validateVector(float[] vector) {
+
+        if (vector.length != vectorLength) {
+            Log.e(Tag + "_" + id, "Invalid vector's length!");
+            return false;
+        }
+
+        // Validate vector's values
+        for (int i = 0; i < vector.length; i++) {
+            if (!Float.isFinite(vector[i])) {
+                Log.e(Tag + "_" + id, "Vector value not finite!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * Add new UserRecord to the database.
@@ -87,8 +114,7 @@ public class UserDatabase {
      * @param userRecord to add to database
      */
     public void addUserRecord(UserRecord userRecord) {
-        // Check correctness of vector length
-        if (userRecord.vector.length == vectorLength) {
+        if (validateVector(userRecord.vector)) {
             if (!usersRecords.containsKey(userRecord.username)) {
                 // If user doesn't exist in database, insert the record
                 usersRecords.put(userRecord.username, userRecord);
@@ -101,7 +127,7 @@ public class UserDatabase {
             // TODO: Later on it might be reasonable to save database on application closure (faster)
             saveDatabase();
         } else {
-            throw new AssertionError("Incorrect vector length");
+            throw new AssertionError("Invalid vector.");
         }
     }
 
@@ -111,15 +137,14 @@ public class UserDatabase {
      * @param userRecord to add to database
      */
     public void forceAddUserRecord(UserRecord userRecord) {
-        // Check correctness of vector length
-        if (userRecord.vector.length == vectorLength) {
+        if (validateVector(userRecord.vector)) {
             usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
             // TODO: Later on it might be reasonable to save database on application closure (faster)
             saveDatabase();
         } else {
-            throw new AssertionError("Incorrect vector length");
+            throw new AssertionError("Invalid vector.");
         }
     }
 
@@ -187,6 +212,10 @@ public class UserDatabase {
      * Deserialize user database.
      */
     public void loadDatabase() {
+        if (databaseFile.exists()) {
+            Log.w(Tag + "_" + id, "Unable to load database. File not found");
+        }
+
         StringBuilder databaseString = new StringBuilder();
 
         // Read the content of file
@@ -198,7 +227,7 @@ public class UserDatabase {
                 ch = fileInputStream.read();
             }
         } catch (IOException e) {
-            Log.e(Tag, "Cannot load database");
+            Log.e(Tag + "_" + id, "Unable to load database. Cannot properly read the file");
             e.printStackTrace();
             return;
         }
@@ -220,7 +249,7 @@ public class UserDatabase {
         usersRecords.clear();
         usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
 
-        Log.d(Tag, "Database file loaded");
+        Log.d(Tag + "_" + id, "Database file loaded");
     }
 
     /**
@@ -243,12 +272,12 @@ public class UserDatabase {
         try (FileOutputStream fos = new FileOutputStream(databaseFile)) {
             fos.write(databaseString.getBytes());
         } catch (IOException e) {
-            Log.e(Tag, "Cannot save database");
+            Log.e(Tag + "_" + id, "Cannot save database");
             e.printStackTrace();
             throw new AssertionError("Cannot save database");
         }
 
-        Log.d(Tag, "Database file saved");
+        Log.d(Tag + "_" + id, "Database file saved");
     }
 
     /**
@@ -257,7 +286,7 @@ public class UserDatabase {
     public void clearFile() {
         if (databaseFile.exists()) {
             if (databaseFile.delete()) {
-                Log.d(Tag, "Database file removed.");
+                Log.d(Tag + "_" + id, "Database file removed.");
             } else {
                 throw new AssertionError("Cannot remove the database file");
             }
@@ -280,7 +309,7 @@ public class UserDatabase {
             is.close();
             resourceString = new String(buffer, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            Log.e(Tag, "Cannot load sample database");
+            Log.e(Tag + "_" + id, "Cannot load sample database");
             e.printStackTrace();
             throw new AssertionError("Cannot load sample database");
         }
@@ -302,6 +331,6 @@ public class UserDatabase {
         usersRecords.clear();
         usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
 
-        Log.d(Tag, "Sample database file loaded form resources");
+        Log.d(Tag + "_" + id, "Sample database file loaded form resources");
     }
 }

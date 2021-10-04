@@ -23,7 +23,13 @@ public class FrameProcessTask implements Runnable {
         // Load neural model
         // TODO: change after model choice functionality will be added
         model = GlobalData.getModel(context,
-                context.getResources().getString(R.string.model_Facenet)).neuralModel;
+                GlobalData.getUserSettings(context).getString(
+                        context.getResources().getString(R.string.user_Settings_user_model_key),
+                        context.getResources().getString(R.string.default_model_name)),
+                GlobalData.getUserSettings(context).getString(
+                        context.getResources().getString(R.string.user_Settings_user_model_key),
+                        context.getResources().getString(R.string.default_model_name)))
+                .neuralModel;
     }
 
     /**

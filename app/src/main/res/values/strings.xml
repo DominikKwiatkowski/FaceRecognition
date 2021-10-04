@@ -1,28 +1,18 @@
 <resources>
     <string name="app_name">FaceRecognition</string>
 
-    <string name="model_Facenet">"Facenet"</string>
-
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 
+    <string name="default_model_name">Facenet</string>
+    <string name="user_settings_name"></string>
     <string name="addface_Username_hint">Nazwa użytkownika</string>
     <string name="addface_UsernameNotGiven_toast">Nie wprowadzono nazwy!</string>
     <string name="addface_UserAdded_toast">Dodano użytkownika %s</string>
     <string name="addface_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="choose_which_models_should_be_used_in_benchmark_mode">Choose which models should be used in benchmark mode</string>
+    <string name="choose_model_to_be_used_in_app">Choose model to be used in app</string>
+    <string name="user_Settings_user_model_key">UserModel</string>
+    <string name="user_settings_model_suffix">Benchmark</string>
 </resources>

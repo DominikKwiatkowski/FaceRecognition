@@ -41,7 +41,8 @@ public class NeuralModel {
     public final String Tag;
 
     protected final String modelFilename;
-    private final int inputSize;
+    private final int imageHeight;
+    private final int imageWidth;
     private final int outputSize;
 
     private final CascadeClassifier faceCascade = new CascadeClassifier();
@@ -64,11 +65,12 @@ public class NeuralModel {
             Log.e(this.Tag, "Error reading model", e);
         }
 
-        inputSize = model.getInputTensor(0).shape()[1];
+        imageHeight = model.getInputTensor(0).shape()[1];
+        imageWidth = model.getInputTensor(0).shape()[2];
         outputSize = model.getOutputTensor(0).shape()[1];
 
         imageProcessor = new ImageProcessor.Builder()
-                        .add(new ResizeOp(inputSize, inputSize, ResizeOp.ResizeMethod.BILINEAR))
+                        .add(new ResizeOp(imageHeight, imageWidth, ResizeOp.ResizeMethod.BILINEAR))
                         .add(new NormalizeOp(127.5f, 127.5f))
                         .build();
 

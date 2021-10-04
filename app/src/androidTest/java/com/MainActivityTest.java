@@ -43,7 +43,13 @@ public class MainActivityTest {
         float[][] result = new float[numOfPhotos][];
         Mat[] photos = new Mat[numOfPhotos];
         NeuralModel model = GlobalData.getModel(appContext,
-                appContext.getResources().getString(R.string.model_Facenet)).neuralModel;
+                GlobalData.getUserSettings(appContext).getString(
+                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
+                        appContext.getResources().getString(R.string.default_model_name)),
+                GlobalData.getUserSettings(appContext).getString(
+                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
+                        appContext.getResources().getString(R.string.default_model_name)))
+                .neuralModel;
 
         // Load images. Image 2 and 3 are images of same person.
         try {

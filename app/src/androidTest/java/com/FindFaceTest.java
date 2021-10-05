@@ -89,10 +89,10 @@ public class FindFaceTest {
         // Name of model does not have any impact on results, it is never used.
         model = GlobalData.getModel(appContext,
                 GlobalData.getUserSettings(appContext).getString(
-                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getString(R.string.settings_userModel_key),
                         res.getStringArray(R.array.models)[0]),
                 GlobalData.getUserSettings(appContext).getString(
-                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getString(R.string.settings_userModel_key),
                         res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 

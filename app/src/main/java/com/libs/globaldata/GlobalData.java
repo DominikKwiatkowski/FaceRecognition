@@ -63,9 +63,9 @@ public class GlobalData {
      * @return userSettings - preferences with all user settings
      */
     public static SharedPreferences getUserSettings(Context context){
-        if(userSettings == null){
-            synchronized (ModelObject.class) {
-                userSettings = context.getSharedPreferences(context.getResources().getString(R.string.user_settings_name), Context.MODE_PRIVATE);
+        synchronized (ModelObject.class) {
+            if (userSettings == null) {
+                userSettings = context.getSharedPreferences(context.getResources().getString(R.string.settings_userName), Context.MODE_PRIVATE);
             }
         }
         return userSettings;

@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
         // Load NeuralModel
         modelObject = GlobalData.getModel(getApplicationContext(),
                 userSettings.getString(
-                        getString(R.string.user_Settings_user_model_key),
+                        getString(R.string.settings_userModel_key),
                         getResources().getStringArray(R.array.models)[0]),
                 userSettings.getString(
-                        getString(R.string.user_Settings_user_model_key),
+                        getString(R.string.settings_userModel_key),
                         getResources().getStringArray(R.array.models)[0]));
     }
 

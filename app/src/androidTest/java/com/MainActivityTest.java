@@ -49,10 +49,10 @@ public class MainActivityTest {
 
         NeuralModel model = GlobalData.getModel(appContext,
                 userSettings.getString(
-                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getString(R.string.settings_userModel_key),
                         res.getStringArray(R.array.models)[0]),
                 userSettings.getString(
-                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getString(R.string.settings_userModel_key),
                         res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 

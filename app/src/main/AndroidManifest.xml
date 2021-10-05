@@ -36,6 +36,6 @@
         <activity android:name="com.activities.AddFaceActivity"></activity>
         <activity
             android:name="com.activities.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/settings_title_activity"></activity>
     </application>
 </manifest>

@@ -3,6 +3,7 @@ package com.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -46,10 +47,16 @@ public class MainActivity extends AppCompatActivity {
             Log.d("OPENCV", "OpenCv loaded succesfully");
         }
 
+        SharedPreferences userSettings = GlobalData.getUserSettings(this);
         // TODO: remove after basic workflow is finished
         // Load NeuralModel
         modelObject = GlobalData.getModel(getApplicationContext(),
-                getResources().getString(R.string.model_Facenet));
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]));
     }
 
     /**
@@ -141,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);
                 startActivity(addFaceIntent);
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
                 break;
 
         }

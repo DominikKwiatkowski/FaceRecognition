@@ -17,9 +17,9 @@ public class ModelObject {
      * @param context       - app/activity context
      * @param modelName     - name of the neural network model
      */
-    ModelObject(Context context, String modelName) {
+    ModelObject(Context context, String modelName, String databaseName) {
         neuralModel = NeuralModelProvider.getInstance(context, modelName);
-        userDatabase = new UserDatabase(context, modelName, neuralModel.getOutputSize());
+        userDatabase = new UserDatabase(context, databaseName, neuralModel.getOutputSize());
     }
 
     /**

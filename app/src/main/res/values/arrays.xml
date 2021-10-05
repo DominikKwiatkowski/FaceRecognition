@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="models">
+        <item>Facenet</item>
+        <item>DeepID</item>
+        <item>OpenFace</item>
+    </string-array>
+</resources>

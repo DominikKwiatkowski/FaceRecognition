@@ -6,4 +6,5 @@
     <item android:id="@+id/saveDatabase" android:title="Save Database"/>
     <item android:id="@+id/clearModel" android:title="Clear model"/>
     <item android:id="@+id/addUser" android:title="Add user"/>
+    <item android:id="@+id/settings" android:title="Settings"/>
 </menu>

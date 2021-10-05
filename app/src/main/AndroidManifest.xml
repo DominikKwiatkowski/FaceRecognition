@@ -34,5 +34,8 @@
         </activity>
         <activity android:name="com.activities.CameraActivity"></activity>
         <activity android:name="com.activities.AddFaceActivity"></activity>
+        <activity
+            android:name="com.activities.SettingsActivity"
+            android:label="@string/settings_title_activity"></activity>
     </application>
 </manifest>

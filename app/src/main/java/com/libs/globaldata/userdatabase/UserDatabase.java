@@ -66,7 +66,7 @@ public class UserDatabase {
 
             for (String user : usersRecords.keySet()) {
                 double prevMinDist = minDist;
-                minDist = Math.min(minDist, VectorOperations.cosineSimilarity(
+                minDist = Math.min(minDist, VectorOperations.euclideanDistance(
                         VectorOperations.l2Normalize(vector),
                         VectorOperations.l2Normalize(usersRecords.get(user).vector)));
 
@@ -212,8 +212,9 @@ public class UserDatabase {
      * Deserialize user database.
      */
     public void loadDatabase() {
-        if (databaseFile.exists()) {
+        if (!databaseFile.exists()) {
             Log.w(Tag + "_" + id, "Unable to load database. File not found");
+            return;
         }
 
         StringBuilder databaseString = new StringBuilder();

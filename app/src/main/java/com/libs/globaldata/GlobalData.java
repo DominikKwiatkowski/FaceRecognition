@@ -23,17 +23,14 @@ public class GlobalData {
      * @return instance - singleton ModelObject instance
      */
     public static ModelObject getModel(Context context, String modelName, String databaseName) {
-        ModelObject model = modelsStorage.get(modelName);
-
-        if (model == null) {
-            synchronized (ModelObject.class) {
-                if (model == null) {
-                    model = new ModelObject(context, modelName, databaseName);
-                    modelsStorage.put(modelName, model);
-                }
+        ModelObject model;
+        synchronized (ModelObject.class) {
+            model = modelsStorage.get(modelName);
+            if (model == null) {
+                model = new ModelObject(context, modelName, databaseName);
+                modelsStorage.put(modelName, model);
             }
         }
-
         return model;
     }
 
@@ -44,14 +41,13 @@ public class GlobalData {
      * @param context   - app/activity context
      */
     public static void clearModel(String modelName, Context context) {
-        ModelObject model = modelsStorage.get(modelName);
+        ModelObject model;
 
-        if (model != null) {
-            synchronized (ModelObject.class) {
-                if (model != null) {
-                    model.clear();
-                    modelsStorage.remove(modelName);
-                }
+        synchronized (ModelObject.class) {
+            model = modelsStorage.get(modelName);
+            if (model != null) {
+                model.clear();
+                modelsStorage.remove(modelName);
             }
         }
     }
@@ -63,7 +59,7 @@ public class GlobalData {
      * @return userSettings - preferences with all user settings
      */
     public static SharedPreferences getUserSettings(Context context){
-        synchronized (ModelObject.class) {
+        synchronized (SharedPreferences.class) {
             if (userSettings == null) {
                 userSettings = context.getSharedPreferences(context.getResources().getString(R.string.settings_userName), Context.MODE_PRIVATE);
             }

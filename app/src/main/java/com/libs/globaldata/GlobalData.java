@@ -13,6 +13,7 @@ import java.util.Map;
 public class GlobalData {
     private final static Map<String, ModelObject> modelsStorage = new HashMap<>();
     private static SharedPreferences userSettings;
+
     /**
      * Singleton model instance getter. Initializes ModelObject instance if not initialized earlier.
      * Returns static NeuralModel instance.
@@ -55,9 +56,17 @@ public class GlobalData {
         }
     }
 
+    /**
+     * Get All user settings defined in SharedPreferences.
+     *
+     * @param context - app/activity context
+     * @return userSettings - preferences with all user settings
+     */
     public static SharedPreferences getUserSettings(Context context){
         if(userSettings == null){
-            userSettings = context.getSharedPreferences(context.getResources().getString(R.string.user_settings_name), Context.MODE_PRIVATE);
+            synchronized (ModelObject.class) {
+                userSettings = context.getSharedPreferences(context.getResources().getString(R.string.user_settings_name), Context.MODE_PRIVATE);
+            }
         }
         return userSettings;
     }

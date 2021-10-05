@@ -10,7 +10,7 @@
         android:id="@+id/chooseModel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/choose_model_to_be_used_in_app"
+        android:text="@string/settings_user_mode"
         android:textAlignment="center" />
 
     <Spinner
@@ -22,7 +22,7 @@
         android:id="@+id/BenchmarkModeSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/choose_which_models_should_be_used_in_benchmark_mode"
+        android:text="@string/settings_benchmark_mode"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 </LinearLayout>

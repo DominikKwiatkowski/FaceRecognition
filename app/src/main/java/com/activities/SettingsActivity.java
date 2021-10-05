@@ -23,7 +23,7 @@ import java.io.File;
 public class SettingsActivity extends AppCompatActivity {
 
     private LinearLayout layout;
-    private Spinner chooseModelSpinner;
+    private Spinner modelChoiceSpinner;
     private SharedPreferences userSettings;
     private SharedPreferences.Editor editor;
     private String[] models;
@@ -33,10 +33,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         layout = findViewById(R.id.settingsLayout);
-        chooseModelSpinner = findViewById(R.id.chooseModelSpinner);
+        modelChoiceSpinner = findViewById(R.id.chooseModelSpinner);
 
         // Get all models
-        models = this.getResources().getStringArray(R.array.models);
+        models = getResources().getStringArray(R.array.models);
 
         // Load user settings preferences
         userSettings = GlobalData.getUserSettings(this);
@@ -75,20 +75,19 @@ public class SettingsActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        chooseModelSpinner.setAdapter(adapter);
-
+        modelChoiceSpinner.setAdapter(adapter);
         // Find chosen model position - maybe better to store int??? Share your opinion on review
         int position = 0;
         for (int i = 0; i < models.length; i++) {
-            if (userSettings.getString(getString(R.string.user_Settings_user_model_key), getString(R.string.default_model_name)).equals(models[i])) {
+            if (userSettings.getString(getString(R.string.user_Settings_user_model_key), models[0]).equals(models[i])) {
                 position = i;
                 break;
             }
         }
 
         // Setup spinner
-        chooseModelSpinner.setSelection(position);
-        chooseModelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        modelChoiceSpinner.setSelection(position);
+        modelChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putString(getString(R.string.user_Settings_user_model_key), models[position]);

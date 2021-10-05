@@ -3,16 +3,15 @@
 
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 
-    <string name="default_model_name">Facenet</string>
-    <string name="user_settings_name"></string>
+    <string name="user_settings_name">userSettings</string>
     <string name="addface_Username_hint">Nazwa użytkownika</string>
     <string name="addface_UsernameNotGiven_toast">Nie wprowadzono nazwy!</string>
     <string name="addface_UserAdded_toast">Dodano użytkownika %s</string>
     <string name="addface_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <string name="choose_which_models_should_be_used_in_benchmark_mode">Choose which models should be used in benchmark mode</string>
-    <string name="choose_model_to_be_used_in_app">Choose model to be used in app</string>
+    <string name="settings_benchmark_mode">Choose which models should be used in benchmark mode</string>
+    <string name="settings_user_mode">Choose model to be used in app</string>
     <string name="user_Settings_user_model_key">UserModel</string>
     <string name="user_settings_model_suffix">Benchmark</string>
 </resources>

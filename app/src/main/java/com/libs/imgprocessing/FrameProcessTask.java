@@ -1,6 +1,8 @@
 package com.libs.imgprocessing;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import com.R;
 import com.libs.facerecognition.NeuralModel;
@@ -22,13 +24,16 @@ public class FrameProcessTask implements Runnable {
     public FrameProcessTask(Context context) {
         // Load neural model
         // TODO: change after model choice functionality will be added
+        
+        Resources res = context.getResources();
+        SharedPreferences userSettings = GlobalData.getUserSettings(context);
         model = GlobalData.getModel(context,
-                GlobalData.getUserSettings(context).getString(
-                        context.getResources().getString(R.string.user_Settings_user_model_key),
-                        context.getResources().getString(R.string.default_model_name)),
-                GlobalData.getUserSettings(context).getString(
-                        context.getResources().getString(R.string.user_Settings_user_model_key),
-                        context.getResources().getString(R.string.default_model_name)))
+                userSettings.getString(
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]),
+                userSettings.getString(
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]))
                 .neuralModel;
     }
 

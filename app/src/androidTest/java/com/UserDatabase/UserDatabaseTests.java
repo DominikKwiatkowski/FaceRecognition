@@ -1,6 +1,7 @@
 package com.UserDatabase;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -21,11 +22,11 @@ public class UserDatabaseTests {
     @Test
     public void saveAndLoadTest() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-
+        Resources res = appContext.getResources();
         // Sample instrumented database test to present functionality - will redo later
         ModelObject modelObject = GlobalData.getModel(appContext,
-                appContext.getResources().getStringArray(R.array.models)[0],
-                appContext.getResources().getStringArray(R.array.models)[0]);
+                res.getStringArray(R.array.models)[0],
+                res.getStringArray(R.array.models)[0]);
 
         UserDatabase userDatabase = modelObject.userDatabase;
 

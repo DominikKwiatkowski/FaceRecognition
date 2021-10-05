@@ -2,6 +2,7 @@ package com.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -94,14 +95,15 @@ public class AddFaceActivity extends AppCompatActivity {
 
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
+        SharedPreferences userSettings = GlobalData.getUserSettings(this);
 
         ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
-                GlobalData.getUserSettings(this).getString(
+                userSettings.getString(
                         getString(R.string.user_Settings_user_model_key),
-                        getString(R.string.default_model_name)),
-                GlobalData.getUserSettings(this).getString(
+                        getResources().getStringArray(R.array.models)[0]),
+                userSettings.getString(
                         getString(R.string.user_Settings_user_model_key),
-                        getString(R.string.default_model_name)));
+                        getResources().getStringArray(R.array.models)[0]));
 
         // Get network model instance
         model = modelObject.neuralModel;

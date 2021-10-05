@@ -1,6 +1,7 @@
 package com;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -84,14 +85,15 @@ public class FindFaceTest {
      */
     public void performTest() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Resources res = appContext.getResources();
         // Name of model does not have any impact on results, it is never used.
         model = GlobalData.getModel(appContext,
                 GlobalData.getUserSettings(appContext).getString(
-                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
-                        appContext.getResources().getString(R.string.default_model_name)),
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]),
                 GlobalData.getUserSettings(appContext).getString(
-                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
-                        appContext.getResources().getString(R.string.default_model_name)))
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 
         // Expected Results

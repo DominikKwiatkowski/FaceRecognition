@@ -1,6 +1,8 @@
 package com;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -38,17 +40,20 @@ public class MainActivityTest {
     @Test
     public void performTest() throws FaceProcessingException {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Resources res = appContext.getResources();
         assertTrue(OpenCVLoader.initDebug());
         final int numOfPhotos = 3;
         float[][] result = new float[numOfPhotos][];
         Mat[] photos = new Mat[numOfPhotos];
+        SharedPreferences userSettings = GlobalData.getUserSettings(appContext);
+
         NeuralModel model = GlobalData.getModel(appContext,
-                GlobalData.getUserSettings(appContext).getString(
-                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
-                        appContext.getResources().getString(R.string.default_model_name)),
-                GlobalData.getUserSettings(appContext).getString(
-                        appContext.getResources().getString(R.string.user_Settings_user_model_key),
-                        appContext.getResources().getString(R.string.default_model_name)))
+                userSettings.getString(
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]),
+                userSettings.getString(
+                        res.getString(R.string.user_Settings_user_model_key),
+                        res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 
         // Load images. Image 2 and 3 are images of same person.

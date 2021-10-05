@@ -107,6 +107,18 @@ public class AddFaceActivity extends AppCompatActivity {
             }
         });
 
+        usernameEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View textView, int key, KeyEvent event) {
+                if (key == KeyEvent.KEYCODE_ENTER) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         // Disable add button before photo selected
         addButton.setClickable(false);
         addButton.setAlpha(0.5f);

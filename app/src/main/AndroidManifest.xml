@@ -20,9 +20,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_logo"
+        android:roundIcon="@mipmap/app_logo_round"
+        android:logo="@mipmap/app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zako">
         <activity android:name="com.activities.MainActivity">

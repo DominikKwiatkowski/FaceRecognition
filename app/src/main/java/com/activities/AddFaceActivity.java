@@ -1,6 +1,7 @@
 package com.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -8,10 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -40,6 +45,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private Imgcodecs imageCodecs = null;
     private ImageView currentFaceImage = null;
     private Button addButton = null;
+    private EditText usernameEditText = null;
 
     // NeuralModel singleton reference
     private NeuralModel model = null;
@@ -88,6 +94,31 @@ public class AddFaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_face);
         currentFaceImage = findViewById(R.id.selectedImage);
         addButton = findViewById(R.id.addUser);
+        usernameEditText = findViewById(R.id.usernameInput);
+
+        usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
+                if (action == EditorInfo.IME_ACTION_DONE) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        usernameEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View textView, int key, KeyEvent event) {
+                if (key == KeyEvent.KEYCODE_ENTER) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // Disable add button before photo selected
         addButton.setClickable(false);

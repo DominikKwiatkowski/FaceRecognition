@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,9 +27,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
-import com.libs.globaldata.ModelObject;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.ModelObject;
 import com.libs.globaldata.userdatabase.UserDatabase;
 import com.libs.globaldata.userdatabase.UserRecord;
 
@@ -38,7 +39,10 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class AddFaceActivity extends AppCompatActivity {
 
@@ -46,6 +50,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private ImageView currentFaceImage = null;
     private Button addButton = null;
     private EditText usernameEditText = null;
+    private ProgressBar progressBar = null;
 
     // NeuralModel singleton reference
     private NeuralModel model = null;
@@ -80,8 +85,11 @@ public class AddFaceActivity extends AppCompatActivity {
                         String filename = result.getData().getStringExtra("UserPhoto");
                         FileInputStream fis = getApplicationContext().openFileInput(filename);
                         Bitmap photo = BitmapFactory.decodeStream(fis);
+                        fis.close();
                         processPhoto(photo);
                     } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -119,10 +127,13 @@ public class AddFaceActivity extends AppCompatActivity {
                 return false;
             }
         });
+        progressBar = findViewById(R.id.progressBar);
+
+        // Hide progress bar
+        progressBar.setVisibility(View.INVISIBLE);
 
         // Disable add button before photo selected
-        addButton.setClickable(false);
-        addButton.setAlpha(0.5f);
+        setAddButtonState(false);
 
         // Initialize Imgcodecs class
         imageCodecs = new Imgcodecs();
@@ -227,33 +238,101 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param photo Bitmap of face which will be preprocessed.
      */
     private void processPhoto(Bitmap photo) {
-        Resources res = getResources();
-        Bitmap bmp = photo;
-
         // Convert Bitmap to Mat
         Mat image = new Mat();
-        Utils.bitmapToMat(bmp, image);
+        Utils.bitmapToMat(photo, image);
 
-        // Find face in photo
-        Mat face;
-        try {
-            face = model.preProcessOneFace(image);
-        } catch (FaceProcessingException fpe) {
-            fpe.printStackTrace();
-            toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
-            return;
+        photoLoading(true);
+        setAddButtonState(false);
+        CompletableFuture.supplyAsync(() -> preProcessFace(image))
+                .thenAccept(result -> {
+                            CompletableFuture.runAsync(() -> displayFace(result));
+                            CompletableFuture.runAsync(() -> processFace(result));
+                        }
+                );
+    }
+
+    /**
+     * Unlock button for adding user if true passed, lock otherwise.
+     *
+     * @param state desired state of button
+     */
+    void setAddButtonState(boolean state) {
+        if (state) {
+            addButton.setClickable(true);
+            addButton.setAlpha(1f);
+        } else {
+            addButton.setClickable(false);
+            addButton.setAlpha(0.5f);
         }
+    }
 
+    /**
+     * Hide face image and show loading animation if true passed,
+     * show face image and hide loading animation if false passed.
+     *
+     * @param state desired state of loading animation.
+     */
+    void photoLoading(boolean state) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (state) {
+                    currentFaceImage.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    currentFaceImage.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    /**
+     * Convert detected face to bitmap and display it on face image View.
+     *
+     * @param face detected face.
+     */
+    private void displayFace(Mat face) {
         // Convert face with Math to bitmap for ImageView
-        bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
+        Bitmap bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(face, bmp);
 
         // Display found face on screen in ImageView
-        currentFaceImage.setImageBitmap(bmp);
-        currentFaceVector = model.resizeAndProcess(face)[0];
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                currentFaceImage.setImageBitmap(bmp);
+            }
+        });
+        photoLoading(false);
+    }
 
+    /**
+     * Pre-process selected image or camera frame. Returns crop face image.
+     *
+     * @param image image or camera frame.
+     * @return cropped face image.
+     */
+    private Mat preProcessFace(Mat image) {
+        Resources res = getResources();
+        try {
+            return model.preProcessOneFace(image);
+        } catch (FaceProcessingException e) {
+            e.printStackTrace();
+            toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
+            throw new CompletionException(e);
+        }
+    }
+
+    /**
+     * Process face image using neural model and enable add user button when done.
+     *
+     * @param face face image.
+     */
+    private void processFace(Mat face) {
+        currentFaceVector = model.resizeAndProcess(face)[0];
         // Unlock "add" button
-        addButton.setClickable(true);
-        addButton.setAlpha(1f);
+        setAddButtonState(true);
     }
 }

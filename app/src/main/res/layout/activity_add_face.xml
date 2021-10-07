@@ -73,4 +73,14 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
+  <ProgressBar
+      android:id="@+id/progressBar"
+      style="?android:attr/progressBarStyle"
+      android:layout_width="200dp"
+      android:layout_height="200dp"
+      app:layout_constraintBottom_toBottomOf="@+id/selectedImage"
+      app:layout_constraintEnd_toEndOf="@+id/selectedImage"
+      app:layout_constraintStart_toStartOf="@+id/selectedImage"
+      app:layout_constraintTop_toTopOf="@+id/selectedImage" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

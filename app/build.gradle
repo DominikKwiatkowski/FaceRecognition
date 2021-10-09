@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
     implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
     implementation 'org.tensorflow:tensorflow-lite:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.4.0'
     implementation project(path: ':openCVLibrary3415')
     implementation 'junit:junit:4.13.2'
     implementation 'com.google.code.gson:gson:2.8.8'

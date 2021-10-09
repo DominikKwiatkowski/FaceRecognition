@@ -22,6 +22,10 @@ import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.gpu.CompatibilityList;
+import org.tensorflow.lite.gpu.GpuDelegate;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,7 +64,19 @@ public class NeuralModel {
         this.modelFilename = modelFilename;
 
         try {
-            model = new Interpreter(FileUtil.loadMappedFile(context, this.modelFilename), new Interpreter.Options());
+            Interpreter.Options options = new Interpreter.Options();
+            CompatibilityList compatList = new CompatibilityList();
+            if(compatList.isDelegateSupportedOnThisDevice()){
+                // if the device has a supported GPU, add the GPU delegate
+                GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
+                GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
+                options.addDelegate(gpuDelegate);
+            } else {
+                // if the GPU is not supported, run on 4 threads
+                options.setNumThreads(4);
+            }
+
+            model = new Interpreter(FileUtil.loadMappedFile(context, this.modelFilename), options);
         } catch (IOException e) {
             Log.e(this.Tag, "Error reading model", e);
         }

@@ -2,6 +2,8 @@ package com.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +14,12 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
-import com.libs.imgprocessing.FrameProcessTask;
+import com.libs.facerecognition.NeuralModel;
+import com.libs.globaldata.GlobalData;
+import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.userdatabase.UserDatabase;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -23,21 +27,35 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.support.image.TensorImage;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import static org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
-    private Executor singleThreadExecutor = Executors.newSingleThreadExecutor();
+    private Executor detectThreadExecutor = Executors.newSingleThreadExecutor();
+    private Executor recognizeThreadExecutor = Executors.newSingleThreadExecutor();
     private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     private CameraBridgeViewBase mOpenCvCameraView;
-    private FrameProcessTask frameProcessTask;
     private Button takePhotoButton;
     private boolean saveNextFrame = false;
     private final String Tag = "CameraActivity";
+    private CompletableFuture<MatOfRect> detectedFacesCompletableFuture = null;
+    private CompletableFuture<String[]> recognizedFacesCompletableFuture = null;
+    private Mat currentDetectedFrame = null;
+    private String[] currentNames = null;
+    private MatOfRect oldFaces = null;
+    private MatOfRect currentFaces = null;
+    private Rect[] lastDrawnFaces = null;
+    private NeuralModel model;
+    private UserDatabase userDatabase = null;
 
     /**
      * Method to get and set stuff after view creation.
@@ -56,9 +74,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         mOpenCvCameraView.setCvCameraViewListener(this);
         mOpenCvCameraView.setVisibility(View.VISIBLE);
 
-        // Create thread class
-        frameProcessTask = new FrameProcessTask(this);
-
         // Set camera change button
         Button CameraChange = findViewById(R.id.cameraChange);
         CameraChange.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +88,24 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         if(addUserMode) {
             takePhotoButton.setVisibility(View.VISIBLE);
         }
+
+        Context context = getApplicationContext();
+        Resources res = context.getResources();
+        SharedPreferences userSettings = GlobalData.getUserSettings(context);
+        ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]));
+
+        // Get network model instance
+        model = modelObject.neuralModel;
+
+        // Get database instance
+        userDatabase = modelObject.userDatabase;
+
     }
 
     /**
@@ -81,9 +114,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public void onPause() {
         super.onPause();
-
-        // Stop processing frames.
-        frameProcessTask.setStop(true);
 
         // Disable camera.
         if (mOpenCvCameraView != null)
@@ -95,9 +125,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      */
     public void onDestroy() {
         super.onDestroy();
-
-        // Stop processing frames.
-        frameProcessTask.setStop(true);
 
         // Disable camera.
         if (mOpenCvCameraView != null)
@@ -136,21 +163,94 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         }
 
         // Set and get synchronized data
-        frameProcessTask.setFrame(inputFrame);
-        MatOfRect faces = frameProcessTask.getFaces();
+
+        if(detectedFacesCompletableFuture != null && detectedFacesCompletableFuture.isDone()){
+            try {
+                oldFaces = currentFaces;
+                currentFaces = detectedFacesCompletableFuture.get();
+                if(oldFaces != null)
+                    lastDrawnFaces = oldFaces.toArray();
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (detectedFacesCompletableFuture == null || detectedFacesCompletableFuture.isDone()){
+            detectedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> model.detectAllFaces(inputFrame), detectThreadExecutor);
+            currentDetectedFrame = inputFrame;
+        }
+
+        if(currentFaces != null){
+            if (recognizedFacesCompletableFuture != null && recognizedFacesCompletableFuture.isDone()) {
+                try {
+                    currentNames = recognizedFacesCompletableFuture.get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (recognizedFacesCompletableFuture == null || recognizedFacesCompletableFuture.isDone()) {
+                recognizedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> {
+                    ArrayList<Mat> faceImages = model.preProcessAllFaces(currentDetectedFrame, currentFaces);
+                    String[] newNames = null;
+                    if (faceImages != null && faceImages.size() > 0) {
+                        // Calculate vector for each face
+                        newNames = new String[faceImages.size()];
+                        for (int i = 0; i < faceImages.size(); i++) {
+                            TensorImage image = model.changeImageRes(faceImages.get(i));
+                            float[] result = null;
+                            try {
+                                result = model.processImage(image)[0];
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            } finally {
+                                String name = userDatabase.findClosestRecord(result).username;
+                                newNames[i] = name;
+                            }
+                        }
+                    }
+                    return newNames;
+                }, recognizeThreadExecutor);
+            }
+        }
+
+
+        MatOfRect facesToDraw = currentFaces;
 
         // Until we will proceed first image, we can't proceed results
-        if (faces != null) {
+        if (facesToDraw != null) {
             // Draw rectangle for each face found in photo.
-            for (Rect face : faces.toArray()) {
+            Rect[] newFaces = facesToDraw.toArray();
+            Rect[] lastFaces = null;
+            if (lastDrawnFaces != null){
+                lastFaces = lastDrawnFaces;
+            }else{
+                lastFaces = newFaces;
+            }
+
+            for (int i = 0; i < lastFaces.length; i++) {
+                if(lastFaces.length == newFaces.length) {
+                    lastFaces[i].x = (lastFaces[i].x + newFaces[i].x) / 2;
+                    lastFaces[i].y = (lastFaces[i].y + newFaces[i].y) / 2;
+                    lastFaces[i].width = (lastFaces[i].width + newFaces[i].width) / 2;
+                    lastFaces[i].height = (lastFaces[i].height + newFaces[i].height) / 2;
+                }
                 Imgproc.rectangle(
                         inputFrame,                                                      // Image
-                        new Point(face.x, face.y),                                       // p1
-                        new Point(face.x + face.width, face.y + face.height),            // p2
-                        new Scalar(0, 0, 255),                                           // color
-                        5                                                                // Thickness
+                        new Point(lastFaces[i].x, lastFaces[i].y),                                       // p1
+                        new Point(lastFaces[i].x  + lastFaces[i].width, lastFaces[i].y + lastFaces[i].height),            // p2
+                        new Scalar(0, 0, 255),                                         // color
+                        5                                                             // Thickness
                 );
+                if(currentNames!=null && currentNames.length > i){
+                    Imgproc.putText(inputFrame,currentNames[i], new Point(lastFaces[i].x, lastFaces[i].y - 10), FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 1);
+                }
             }
+            lastDrawnFaces = lastFaces;
         }
 
         return inputFrame;
@@ -162,7 +262,6 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public void onResume() {
         mOpenCvCameraView.enableView();
-        singleThreadExecutor.execute(frameProcessTask);
         super.onResume();
     }
 

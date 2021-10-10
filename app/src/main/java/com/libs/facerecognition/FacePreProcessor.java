@@ -40,13 +40,21 @@ import static org.junit.Assert.assertEquals;
 import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
 import static org.opencv.imgproc.Imgproc.warpAffine;
 
+/**
+ * Class for all operations before image is put into face recognition. It provides method to detect
+ * faces and trim faces.
+ */
 public class FacePreProcessor {
     private final CascadeClassifier faceCascade = new CascadeClassifier();
     private final CascadeClassifier eyeCascade = new CascadeClassifier();
     public final String Tag = "ImagePreProcessor";
     private FaceDetector faceDetector;
 
-
+    /**
+     * Creates pre processor instance. Load cascade classifiers and build google face detector.
+     *
+     * @param context current app context
+     */
     public FacePreProcessor(Context context){
         FaceDetectorOptions options =
                 new FaceDetectorOptions.Builder()
@@ -61,6 +69,7 @@ public class FacePreProcessor {
         loadClassifier(R.raw.haarcascade_frontalface_alt2, faceCascade, context);
         loadClassifier(R.raw.haarcascade_eye, eyeCascade, context);
     }
+
     /**
      * Load Classifier from resources.
      *
@@ -93,11 +102,12 @@ public class FacePreProcessor {
     }
 
     /**
-     * Detect all faces on given frame.
+     * Detect all faces on given frame. This function will use OpenCv cascade. I will not recommend
+     * this method to detect faces.
      *
      * @param frame image on which faces will be found
      * @return MatOfRect matrix of all face rectangular. Face rectangular is beginning point and
-     * Size
+     * size
      */
     public MatOfRect detectAllFacesUsingCascade(Mat frame) {
         Mat frameGray = new Mat();
@@ -109,6 +119,12 @@ public class FacePreProcessor {
         return faces;
     }
 
+    /**
+     * Detect all faces on given frame. This function will use Google Ml Kit face detector.
+     * @param frame image on which faces will be found
+     * @return MatOfRect matrix of all face rectangular. Face rectangular is beginning point and
+     * size
+     */
     public MatOfRect detectAllFacesUsingML(Mat frame) {
         Bitmap image = Bitmap.createBitmap(frame.cols(),  frame.rows(),Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(frame,image);
@@ -132,6 +148,7 @@ public class FacePreProcessor {
         returnResult.fromList(facesRect);
         return returnResult;
     }
+
     /**
      * Try to rotate face and trim rest of photo.
      *
@@ -145,7 +162,7 @@ public class FacePreProcessor {
             face = rotateImageByEye(face, eyeArray);
         }
 
-        Rect[] faceArray = detectAllFacesUsingCascade(face).toArray();
+        Rect[] faceArray = detectAllFacesUsingML(face).toArray();
         if (faceArray.length == 0)
             throw new FaceProcessingException(FaceProcessingException.NO_FACES);
         else if (faceArray.length > 1)

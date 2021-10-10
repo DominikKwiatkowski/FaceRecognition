@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
+
 import com.libs.facerecognition.FacePreProcessor;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
@@ -44,9 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AddFaceActivity extends AppCompatActivity {
 
+    private Executor faceRecognitionExecutor = Executors.newSingleThreadExecutor();
     private Imgcodecs imageCodecs = null;
     private ImageView currentFaceImage = null;
     private Button addButton = null;
@@ -254,8 +258,8 @@ public class AddFaceActivity extends AppCompatActivity {
         setAddButtonState(false);
         CompletableFuture.supplyAsync(() -> preProcessFace(image))
                 .thenAccept(result -> {
-                            CompletableFuture.runAsync(() -> displayFace(result));
-                            CompletableFuture.runAsync(() -> processFace(result));
+                            displayFace(result);
+                            CompletableFuture.runAsync(() -> processFace(result), faceRecognitionExecutor) ;
                         }
                 );
     }
@@ -322,7 +326,6 @@ public class AddFaceActivity extends AppCompatActivity {
                 photoLoading(false);
             }
         });
-
     }
 
     /**

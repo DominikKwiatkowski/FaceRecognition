@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
+import com.libs.facerecognition.FacePreProcessor;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
@@ -64,6 +65,7 @@ public class AddFaceActivity extends AppCompatActivity {
     // ToastWrapper Instance
     private ToastWrapper toastWrapper = null;
 
+    private FacePreProcessor facePreProcessor = null;
     // ChoosePhoto Intent launcher
     ActivityResultLauncher<Intent> choosePhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -155,6 +157,8 @@ public class AddFaceActivity extends AppCompatActivity {
 
         // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());
+
+        facePreProcessor = GlobalData.getFacePreProcessor(this);
     }
 
     /**
@@ -317,7 +321,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private Mat preProcessFace(Mat image) {
         Resources res = getResources();
         try {
-            return model.preProcessOneFace(image);
+            return facePreProcessor.preProcessOneFace(image);
         } catch (FaceProcessingException e) {
             e.printStackTrace();
             toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);

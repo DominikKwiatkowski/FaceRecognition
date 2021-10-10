@@ -14,6 +14,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
+import com.libs.facerecognition.FacePreProcessor;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
@@ -56,6 +57,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     private Rect[] lastDrawnFaces = null;
     private NeuralModel model;
     private UserDatabase userDatabase = null;
+    private FacePreProcessor facePreProcessor = null;
 
     /**
      * Method to get and set stuff after view creation.
@@ -106,6 +108,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         // Get database instance
         userDatabase = modelObject.userDatabase;
 
+        facePreProcessor = GlobalData.getFacePreProcessor(this);
     }
 
     /**
@@ -164,59 +167,10 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         // Set and get synchronized data
 
-        if(detectedFacesCompletableFuture != null && detectedFacesCompletableFuture.isDone()){
-            try {
-                oldFaces = currentFaces;
-                currentFaces = detectedFacesCompletableFuture.get();
-                if(oldFaces != null)
-                    lastDrawnFaces = oldFaces.toArray();
 
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        detectFaces(inputFrame);
 
-        if (detectedFacesCompletableFuture == null || detectedFacesCompletableFuture.isDone()){
-            detectedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> model.detectAllFaces(inputFrame), detectThreadExecutor);
-            currentDetectedFrame = inputFrame;
-        }
-
-        if(currentFaces != null){
-            if (recognizedFacesCompletableFuture != null && recognizedFacesCompletableFuture.isDone()) {
-                try {
-                    currentNames = recognizedFacesCompletableFuture.get();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (recognizedFacesCompletableFuture == null || recognizedFacesCompletableFuture.isDone()) {
-                recognizedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> {
-                    ArrayList<Mat> faceImages = model.preProcessAllFaces(currentDetectedFrame, currentFaces);
-                    String[] newNames = null;
-                    if (faceImages != null && faceImages.size() > 0) {
-                        // Calculate vector for each face
-                        newNames = new String[faceImages.size()];
-                        for (int i = 0; i < faceImages.size(); i++) {
-                            TensorImage image = model.changeImageRes(faceImages.get(i));
-                            float[] result = null;
-                            try {
-                                result = model.processImage(image)[0];
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();
-                            } finally {
-                                String name = userDatabase.findClosestRecord(result).username;
-                                newNames[i] = name;
-                            }
-                        }
-                    }
-                    return newNames;
-                }, recognizeThreadExecutor);
-            }
-        }
+        recogniseFaces();
 
 
         MatOfRect facesToDraw = currentFaces;
@@ -256,6 +210,64 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         return inputFrame;
     }
 
+    private void detectFaces(Mat inputFrame){
+        if(detectedFacesCompletableFuture != null && detectedFacesCompletableFuture.isDone()){
+            try {
+                oldFaces = currentFaces;
+                currentFaces = detectedFacesCompletableFuture.get();
+                if(oldFaces != null)
+                    lastDrawnFaces = oldFaces.toArray();
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (detectedFacesCompletableFuture == null || detectedFacesCompletableFuture.isDone()){
+            detectedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> facePreProcessor.detectAllFacesUsingML(inputFrame), detectThreadExecutor);
+            currentDetectedFrame = inputFrame;
+        }
+    }
+
+
+    private void recogniseFaces(){
+        if(currentFaces != null){
+            if (recognizedFacesCompletableFuture != null && recognizedFacesCompletableFuture.isDone()) {
+                try {
+                    currentNames = recognizedFacesCompletableFuture.get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (recognizedFacesCompletableFuture == null || recognizedFacesCompletableFuture.isDone()) {
+                recognizedFacesCompletableFuture = CompletableFuture.supplyAsync(() -> {
+                    ArrayList<Mat> faceImages = facePreProcessor.preProcessAllFaces(currentDetectedFrame, currentFaces);
+                    String[] newNames = null;
+                    if (faceImages != null && faceImages.size() > 0) {
+                        // Calculate vector for each face
+                        newNames = new String[faceImages.size()];
+                        for (int i = 0; i < faceImages.size(); i++) {
+                            TensorImage image = model.changeImageRes(faceImages.get(i));
+                            float[] result = null;
+                            try {
+                                result = model.processImage(image)[0];
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                            } finally {
+                                String name = userDatabase.findClosestRecord(result).username;
+                                newNames[i] = name;
+                            }
+                        }
+                    }
+                    return newNames;
+                }, recognizeThreadExecutor);
+            }
+        }
+    }
     /**
      * In case of resuming up, we have to turn on camera again.
      */

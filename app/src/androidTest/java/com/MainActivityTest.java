@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.common.FaceProcessingException;
 import com.common.VectorOperations;
+import com.libs.facerecognition.FacePreProcessor;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 
@@ -56,6 +57,7 @@ public class MainActivityTest {
                         res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 
+        FacePreProcessor facePreProcessor = GlobalData.getFacePreProcessor(appContext);
         // Load images. Image 2 and 3 are images of same person.
         try {
             photos[0] = Utils.loadResource(appContext, R.drawable.face1);
@@ -68,7 +70,7 @@ public class MainActivityTest {
 
         // Process and proceed all test photos
         for (int i = 0; i < photos.length; i++) {
-            Mat faceImage = model.preProcessOneFace(photos[i]);
+            Mat faceImage = facePreProcessor.preProcessOneFace(photos[i]);
             TensorImage image = model.changeImageRes(faceImage);
             result[i] = model.processImage(image)[0];
         }

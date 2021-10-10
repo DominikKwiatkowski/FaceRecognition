@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.libs.facerecognition.NeuralModel;
+import com.libs.facerecognition.FacePreProcessor;
 import com.libs.globaldata.GlobalData;
 
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class FindFaceTest {
         System.loadLibrary("opencv_java3");
     }
 
-    private NeuralModel model;
+    private FacePreProcessor preProcessor;
 
     /**
      * Function to check if results are correct. We use margin, which is equal to margin field.
@@ -46,7 +46,7 @@ public class FindFaceTest {
      * @return true if result is correct
      */
     boolean photoIsCorrect(Mat image, Rect face) {
-        Rect[] result = model.detectAllFaces(image).toArray();
+        Rect[] result = preProcessor.detectAllFacesUsingML(image).toArray();
 
         if (result.length != 1) {
             return false;
@@ -87,14 +87,7 @@ public class FindFaceTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Resources res = appContext.getResources();
         // Name of model does not have any impact on results, it is never used.
-        model = GlobalData.getModel(appContext,
-                GlobalData.getUserSettings(appContext).getString(
-                        res.getString(R.string.settings_userModel_key),
-                        res.getStringArray(R.array.models)[0]),
-                GlobalData.getUserSettings(appContext).getString(
-                        res.getString(R.string.settings_userModel_key),
-                        res.getStringArray(R.array.models)[0]))
-                .neuralModel;
+        preProcessor = GlobalData.getFacePreProcessor(appContext);
 
         // Expected Results
         Rect[] faces = new Rect[testCases];

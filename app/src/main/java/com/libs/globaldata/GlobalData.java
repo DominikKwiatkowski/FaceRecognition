@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.R;
+import com.libs.facerecognition.FacePreProcessor;
 
 import org.junit.runner.manipulation.Ordering;
 
@@ -13,6 +14,7 @@ import java.util.Map;
 public class GlobalData {
     private final static Map<String, ModelObject> modelsStorage = new HashMap<>();
     private static SharedPreferences userSettings;
+    private static FacePreProcessor facePreProcessor;
 
     /**
      * Singleton model instance getter. Initializes ModelObject instance if not initialized earlier.
@@ -65,5 +67,21 @@ public class GlobalData {
             }
         }
         return userSettings;
+    }
+
+
+    /**
+     * Get All user settings defined in SharedPreferences.
+     *
+     * @param context - app/activity context
+     * @return userSettings - preferences with all user settings
+     */
+    public static FacePreProcessor getFacePreProcessor(Context context){
+        synchronized (FacePreProcessor.class) {
+            if (facePreProcessor == null) {
+                facePreProcessor = new FacePreProcessor(context);
+            }
+        }
+        return facePreProcessor;
     }
 }

@@ -136,7 +136,7 @@ public class NeuralModel {
      * @return probabilityBuffer Buffer of face properties. Sized of buffer must be specified
      * @throws NullPointerException in case of null image
      */
-    public float[][] processImage(TensorImage tImage) {
+    public synchronized float[][] processImage(TensorImage tImage) {
         if (tImage == null) {
             throw new NullPointerException("Image can't be null");
         }

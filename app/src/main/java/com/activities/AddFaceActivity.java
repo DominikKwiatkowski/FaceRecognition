@@ -50,6 +50,8 @@ public class AddFaceActivity extends AppCompatActivity {
     private Imgcodecs imageCodecs = null;
     private ImageView currentFaceImage = null;
     private Button addButton = null;
+    private Button addFromPhotoButton= null;
+    private Button addFromCameraButton = null;
     private EditText usernameEditText = null;
     private ProgressBar progressBar = null;
 
@@ -104,6 +106,8 @@ public class AddFaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_face);
         currentFaceImage = findViewById(R.id.selectedImage);
         addButton = findViewById(R.id.addUser);
+        addFromPhotoButton = findViewById(R.id.addFromPhoto);
+        addFromCameraButton = findViewById(R.id.addFromCamera);
         usernameEditText = findViewById(R.id.usernameInput);
 
         usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -284,9 +288,18 @@ public class AddFaceActivity extends AppCompatActivity {
                 if (state) {
                     currentFaceImage.setVisibility(View.INVISIBLE);
                     progressBar.setVisibility(View.VISIBLE);
+                    addFromCameraButton.setAlpha(0.5f);
+                    addFromPhotoButton.setAlpha(0.5f);
+                    addFromCameraButton.setClickable(false);
+                    addFromPhotoButton.setClickable(false);
+
                 } else {
                     currentFaceImage.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
+                    addFromCameraButton.setAlpha(1);
+                    addFromPhotoButton.setAlpha(1);
+                    addFromCameraButton.setClickable(true);
+                    addFromPhotoButton.setClickable(true);
                 }
             }
         });
@@ -298,18 +311,18 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param face detected face.
      */
     private void displayFace(Mat face) {
-        // Convert face with Math to bitmap for ImageView
-        Bitmap bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(face, bmp);
-
         // Display found face on screen in ImageView
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // Convert face with Math to bitmap for ImageView
+                Bitmap bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(face, bmp);
                 currentFaceImage.setImageBitmap(bmp);
+                photoLoading(false);
             }
         });
-        photoLoading(false);
+
     }
 
     /**

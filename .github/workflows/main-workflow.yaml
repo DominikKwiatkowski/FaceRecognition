@@ -63,6 +63,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          sdcard-path-or-size: 3G
           disable-animations: true
           emulator-build: 7425822   # Use it as a fix for "no emulator bug"
           script: ./gradlew connectedCheck

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/text_prediction"
+        android:autoSizeTextType="uniform"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text=""
+        android:textAllCaps="true"
+        android:textColor="@color/face_caption"
+        android:singleLine="true"
+        android:ellipsize="none"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bounding_box" />
+</merge>

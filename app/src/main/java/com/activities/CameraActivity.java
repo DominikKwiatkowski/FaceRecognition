@@ -14,7 +14,6 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
-
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.face.Face;
 import com.libs.facerecognition.FacePreProcessor;
@@ -26,9 +25,7 @@ import com.libs.globaldata.userdatabase.UserDatabase;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -40,6 +37,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 import static org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {

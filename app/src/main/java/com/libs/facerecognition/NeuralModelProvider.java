@@ -2,8 +2,6 @@ package com.libs.facerecognition;
 
 import android.content.Context;
 
-import com.R;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -70,13 +70,12 @@ public class GlobalData {
     /**
      * Get image preprocessor.
      *
-     * @param context - app/activity context
      * @return facePreProcessor - defined pre processor of app.
      */
-    public static FacePreProcessor getFacePreProcessor(Context context){
+    public static FacePreProcessor getFacePreProcessor(){
         synchronized (FacePreProcessor.class) {
             if (facePreProcessor == null) {
-                facePreProcessor = new FacePreProcessor(context);
+                facePreProcessor = new FacePreProcessor();
             }
         }
         return facePreProcessor;

@@ -2,10 +2,13 @@ package com;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Rect;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.face.Face;
 import com.libs.facerecognition.FacePreProcessor;
 import com.libs.globaldata.GlobalData;
 
@@ -14,9 +17,10 @@ import org.junit.runner.RunWith;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.opencv.core.Rect;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -46,37 +50,45 @@ public class FindFaceTest {
      * @return true if result is correct
      */
     boolean photoIsCorrect(Mat image, Rect face) {
-        Rect[] result = preProcessor.detectAllFacesUsingML(image).toArray();
+        Task<List<Face>> task = preProcessor.detectAllFacesUsingML(image);
+        while(!task.isComplete())
+        {
 
-        if (result.length != 1) {
+        }
+        ArrayList<Rect> result = new ArrayList<>();
+        for(Face faceRes : task.getResult()){
+            result.add(faceRes.getBoundingBox());
+        }
+
+        if (result.size() != 1) {
             return false;
         }
 
-        int widthMargin = face.width / margin;
-        int heightMargin = face.height / margin;
+        int widthMargin = face.width() / margin;
+        int heightMargin = face.height() / margin;
 
-        if (face.width - widthMargin > result[0].width) {
+        if (face.width() - widthMargin > result.get(0).width()) {
             return false;
         }
-        if (face.width + widthMargin < result[0].width) {
+        if (face.width() + widthMargin < result.get(0).width()) {
             return false;
         }
-        if (face.x - widthMargin > result[0].x) {
+        if (face.left - widthMargin > result.get(0).left) {
             return false;
         }
-        if (face.x + widthMargin < result[0].x) {
+        if (face.left + widthMargin < result.get(0).left) {
             return false;
         }
-        if (face.height - heightMargin > result[0].height) {
+        if (face.height() - heightMargin > result.get(0).height()) {
             return false;
         }
-        if (face.height + heightMargin < result[0].height) {
+        if (face.height() + heightMargin < result.get(0).height()) {
             return false;
         }
-        if (face.y - heightMargin > result[0].y) {
+        if (face.top - heightMargin > result.get(0).top) {
             return false;
         }
-        return face.y + heightMargin >= result[0].y;
+        return face.top + heightMargin >= result.get(0).top;
     }
 
     @Test
@@ -87,12 +99,12 @@ public class FindFaceTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Resources res = appContext.getResources();
         // Name of model does not have any impact on results, it is never used.
-        preProcessor = GlobalData.getFacePreProcessor(appContext);
+        preProcessor = GlobalData.getFacePreProcessor();
 
         // Expected Results
         Rect[] faces = new Rect[testCases];
-        faces[0] = new Rect(140, 170, 691, 800);
-        faces[1] = new Rect(48, 33, 74, 74);
+        faces[0] = new Rect(140, 170, 140 + 691, 170 + 800);
+        faces[1] = new Rect(48, 33, 48 + 74, 33 + 74);
 
         // Load images.
         Mat[] images = new Mat[testCases];

@@ -57,7 +57,7 @@ public class MainActivityTest {
                         res.getStringArray(R.array.models)[0]))
                 .neuralModel;
 
-        FacePreProcessor facePreProcessor = GlobalData.getFacePreProcessor(appContext);
+        FacePreProcessor facePreProcessor = GlobalData.getFacePreProcessor();
         // Load images. Image 2 and 3 are images of same person.
         try {
             photos[0] = Utils.loadResource(appContext, R.drawable.face1);

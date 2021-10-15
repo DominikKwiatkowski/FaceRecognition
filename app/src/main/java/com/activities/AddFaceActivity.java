@@ -162,7 +162,7 @@ public class AddFaceActivity extends AppCompatActivity {
         // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());
 
-        facePreProcessor = GlobalData.getFacePreProcessor(this);
+        facePreProcessor = GlobalData.getFacePreProcessor();
     }
 
     /**

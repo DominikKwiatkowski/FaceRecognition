@@ -159,21 +159,4 @@ public class FacePreProcessor {
         Log.d(Tag, "Image rotated");
         return imageRot;
     }
-
-    /*private android.graphics.Rect rotateRect(android.graphics.Rect rect, double angle){
-        double [] x = {rect.left,rect.right,rect.left,rect.right};
-        double [] y = {rect.top, rect.top, rect.bottom, rect.bottom};
-        for(int i=0;i<4;i++)
-        {
-            x[i] = x[i] - rect.centerX();
-            y[i] = y[i] - rect.centerY();
-            double xTemp = x[i] * Math.cos(angle) - y[i] * Math.sin(angle);
-            double yTemp = x[i] * Math.sin(angle) + y[i] * Math.cos(angle);
-            x[i] = xTemp + rect.centerX();
-            y[i] = yTemp + rect.centerY();
-        }
-        rect.se
-
-    }
-     */
 }

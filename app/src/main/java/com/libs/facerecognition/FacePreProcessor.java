@@ -81,7 +81,7 @@ public class FacePreProcessor {
     }
 
     /**
-     * Try to rotate face and trim rest of photo.
+     * Detect face, rotate it and trim.
      *
      * @param image image of face which will be preprocessed
      * @return Matrix of preprocessed face
@@ -95,20 +95,25 @@ public class FacePreProcessor {
                 e.printStackTrace();
             }
         }
+        // Check number of detected faces.
         List<Face> faces = task.getResult();
         if (faces.size() == 0)
             throw new FaceProcessingException(FaceProcessingException.NO_FACES);
         else if (faces.size() > 1)
             throw new FaceProcessingException(FaceProcessingException.MORE_THAN_ONE_FACE);
 
+        // Rotate faces.
         Face face = faces.get(0);
         double angle =  -face.getHeadEulerAngleZ();
         Mat rotatedImage = rotateImageByAngle(image, angle, face.getBoundingBox().centerX(),face.getBoundingBox().centerY());
         android.graphics.Rect rectangle = face.getBoundingBox();
 
+        // Calculate new bounding box.
         RotatedRect boundingBox = new RotatedRect(new Point(rectangle.centerX(),rectangle.centerY()),new Size(rectangle.width(),rectangle.height()),angle);
 
         Log.d(Tag, "Preprocessed one face");
+
+        // Return trimmed face.
         return rotatedImage.submat(boundingBox.boundingRect());
     }
 
@@ -120,6 +125,7 @@ public class FacePreProcessor {
      * @return Matrix of all faces after trimming and rotation
      */
     public ArrayList<Mat> preProcessAllFaces(Mat frame, Task<List<Face>> task) {
+        // Wait until task is done.
         while(!task.isComplete()){
             try {
                 Thread.sleep(10);
@@ -129,6 +135,7 @@ public class FacePreProcessor {
         }
         ArrayList<Mat> cutFaces = new ArrayList<>();
 
+        // Rotate each face
         for (Face face : task.getResult()) {
             android.graphics.Rect rectangle = face.getBoundingBox();
 

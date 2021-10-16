@@ -42,12 +42,12 @@ import static org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
 
+    private final String Tag = "CameraActivity";
     private Executor recognizeThreadExecutor = Executors.newSingleThreadExecutor();
     private int CameraIndex = CameraBridgeViewBase.CAMERA_ID_BACK;
     private CameraBridgeViewBase mOpenCvCameraView;
     private Button takePhotoButton;
     private boolean saveNextFrame = false;
-    private final String Tag = "CameraActivity";
     private CompletableFuture<String[]> recognizedFacesCompletableFuture = null;
     private Mat currentDetectedFrame = null;
     private String[] currentNames = null;
@@ -87,7 +87,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         takePhotoButton = findViewById(R.id.takePhotoButton);
         boolean addUserMode = getIntent().getBooleanExtra("TakePhotoMode", false);
-        if(addUserMode) {
+        if (addUserMode) {
             takePhotoButton.setVisibility(View.VISIBLE);
         }
 
@@ -160,18 +160,15 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     @Override
     public Mat onCameraFrame(Mat inputFrame) {
         // Check if camera should take picture.
-        if(saveNextFrame){
+        if (saveNextFrame) {
             savePhoto(inputFrame);
             return inputFrame;
         }
 
         // Set and get synchronized data
-
-
         detectFaces(inputFrame);
 
         recogniseFacesTask();
-
 
         List<Face> facesToDraw = currentFaces;
 
@@ -179,28 +176,28 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         if (facesToDraw != null) {
             // Draw rectangle for each face found in photo.
             List<Face> lastFaces = null;
-            if (lastDrawnFaces != null){
+            if (lastDrawnFaces != null) {
                 lastFaces = lastDrawnFaces;
-            }else{
+            } else {
                 lastFaces = facesToDraw;
             }
 
             for (int i = 0; i < lastFaces.size(); i++) {
-                if(lastFaces.size() == facesToDraw.size()) {
+                if (lastFaces.size() == facesToDraw.size()) {
                     lastFaces.get(i).getBoundingBox().left = (lastFaces.get(i).getBoundingBox().left + facesToDraw.get(i).getBoundingBox().left) / 2;
                     lastFaces.get(i).getBoundingBox().top = (lastFaces.get(i).getBoundingBox().top + facesToDraw.get(i).getBoundingBox().top) / 2;
                     lastFaces.get(i).getBoundingBox().right = (lastFaces.get(i).getBoundingBox().right + facesToDraw.get(i).getBoundingBox().right) / 2;
                     lastFaces.get(i).getBoundingBox().bottom = (lastFaces.get(i).getBoundingBox().bottom + facesToDraw.get(i).getBoundingBox().bottom) / 2;
                 }
                 Imgproc.rectangle(
-                        inputFrame,                                                      // Image
-                        new Point(lastFaces.get(i).getBoundingBox().left, lastFaces.get(i).getBoundingBox().top),                                       // p1
-                        new Point(lastFaces.get(i).getBoundingBox().right, lastFaces.get(i).getBoundingBox().bottom),            // p2
-                        new Scalar(0, 0, 255),                                         // color
-                        5                                                             // Thickness
+                        inputFrame,
+                        new Point(lastFaces.get(i).getBoundingBox().left, lastFaces.get(i).getBoundingBox().top),
+                        new Point(lastFaces.get(i).getBoundingBox().right, lastFaces.get(i).getBoundingBox().bottom),
+                        new Scalar(0, 0, 255),
+                        5
                 );
-                if(currentNames!=null && currentNames.length > i){
-                    Imgproc.putText(inputFrame,currentNames[i], new Point(lastFaces.get(i).getBoundingBox().left, lastFaces.get(i).getBoundingBox().top - 10), FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 1);
+                if (currentNames != null && currentNames.length > i) {
+                    Imgproc.putText(inputFrame, currentNames[i], new Point(lastFaces.get(i).getBoundingBox().left, lastFaces.get(i).getBoundingBox().top - 10), FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 1);
                 }
             }
             lastDrawnFaces = lastFaces;
@@ -211,11 +208,12 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     /**
      * Asynchronously detect faces on image. This method put result into currentFaces field.
+     *
      * @param inputFrame
      */
-    private void detectFaces(Mat inputFrame){
+    private void detectFaces(Mat inputFrame) {
         // Check if results are ready
-        if(detectedFacesTask != null &&  detectedFacesTask.isComplete()) {
+        if (detectedFacesTask != null && detectedFacesTask.isComplete()) {
             // Try to get result
             oldFaces = currentFaces;
             currentFaces = detectedFacesTask.getResult();
@@ -223,7 +221,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
                 lastDrawnFaces = oldFaces;
 
         }
-        if(detectedFacesTask == null ||  detectedFacesTask.isComplete()) {
+        if (detectedFacesTask == null || detectedFacesTask.isComplete()) {
             detectedFacesTask = facePreProcessor.detectAllFacesUsingML(inputFrame);
             currentDetectedFrame = inputFrame;
         }
@@ -233,9 +231,9 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      * Asynchronously recognise face on images. This method takes last frame and detected faces
      * from class fields.
      */
-    private void recogniseFacesTask(){
+    private void recogniseFacesTask() {
         // Check if there are faces to be recognised
-        if(currentFaces != null){
+        if (currentFaces != null) {
             // Check if results are ready to get
             if (recognizedFacesCompletableFuture != null && recognizedFacesCompletableFuture.isDone()) {
                 // Try to get results
@@ -257,9 +255,12 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             }
         }
     }
-    public String [] recogniseFaces(){
+
+    public String[] recogniseFaces() {
         // Trim all faces
-        ArrayList<Mat> faceImages = facePreProcessor.preProcessAllFaces(currentDetectedFrame, currentFaces);
+        ArrayList<Mat> faceImages = facePreProcessor.preProcessAllFaces(
+                currentDetectedFrame,
+                currentFaces);
         String[] newNames = null;
 
         if (faceImages != null && faceImages.size() > 0) {
@@ -283,6 +284,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         }
         return newNames;
     }
+
     /**
      * In case of resuming up, we have to turn on camera again.
      */
@@ -324,8 +326,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
      *
      * @param frame to be saved
      */
-    private void savePhoto(Mat frame){
-        if(frame == null){
+    private void savePhoto(Mat frame) {
+        if (frame == null) {
             Log.e(Tag, "Trying to save null image.");
             throw new NullPointerException();
         }

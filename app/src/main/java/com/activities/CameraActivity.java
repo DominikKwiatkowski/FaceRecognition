@@ -258,7 +258,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     public String[] recogniseFaces() {
         // Trim all faces
-        ArrayList<Mat> faceImages = (ArrayList<Mat>) facePreProcessor.preProcessAllFaces(
+        List<Mat> faceImages = facePreProcessor.preProcessAllFaces(
                 currentDetectedFrame,
                 currentFaces);
         String[] newNames = null;

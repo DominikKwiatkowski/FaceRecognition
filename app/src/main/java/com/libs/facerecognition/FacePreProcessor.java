@@ -50,8 +50,8 @@ public class FacePreProcessor {
     /**
      * Detect all faces on given frame. This function will use Google Ml Kit face detector.
      * @param frame image on which faces will be found
-     * @return MatOfRect matrix of all face rectangular. Face rectangular is beginning point and
-     * size
+     * @return Task<List<Face>> task which will detect faces. When task ends, we can get all
+     * detected faces.
      */
     public Task<List<Face>> detectAllFacesUsingML(Mat frame) {
         Bitmap image = Bitmap.createBitmap(frame.cols(),  frame.rows(),Bitmap.Config.ARGB_8888);
@@ -64,6 +64,19 @@ public class FacePreProcessor {
     }
 
     /**
+     * Wait until given task will not end
+     * @param task detect faces task for which we need to wait.
+     */
+    public void waitForTask(Task<List<Face>> task){
+        while(!task.isComplete()){
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
      * Detect face, rotate it and trim.
      *
      * @param image image of face which will be preprocessed
@@ -71,13 +84,7 @@ public class FacePreProcessor {
      */
     public Mat preProcessOneFace(Mat image ) throws FaceProcessingException {
         Task<List<Face>> task = detectAllFacesUsingML(image);
-        while(!task.isComplete()){
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        waitForTask(task);
         // Check number of detected faces.
         List<Face> faces = task.getResult();
         if (faces.size() == 0)
@@ -103,23 +110,15 @@ public class FacePreProcessor {
     /**
      * Try to rotate face and trim rest of photo.
      *
-     * @param frame         image with many faces which will be preprocessed
-     * @param task Rect of this face
+     * @param frame image with many faces which will be preprocessed
+     * @param listOfFaces List of all faces on this image.
      * @return Matrix of all faces after trimming and rotation
      */
-    public ArrayList<Mat> preProcessAllFaces(Mat frame, Task<List<Face>> task) {
-        // Wait until task is done.
-        while(!task.isComplete()){
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public ArrayList<Mat> preProcessAllFaces(Mat frame, List<Face> listOfFaces) {
         ArrayList<Mat> cutFaces = new ArrayList<>();
 
         // Rotate each face
-        for (Face face : task.getResult()) {
+        for (Face face : listOfFaces) {
             android.graphics.Rect rectangle = face.getBoundingBox();
 
             Mat faceImg = frame.submat(new Rect(rectangle.left,rectangle.top,rectangle.width(),rectangle.height()));
@@ -132,10 +131,10 @@ public class FacePreProcessor {
     }
 
     /**
-     * Rotate the image relative to the eyes.
+     * Rotate the image vy given angle.
      *
-     * @param image    image with face to be transformed
-     * @param angle Array of rectangles marking eyes. Has to be two-element
+     * @param image Image with face to be transformed
+     * @param angle Angle of which we want to rotate image
      * @return rotated image
      */
     private Mat rotateImageByAngle(Mat image, double angle, int x, int y) {

@@ -51,8 +51,8 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
     private CompletableFuture<String[]> recognizedFacesCompletableFuture = null;
     private Mat currentDetectedFrame = null;
     private String[] currentNames = null;
-    private Task<List<Face>> oldFaces = null;
-    private Task<List<Face>> currentFaces = null;
+    private List<Face> oldFaces = null;
+    private List<Face> currentFaces = null;
     private List<Face> lastDrawnFaces = null;
     private NeuralModel model;
     private UserDatabase userDatabase = null;
@@ -173,25 +173,24 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         recogniseFacesTask();
 
 
-        Task<List<Face>> facesToDraw = currentFaces;
+        List<Face> facesToDraw = currentFaces;
 
         // Until we will proceed first image, we can't proceed results
         if (facesToDraw != null) {
             // Draw rectangle for each face found in photo.
-            List<Face> newFaces = facesToDraw.getResult();
             List<Face> lastFaces = null;
             if (lastDrawnFaces != null){
                 lastFaces = lastDrawnFaces;
             }else{
-                lastFaces = newFaces;
+                lastFaces = facesToDraw;
             }
 
             for (int i = 0; i < lastFaces.size(); i++) {
-                if(lastFaces.size() == newFaces.size()) {
-                    lastFaces.get(i).getBoundingBox().left = (lastFaces.get(i).getBoundingBox().left + newFaces.get(i).getBoundingBox().left) / 2;
-                    lastFaces.get(i).getBoundingBox().top = (lastFaces.get(i).getBoundingBox().top + newFaces.get(i).getBoundingBox().top) / 2;
-                    lastFaces.get(i).getBoundingBox().right = (lastFaces.get(i).getBoundingBox().right + newFaces.get(i).getBoundingBox().right) / 2;
-                    lastFaces.get(i).getBoundingBox().bottom = (lastFaces.get(i).getBoundingBox().bottom + newFaces.get(i).getBoundingBox().bottom) / 2;
+                if(lastFaces.size() == facesToDraw.size()) {
+                    lastFaces.get(i).getBoundingBox().left = (lastFaces.get(i).getBoundingBox().left + facesToDraw.get(i).getBoundingBox().left) / 2;
+                    lastFaces.get(i).getBoundingBox().top = (lastFaces.get(i).getBoundingBox().top + facesToDraw.get(i).getBoundingBox().top) / 2;
+                    lastFaces.get(i).getBoundingBox().right = (lastFaces.get(i).getBoundingBox().right + facesToDraw.get(i).getBoundingBox().right) / 2;
+                    lastFaces.get(i).getBoundingBox().bottom = (lastFaces.get(i).getBoundingBox().bottom + facesToDraw.get(i).getBoundingBox().bottom) / 2;
                 }
                 Imgproc.rectangle(
                         inputFrame,                                                      // Image
@@ -219,9 +218,9 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
         if(detectedFacesTask != null &&  detectedFacesTask.isComplete()) {
             // Try to get result
             oldFaces = currentFaces;
-            currentFaces = detectedFacesTask;
+            currentFaces = detectedFacesTask.getResult();
             if (oldFaces != null)
-                lastDrawnFaces = oldFaces.getResult();
+                lastDrawnFaces = oldFaces;
 
         }
         if(detectedFacesTask == null ||  detectedFacesTask.isComplete()) {

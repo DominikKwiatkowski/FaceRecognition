@@ -16,8 +16,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -50,7 +50,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private Imgcodecs imageCodecs = null;
     private ImageView currentFaceImage = null;
     private Button addButton = null;
-    private Button addFromPhotoButton= null;
+    private Button addFromPhotoButton = null;
     private Button addFromCameraButton = null;
     private EditText usernameEditText = null;
     private ProgressBar progressBar = null;
@@ -114,7 +114,7 @@ public class AddFaceActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                     return true;
                 }
@@ -126,7 +126,7 @@ public class AddFaceActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View textView, int key, KeyEvent event) {
                 if (key == KeyEvent.KEYCODE_ENTER) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                     return true;
                 }
@@ -162,7 +162,7 @@ public class AddFaceActivity extends AppCompatActivity {
         // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());
 
-        facePreProcessor = GlobalData.getFacePreProcessor(this);
+        facePreProcessor = GlobalData.getFacePreProcessor();
     }
 
     /**

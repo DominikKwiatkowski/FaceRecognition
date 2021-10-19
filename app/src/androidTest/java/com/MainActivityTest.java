@@ -3,6 +3,8 @@ package com;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -45,7 +47,7 @@ public class MainActivityTest {
         assertTrue(OpenCVLoader.initDebug());
         final int numOfPhotos = 3;
         float[][] result = new float[numOfPhotos][];
-        Mat[] photos = new Mat[numOfPhotos];
+        Bitmap[] photos = new Bitmap[numOfPhotos];
         SharedPreferences userSettings = GlobalData.getUserSettings(appContext);
 
         NeuralModel model = GlobalData.getModel(appContext,
@@ -59,18 +61,15 @@ public class MainActivityTest {
 
         FacePreProcessor facePreProcessor = GlobalData.getFacePreProcessor();
         // Load images. Image 2 and 3 are images of same person.
-        try {
-            photos[0] = Utils.loadResource(appContext, R.drawable.face1);
-            photos[1] = Utils.loadResource(appContext, R.drawable.face2);
-            photos[2] = Utils.loadResource(appContext, R.drawable.face3);
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        }
+
+        photos[0] = BitmapFactory.decodeResource(res, R.drawable.face1);
+        photos[1] = BitmapFactory.decodeResource(res, R.drawable.face2);
+        photos[2] = BitmapFactory.decodeResource(res, R.drawable.face3);
+
 
         // Process and proceed all test photos
         for (int i = 0; i < photos.length; i++) {
-            Mat faceImage = facePreProcessor.preProcessOneFace(photos[i]);
+            Bitmap faceImage = facePreProcessor.preProcessOneFace(photos[i]);
             TensorImage image = model.changeImageRes(faceImage);
             result[i] = model.processImage(image)[0];
         }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.CompatibilityList;
@@ -86,15 +84,13 @@ public class NeuralModel {
      * @return tImage image processed and ready to be putted by neural network.
      * @throws NullPointerException in case of null image
      */
-    public TensorImage changeImageRes(Mat image) {
+    public TensorImage changeImageRes(Bitmap image) {
         if (image == null) {
             throw new NullPointerException("Image can't be null");
         }
 
         TensorImage tImage = new TensorImage(DataType.UINT8);
-        Bitmap bitmap = Bitmap.createBitmap(image.width(), image.height(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(image, bitmap);
-        tImage.load(bitmap);
+        tImage.load(image);
 
         return imageProcessor.process(tImage);
     }
@@ -105,7 +101,7 @@ public class NeuralModel {
      * @param image image to be prepared
      * @return probabilityBuffer Buffer of face properties
      */
-    public float[][] resizeAndProcess(Mat image) {
+    public float[][] resizeAndProcess(Bitmap image) {
         return processImage(changeImageRes(image));
     }
 

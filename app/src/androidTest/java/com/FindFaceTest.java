@@ -2,6 +2,8 @@ package com;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -14,9 +16,6 @@ import com.libs.globaldata.GlobalData;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class FindFaceTest {
      * @param face  expected face position
      * @return true if result is correct
      */
-    boolean photoIsCorrect(Mat image, Rect face) {
+    boolean photoIsCorrect(Bitmap image, Rect face) {
         Task<List<Face>> task = preProcessor.detectAllFacesUsingML(image);
         while(!task.isComplete())
         {
@@ -103,20 +102,16 @@ public class FindFaceTest {
 
         // Expected Results
         Rect[] faces = new Rect[testCases];
-        faces[0] = new Rect(140, 170, 140 + 691, 170 + 800);
-        faces[1] = new Rect(48, 33, 48 + 74, 33 + 74);
+        faces[0] = new Rect(396, 519, 2317, 2400);
+        faces[1] = new Rect(118, 86, 320, 288);
 
         // Load images.
-        Mat[] images = new Mat[testCases];
-        try {
-            images[0] = Utils.loadResource(appContext, R.drawable.face1);
-            images[1] = Utils.loadResource(appContext, R.drawable.face2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap[] images = new Bitmap[testCases];
 
-        // Test checks.
-        assertTrue(OpenCVLoader.initDebug());
+        images[0] = BitmapFactory.decodeResource(res, R.drawable.face1);
+        images[1] = BitmapFactory.decodeResource(res, R.drawable.face2);
+
+
         for (int i = 0; i < testCases; i++) {
             assertTrue(photoIsCorrect(images[i], faces[i]));
         }

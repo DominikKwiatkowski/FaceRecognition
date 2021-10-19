@@ -34,10 +34,6 @@ import com.libs.globaldata.ModelObject;
 import com.libs.globaldata.userdatabase.UserDatabase;
 import com.libs.globaldata.userdatabase.UserRecord;
 
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.imgcodecs.Imgcodecs;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,7 +43,6 @@ import java.util.concurrent.CompletionException;
 
 public class AddFaceActivity extends AppCompatActivity {
 
-    private Imgcodecs imageCodecs = null;
     private ImageView currentFaceImage = null;
     private Button addButton = null;
     private Button addFromPhotoButton = null;
@@ -142,7 +137,6 @@ public class AddFaceActivity extends AppCompatActivity {
         setAddButtonState(false);
 
         // Initialize Imgcodecs class
-        imageCodecs = new Imgcodecs();
         SharedPreferences userSettings = GlobalData.getUserSettings(this);
 
         ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
@@ -243,12 +237,10 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Process chosen photo using NeuralModel, display found face, save face vector.
      *
-     * @param photo Bitmap of face which will be preprocessed.
+     * @param image Bitmap of face which will be preprocessed.
      */
-    private void processPhoto(Bitmap photo) {
+    private void processPhoto(Bitmap image) {
         // Convert Bitmap to Mat
-        Mat image = new Mat();
-        Utils.bitmapToMat(photo, image);
 
         photoLoading(true);
         setAddButtonState(false);
@@ -310,15 +302,12 @@ public class AddFaceActivity extends AppCompatActivity {
      *
      * @param face detected face.
      */
-    private void displayFace(Mat face) {
+    private void displayFace(Bitmap face) {
         // Display found face on screen in ImageView
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // Convert face with Math to bitmap for ImageView
-                Bitmap bmp = Bitmap.createBitmap(face.cols(), face.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(face, bmp);
-                currentFaceImage.setImageBitmap(bmp);
+                currentFaceImage.setImageBitmap(face);
                 photoLoading(false);
             }
         });
@@ -330,7 +319,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param image image or camera frame.
      * @return cropped face image.
      */
-    private Mat preProcessFace(Mat image) {
+    private Bitmap preProcessFace(Bitmap image) {
         Resources res = getResources();
         try {
             return facePreProcessor.preProcessOneFace(image);
@@ -346,7 +335,7 @@ public class AddFaceActivity extends AppCompatActivity {
      *
      * @param face face image.
      */
-    private void processFace(Mat face) {
+    private void processFace(Bitmap face) {
         currentFaceVector = model.resizeAndProcess(face)[0];
         // Unlock "add" button
         setAddButtonState(true);

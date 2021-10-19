@@ -24,6 +24,7 @@ import com.libs.globaldata.userdatabase.UserDatabase;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -31,6 +32,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,6 +40,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static org.opencv.android.Utils.bitmapToMat;
+import static org.opencv.android.Utils.matToBitmap;
 import static org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
 
 public class CameraActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener {
@@ -222,7 +226,9 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
         }
         if (detectedFacesTask == null || detectedFacesTask.isComplete()) {
-            detectedFacesTask = facePreProcessor.detectAllFacesUsingML(inputFrame);
+            Bitmap bp = Bitmap.createBitmap(inputFrame.width(), inputFrame.height(), Bitmap.Config.ARGB_8888);
+            matToBitmap(inputFrame,bp);
+            detectedFacesTask = facePreProcessor.detectAllFacesUsingML(bp);
             currentDetectedFrame = inputFrame;
         }
     }
@@ -258,8 +264,10 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
 
     public String[] recogniseFaces() {
         // Trim all faces
-        List<Mat> faceImages = facePreProcessor.preProcessAllFaces(
-                currentDetectedFrame,
+        Bitmap bp = Bitmap.createBitmap(currentDetectedFrame.width(), currentDetectedFrame.height(), Bitmap.Config.ARGB_8888);
+        matToBitmap(currentDetectedFrame, bp);
+        List<Bitmap> faceImages = facePreProcessor.preProcessAllFaces(
+                bp,
                 currentFaces);
         String[] newNames = null;
 
@@ -268,6 +276,17 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             // Calculate vector for each face
             newNames = new String[faceImages.size()];
             for (int i = 0; i < faceImages.size(); i++) {
+                String filename = "cachedImage.png";
+                try {
+                    FileOutputStream fos = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
+                    faceImages.get(i).compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 // Predict face parameters
                 float[] result = null;
                 try {
@@ -332,7 +351,7 @@ public class CameraActivity extends AppCompatActivity implements CameraBridgeVie
             throw new NullPointerException();
         }
         Bitmap frameBmp = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(frame, frameBmp);
+        matToBitmap(frame, frameBmp);
 
         try {
             String filename = "cachedImage";

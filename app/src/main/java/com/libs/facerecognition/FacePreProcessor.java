@@ -1,6 +1,9 @@
 package com.libs.facerecognition;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 
 import com.common.FaceProcessingException;
@@ -11,18 +14,10 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Size;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.opencv.imgproc.Imgproc.getRotationMatrix2D;
-import static org.opencv.imgproc.Imgproc.warpAffine;
+import static android.graphics.Bitmap.createBitmap;
 
 /**
  * Class for all operations before image is put into face recognition. It provides method to detect
@@ -33,7 +28,7 @@ public class FacePreProcessor {
     private FaceDetector faceDetector;
 
     /**
-     * Creates pre processor instance. Load cascade classifiers and build google face detector.
+     * Creates pre processor instance. Build google face detector.
      */
     public FacePreProcessor() {
         FaceDetectorOptions options =
@@ -54,10 +49,8 @@ public class FacePreProcessor {
      * @return Task<List < Face>> task which will detect faces. When task ends, we can get all
      * detected faces.
      */
-    public Task<List<Face>> detectAllFacesUsingML(Mat frame) {
-        Bitmap image = Bitmap.createBitmap(frame.cols(), frame.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(frame, image);
-        InputImage miImage = InputImage.fromBitmap(image, 0);
+    public Task<List<Face>> detectAllFacesUsingML(Bitmap frame) {
+        InputImage miImage = InputImage.fromBitmap(frame, 0);
         Task<List<Face>> result = faceDetector.process(miImage);
 
         Log.d(Tag, "Face detection started");
@@ -85,7 +78,7 @@ public class FacePreProcessor {
      * @param image image of face which will be preprocessed
      * @return Matrix of preprocessed face
      */
-    public Mat preProcessOneFace(Mat image) throws FaceProcessingException {
+    public Bitmap preProcessOneFace(Bitmap image) throws FaceProcessingException {
         Task<List<Face>> task = detectAllFacesUsingML(image);
         waitForTask(task);
         // Check number of detected faces.
@@ -97,23 +90,8 @@ public class FacePreProcessor {
 
         // Rotate faces.
         Face face = faces.get(0);
-        double angle = -face.getHeadEulerAngleZ();
-        Mat rotatedImage = rotateImageByAngle(image,
-                angle,
-                face.getBoundingBox().centerX(),
-                face.getBoundingBox().centerY());
-        android.graphics.Rect rectangle = face.getBoundingBox();
 
-        // Calculate new bounding box.
-        RotatedRect boundingBox = new RotatedRect(
-                new Point(rectangle.centerX(), rectangle.centerY()),
-                new Size(rectangle.width(), rectangle.height()),
-                angle);
-
-        Log.d(Tag, "Preprocessed one face");
-
-        // Return trimmed face.
-        return rotatedImage.submat(boundingBox.boundingRect());
+        return rotateAndTrimFace(image, face);
     }
 
     /**
@@ -123,24 +101,12 @@ public class FacePreProcessor {
      * @param listOfFaces List of all faces on this image.
      * @return Matrix of all faces after trimming and rotation
      */
-    public List<Mat> preProcessAllFaces(Mat frame, List<Face> listOfFaces) {
-        List<Mat> cutFaces = new ArrayList<>();
+    public List<Bitmap> preProcessAllFaces(Bitmap frame, List<Face> listOfFaces) {
+        List<Bitmap> cutFaces = new ArrayList<>();
 
         // Rotate each face
         for (Face face : listOfFaces) {
-            android.graphics.Rect rectangle = face.getBoundingBox();
-
-            Mat faceImg = frame.submat(new Rect(
-                    rectangle.left,
-                    rectangle.top,
-                    rectangle.width(),
-                    rectangle.height()));
-            double angle = -face.getHeadEulerAngleZ();
-            cutFaces.add(rotateImageByAngle(
-                    faceImg,
-                    angle,
-                    rectangle.centerX(),
-                    rectangle.centerY()));
+            cutFaces.add(rotateAndTrimFace( frame, face));
         }
 
         Log.d(Tag, "Preprocessed all iamges");
@@ -151,18 +117,64 @@ public class FacePreProcessor {
      * Rotate the image by given angle.
      *
      * @param image Image with face to be transformed
-     * @param angle Angle of which we want to rotate image
+     * @param face  Face from face detection
      * @return rotated image
      */
-    private Mat rotateImageByAngle(Mat image, double angle, int x, int y) {
-        int rows = image.rows();
-        int cols = image.cols();
+    private Bitmap rotateAndTrimFace(Bitmap image, Face face) {
+        double angle = face.getHeadEulerAngleZ();
+        Matrix rotationMatrix = new Matrix();
 
-        Mat M = getRotationMatrix2D(new Point(x, y), angle, 1);
-        Mat imageRot = new Mat();
-        warpAffine(image, imageRot, M, new Size(cols, rows));
+        // Create rotation matrix
+        rotationMatrix.setRotate((float) angle,
+                image.getWidth() / 2,
+                image.getHeight() / 2);
 
-        Log.d(Tag, "Image rotated");
-        return imageRot;
+        // Rotate image
+        Bitmap rotatedImage = createBitmap(image,
+                0,
+                0,
+                image.getWidth(),
+                image.getHeight(),
+                rotationMatrix,
+                false);
+
+        // Calculate new bounding box center coordinate
+        int newBoundingBoxCenterX = face.getBoundingBox().centerX() * rotatedImage.getWidth() / image.getWidth();
+        int newBoundingBoxCenterY = face.getBoundingBox().centerY() * rotatedImage.getHeight() / image.getHeight();
+
+        // Create moved bounding box
+        RectF boundingBoxF = new RectF(
+                face.getBoundingBox().left + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
+                face.getBoundingBox().top + newBoundingBoxCenterY - face.getBoundingBox().centerY(),
+                face.getBoundingBox().right + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
+                face.getBoundingBox().bottom + newBoundingBoxCenterY - face.getBoundingBox().centerY()
+        );
+
+        // Set new rotation matrix and apply it
+        rotationMatrix.setRotate(
+                (float) angle,
+                rotatedImage.getWidth() / 2,
+                rotatedImage.getHeight() / 2);
+
+        rotationMatrix.mapRect(boundingBoxF);
+
+        // Map result to int( we can't cut half of the pixel)
+        Rect rotatedBox = new Rect();
+        boundingBoxF.roundOut(rotatedBox);
+
+        // For some reason after rotation bounding box have diffrent size, it will fix it
+        int xCordScale = (rotatedBox.width() - face.getBoundingBox().width()) / 2;
+        int yCordScale = (rotatedBox.height() - face.getBoundingBox().height()) / 2;
+        rotatedBox.set(
+                rotatedBox.left + xCordScale,
+                rotatedBox.top + yCordScale,
+                rotatedBox.right - xCordScale,
+                rotatedBox.bottom - yCordScale
+        );
+
+        Log.d(Tag, "Rotated and trimmed face");
+
+        // Trim and return preprocessed face.
+        return createBitmap(rotatedImage, rotatedBox.left, rotatedBox.top, rotatedBox.width(), rotatedBox.height());
     }
 }

@@ -106,9 +106,7 @@ public class FacePreProcessor {
 
         // Rotate each face
         for (Face face : listOfFaces) {
-            cutFaces.add(rotateAndTrimFace(
-                    frame,
-                    face));
+            cutFaces.add(rotateAndTrimFace( frame, face));
         }
 
         Log.d(Tag, "Preprocessed all iamges");
@@ -141,15 +139,15 @@ public class FacePreProcessor {
                 false);
 
         // Calculate new bounding box center coordinate
-        int newX = face.getBoundingBox().centerX() * rotatedImage.getWidth() / image.getWidth();
-        int newY = face.getBoundingBox().centerY() * rotatedImage.getHeight() / image.getHeight();
+        int newBoundingBoxCenterX = face.getBoundingBox().centerX() * rotatedImage.getWidth() / image.getWidth();
+        int newBoundingBoxCenterY = face.getBoundingBox().centerY() * rotatedImage.getHeight() / image.getHeight();
 
         // Create moved bounding box
         RectF boundingBoxF = new RectF(
-                face.getBoundingBox().left + newX - face.getBoundingBox().centerX(),
-                face.getBoundingBox().top + newY - face.getBoundingBox().centerY(),
-                face.getBoundingBox().right + newX - face.getBoundingBox().centerX(),
-                face.getBoundingBox().bottom + newY - face.getBoundingBox().centerY()
+                face.getBoundingBox().left + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
+                face.getBoundingBox().top + newBoundingBoxCenterY - face.getBoundingBox().centerY(),
+                face.getBoundingBox().right + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
+                face.getBoundingBox().bottom + newBoundingBoxCenterY - face.getBoundingBox().centerY()
         );
 
         // Set new rotation matrix and apply it
@@ -160,11 +158,11 @@ public class FacePreProcessor {
 
         rotationMatrix.mapRect(boundingBoxF);
 
-        // Map result to int( we can't cut half of pixel
+        // Map result to int( we can't cut half of the pixel)
         Rect rotatedBox = new Rect();
         boundingBoxF.roundOut(rotatedBox);
 
-        // For some reason after rotation bounding box have diffrent size, it fix it
+        // For some reason after rotation bounding box have diffrent size, it will fix it
         int xCordScale = (rotatedBox.width() - face.getBoundingBox().width()) / 2;
         int yCordScale = (rotatedBox.height() - face.getBoundingBox().height()) / 2;
         rotatedBox.set(

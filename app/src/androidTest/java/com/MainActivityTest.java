@@ -31,9 +31,6 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
-    static {
-        System.loadLibrary("opencv_java3");
-    }
 
     /**
      * Function check if face recognition work correctly. It loads 3 faces, 2 of them are same

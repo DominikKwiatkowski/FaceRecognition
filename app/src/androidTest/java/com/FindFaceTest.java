@@ -34,10 +34,6 @@ public class FindFaceTest {
     private static final int margin = 10;
     private static final int testCases = 2;
 
-    static {
-        System.loadLibrary("opencv_java3");
-    }
-
     private FacePreProcessor preProcessor;
 
     /**

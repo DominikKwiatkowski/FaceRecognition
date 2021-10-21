@@ -62,7 +62,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -partition-size 512 -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -partition-size 2048 -camera-back none
           # sdcard-path-or-size: 3G
           disable-animations: true
           emulator-build: 7425822   # Use it as a fix for "no emulator bug"

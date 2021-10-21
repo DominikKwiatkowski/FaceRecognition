@@ -2,7 +2,9 @@ package com.libs.globaldata.userdatabase;
 
 import androidx.annotation.NonNull;
 
-public class UserRecord {
+import java.io.Serializable;
+
+public class UserRecord implements Serializable {
     public String username;
     public float[] vector;
     private int weight;

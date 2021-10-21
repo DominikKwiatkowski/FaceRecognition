@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -63,6 +64,8 @@ public class AddFaceActivity extends AppCompatActivity {
     private ToastWrapper toastWrapper = null;
 
     private FacePreprocessor facePreProcessor = null;
+
+    private ArrayList<UserRecord> resultData = new ArrayList<>();
     // ChoosePhoto Intent launcher
     ActivityResultLauncher<Intent> choosePhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -158,9 +161,34 @@ public class AddFaceActivity extends AppCompatActivity {
 
         facePreProcessor = GlobalData.getFacePreProcessor();
     }
-
     /**
      * Unlock button for adding user if true passed, lock otherwise.
+     * Start file chooser activity with image constraint.
+     *
+     * @param view - current view.
+     */
+    public void choosePhoto(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+    }
+
+
+    /**
+     * Exit activity without adding user.
+     *
+     * @param view - current view.
+     */
+    public void cancel(View view) {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(getString(R.string.addFace_resultData_name), resultData);
+        setResult(RESULT_OK, returnIntent);
+        finish();
+    }
+
+    /**
+     * Create UserRecord with data from last processed image and user input.
      *
      * @param state desired state of button
      */
@@ -255,7 +283,7 @@ public class AddFaceActivity extends AppCompatActivity {
             return facePreProcessor.preProcessOneFace(image);
         } catch (FaceProcessingException e) {
             e.printStackTrace();
-            toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
+            toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
             throw new CompletionException(e);
         }
     }
@@ -288,18 +316,6 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
-     * Start file chooser activity with image constraint.
-     *
-     * @param view - current view.
-     */
-    public void choosePhoto(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
-    }
-
-    /**
      * Start CameraActivity with in photo taking mode.
      *
      * @param view - current view.
@@ -309,15 +325,6 @@ public class AddFaceActivity extends AppCompatActivity {
         takePhotoIntent.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
                 CameraPreviewActivity.CameraPreviewMode.CAPTURE);
         takePhotoLauncher.launch(takePhotoIntent);
-    }
-
-    /**
-     * Exit activity without adding user.
-     *
-     * @param view - current view.
-     */
-    public void cancel(View view) {
-        finish();
     }
 
     /**
@@ -331,13 +338,13 @@ public class AddFaceActivity extends AppCompatActivity {
         Resources res = getResources();
 
         if (username.isEmpty() || currentFaceVector == null) {
-            toastWrapper.showToast(res.getString(R.string.addface_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
+            toastWrapper.showToast(res.getString(R.string.addFace_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
             return;
         }
 
         UserRecord userRecord = new UserRecord(username, currentFaceVector);
         userDatabase.addUserRecord(userRecord);
-        toastWrapper.showToast(String.format(res.getString(R.string.addface_UserAdded_toast), username), Toast.LENGTH_SHORT);
+        toastWrapper.showToast(String.format(res.getString(R.string.addFace_UserAdded_toast), username), Toast.LENGTH_SHORT);
         finish();
     }
 }

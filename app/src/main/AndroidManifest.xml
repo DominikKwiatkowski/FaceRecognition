@@ -3,8 +3,8 @@
     package="com"
     android:installLocation="preferExternal">
 
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -41,5 +41,6 @@
         <activity
             android:name="com.activities.SettingsActivity"
             android:label="@string/settings_title_activity" />
+        <activity android:name="com.activities.BenchmarkModeActivity"></activity>
     </application>
 </manifest>

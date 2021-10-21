@@ -1,6 +1,7 @@
 package com.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +19,9 @@ import com.R;
 import com.common.PermissionsWrapper;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.userdatabase.UserRecord;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +29,21 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: remove after basic workflow is finished
     ModelObject modelObject = null;
+
+    ActivityResultLauncher<Intent> addFace = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // Create all user records
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    // Put all user records into database.
+                    ArrayList<UserRecord> userRecordArray =
+                            (ArrayList<UserRecord>) result.getData().getSerializableExtra(
+                            getResources().getString(R.string.addFace_resultData_name));
+                    for(UserRecord userRecord : userRecordArray){
+                        modelObject.userDatabase.addUserRecord(userRecord);
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);
-                startActivity(addFaceIntent);
+                addFace.launch(addFaceIntent);
                 break;
             case R.id.settings:
                 Intent settings = new Intent(this, SettingsActivity.class);

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -109,6 +110,7 @@ public class FindFaceTest {
 
 
         for (int i = 0; i < testCases; i++) {
+            Log.d("MSG", String.valueOf(i));
             assertTrue(photoIsCorrect(images[i], faces[i]));
         }
     }

@@ -8,6 +8,8 @@
     <string name="addFace_UserAdded_toast">Dodano użytkownika %s</string>
     <string name="addFace_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
     <string name="addFace_resultData_name">ResultData</string>
+    <string name="addFace_countNotFinish_toast">Nie skończono obliczeń!</string>
+    <string name="addFace_ChooseModelName_intentValue">usedModels</string>
 
     <string name="settings_title_activity">SettingsActivity</string>
     <string name="settings_userName">userSettings</string>
@@ -17,4 +19,8 @@
     <string name="settings_userModel_suffix">Benchmark</string>
 
     <string name="camerapreview_captureButton_desc">Capture</string>
+
+    <string name="settings_benchModel_suffix">Benchmark</string>
+    <string name="benchmarkMode_modelDatabaseName_suffix">_benchmark</string>
+
 </resources>

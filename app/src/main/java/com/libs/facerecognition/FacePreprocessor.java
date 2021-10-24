@@ -143,7 +143,7 @@ public class FacePreprocessor {
         Rect rotatedBox = new Rect();
         boundingBoxF.roundOut(rotatedBox);
 
-        // For some reason after rotation bounding box have diffrent size, it will fix it
+        // For some reason after rotation bounding box have different size, it will fix it
         int xCordScale = (rotatedBox.width() - face.getBoundingBox().width()) / 2;
         int yCordScale = (rotatedBox.height() - face.getBoundingBox().height()) / 2;
         rotatedBox.set(

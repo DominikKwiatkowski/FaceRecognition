@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,27 +24,13 @@ import com.libs.globaldata.userdatabase.UserRecord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     // TODO: remove after basic workflow is finished
     ModelObject modelObject = null;
-
-    ActivityResultLauncher<Intent> addFace = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                // Create all user records
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    // Put all user records into database.
-                    ArrayList<UserRecord> userRecordArray =
-                            (ArrayList<UserRecord>) result.getData().getSerializableExtra(
-                            getResources().getString(R.string.addFace_resultData_name));
-                    for(UserRecord userRecord : userRecordArray){
-                        modelObject.userDatabase.addUserRecord(userRecord);
-                    }
-                }
-            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,13 +123,26 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);
-                addFace.launch(addFaceIntent);
+                ArrayList<String> chosenModels= new ArrayList<>();
+                SharedPreferences userSettings = GlobalData.getUserSettings(this);
+                chosenModels.add(
+                        userSettings.getString(
+                            getString(R.string.settings_userModel_key),
+                            getResources().getStringArray(R.array.models)[0]));
+                chosenModels.add(userSettings.getString(
+                            getString(R.string.settings_userModel_key),
+                            getResources().getStringArray(R.array.models)[0]));
+                addFaceIntent.putExtra(getResources().getString(R.string.addFace_ChooseModelName_intentValue),chosenModels);
+                startActivity(addFaceIntent);
                 break;
             case R.id.settings:
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
-
+            case R.id.benchmarkMode:
+                Intent benchmark = new Intent(this, BenchmarkModeActivity.class);
+                startActivity(benchmark);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

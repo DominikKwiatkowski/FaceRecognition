@@ -1,4 +1,4 @@
-package com.libs.facerecognition;
+package com.libs.benchmark;
 
 import android.graphics.Bitmap;
 

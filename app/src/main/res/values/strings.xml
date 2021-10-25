@@ -22,5 +22,6 @@
 
     <string name="settings_benchModel_suffix">Benchmark</string>
     <string name="benchmarkMode_modelDatabaseName_suffix">_benchmark</string>
+    <string name="Return">Return</string>
 
 </resources>

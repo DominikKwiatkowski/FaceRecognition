@@ -195,6 +195,10 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
             faceMini.setMinimumHeight(faceSize);
             horizontalLayout.addView(faceMini);
 
+            Space space = new Space(caller);
+            space.setMinimumWidth(150);
+            horizontalLayout.addView(space);
+
             // Create vertical layout to gather all models results.
             LinearLayout verticalLayout = new LinearLayout(caller);
             horizontalLayout.addView(verticalLayout);
@@ -209,8 +213,8 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
 
             showResultLayout.addView(horizontalLayout);
             // Add space between each result to make it clearer
-            Space space = new Space(caller);
-            space.setMinimumHeight(60);
+            space = new Space(caller);
+            space.setMinimumHeight(100);
             showResultLayout.addView(space);
         }
     }

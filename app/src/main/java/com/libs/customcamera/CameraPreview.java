@@ -11,6 +11,7 @@ import android.view.Surface;
 
 import androidx.annotation.NonNull;
 import androidx.camera.camera2.interop.Camera2Interop;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -118,23 +119,27 @@ public class CameraPreview {
         this.cameraProvider = cameraProvider;
 
         Preview preview = new Preview.Builder()
+                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setTargetRotation(Surface.ROTATION_0)
-                .setTargetResolution(previewResolution)
+                //        .setTargetResolution(previewResolution)
                 .build();
 
-        // Preview image's resolution (larger image takes longer to process)
-        int imageAnalysisWidth = 640;
-        int imageAnalysisHeight = imageAnalysisWidth *
-                previewResolution.getHeight() / previewResolution.getWidth();
+        // // Preview image's resolution (larger image takes longer to process)
+        // int imageAnalysisWidth = 640;
+        // int imageAnalysisHeight = imageAnalysisWidth *
+        //         previewResolution.getHeight() / previewResolution.getWidth();
 
         // Most optimal solution
         ImageAnalysis.Builder imageAnalysisBuilder = new ImageAnalysis.Builder()
+                .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setTargetRotation(Surface.ROTATION_0)
-                .setTargetResolution(new Size(imageAnalysisWidth, imageAnalysisHeight))
+                //        .setTargetResolution(new Size(imageAnalysisWidth, imageAnalysisHeight))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888);
+
         Camera2Interop.Extender<ImageAnalysis> ext = new Camera2Interop.Extender<>(imageAnalysisBuilder)
                 .setCaptureRequestOption(CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE, new Range<>(30, 30));
+
         ImageAnalysis imageAnalysis = imageAnalysisBuilder.build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()

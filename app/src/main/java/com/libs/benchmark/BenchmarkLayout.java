@@ -48,6 +48,9 @@ public class BenchmarkLayout implements  LayoutClassInterface{
         testButton.setOnClickListener(v->test());
     }
 
+    /**
+     * Start add user activity.
+     */
     private void addUser() {
         Intent addFaceIntent = new Intent(caller, AddFaceActivity.class);
         ArrayList<String> chosenModels= new ArrayList<>();
@@ -59,11 +62,16 @@ public class BenchmarkLayout implements  LayoutClassInterface{
         caller.startActivity(addFaceIntent);
     }
 
+    /**
+     * Activate add photo layout.
+     */
     private void addPhoto(){
         addPhotoLayout.makeActive();
     }
 
-
+    /**
+     * Activate test layout.
+     */
     private void test(){
         displayResultLayout.makeActive();
     }

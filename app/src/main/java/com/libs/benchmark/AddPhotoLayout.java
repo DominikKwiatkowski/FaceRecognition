@@ -22,6 +22,9 @@ import java.util.ArrayList;
 
 import static com.common.BitmapOperations.resolveContentToBitmap;
 
+/**
+ * Specifies all operations within Add photo layout. Provides events and process given data.
+ */
 public class AddPhotoLayout implements LayoutClassInterface{
     AppCompatActivity caller;
     LayoutClassInterface benchmarkLayout;
@@ -70,6 +73,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
                     }
                 });
     }
+
     @Override
     public void makeActive() {
         caller.setContentView(R.layout.activity_benchmark_add_photo);
@@ -98,23 +102,35 @@ public class AddPhotoLayout implements LayoutClassInterface{
         updateUI();
     }
 
+    /**
+     * Cancel being in this layout, return to previous layout. Clear all uploaded photos.
+     */
     private void cancel(){
         tempPhotos.clear();
         benchmarkLayout.makeActive();
     }
 
+    /**
+     * Add all given photo to be proceed. Return to main benchmark layout.
+     */
     private void addTestPhotos(){
         testPhotos.addAll(tempPhotos);
         tempPhotos.clear();
         benchmarkLayout.makeActive();
     }
 
+    /**
+     * Call camera activity and proceed it after return.
+     */
     private void makePhoto(){
         Intent takePhotoIntent = new Intent(caller, CameraActivity.class);
         takePhotoIntent.putExtra("TakePhotoMode", true);
         takePhotoLauncher.launch(takePhotoIntent);
     }
 
+    /**
+     * Call intent to chose photo from disk and proceed it after return.
+     */
     private void chosePhoto(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -122,12 +138,20 @@ public class AddPhotoLayout implements LayoutClassInterface{
         choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
+    /**
+     * Refresh UI and add photo to proper structures.
+     * @param image image added by user
+     */
     private void addNewTempPhoto(Bitmap image){
         tempPhotos.add(image);
         indexer = tempPhotos.size()-1;
         updateUI();
     }
 
+    /**
+     * Update UI after some user operation. It will change display photo if required and menage
+     * other UI part such as button visibility and correctness of texts.
+     */
     private void updateUI(){
         if(tempPhotos.size()>0) {
             addPhoto_ImageView.setImageBitmap(tempPhotos.get(indexer));
@@ -154,16 +178,25 @@ public class AddPhotoLayout implements LayoutClassInterface{
         numberOfPhotosTextView.setText("Liczba zdjęć: " + tempPhotos.size());
     }
 
+    /**
+     * set next photo to be displayed.
+     */
     private void nextPhoto(){
         indexer++;
         updateUI();
     }
 
+    /**
+     * set previous photo to be displayed.
+     */
     private void previousPhoto(){
         indexer--;
         updateUI();
     }
 
+    /**
+     * Delete photo from set to be added to tests.
+     */
     private void deletePhoto(){
         tempPhotos.remove(indexer);
         if(indexer > 0)

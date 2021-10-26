@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,6 +32,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     private Button leftButton;
     private Button rightButton;
     private Button deletePhotoButton;
+    private TextView numberOfPhotosTextView;
     private final ActivityResultLauncher<Intent> choosePhotoLauncher;
 
     private final ActivityResultLauncher<Intent> takePhotoLauncher;
@@ -92,6 +94,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
         deletePhotoButton = caller.findViewById(R.id.deletePhotoButton);
         deletePhotoButton.setOnClickListener(v -> deletePhoto());
 
+        numberOfPhotosTextView = caller.findViewById(R.id.numberOfPhotosTextView);
         updateUI();
     }
 
@@ -148,6 +151,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
             rightButton.setVisibility(View.VISIBLE);
         }
 
+        numberOfPhotosTextView.setText("Liczba zdjęć: " + tempPhotos.size());
     }
 
     private void nextPhoto(){

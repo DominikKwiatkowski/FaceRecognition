@@ -4,11 +4,14 @@ import android.graphics.Bitmap;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -150,17 +153,37 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
     private void showModelsResults(){
         for(BenchmarkResult result :testResults){
             ImageView faceMini = new ImageView(caller);
+            LinearLayout horizontalLayout = new LinearLayout(caller);
+            horizontalLayout.setGravity(Gravity.CENTER);
             faceMini.setImageBitmap(result.getPhoto());
-            faceMini.setForegroundGravity(Gravity.CENTER);
+            faceMini.setForegroundGravity(Gravity.LEFT);
             faceMini.setMaxHeight(faceSize);
             faceMini.setMaxWidth(faceSize);
-            showResultLayout.addView(faceMini);
+            faceMini.setMinimumWidth(faceSize);
+            faceMini.setMinimumHeight(faceSize);
+            horizontalLayout.addView(faceMini);
+
+            LinearLayout verticalLayout = new LinearLayout(caller);
+            horizontalLayout.addView(verticalLayout);
+            setMargins(verticalLayout,10,0,0,0);
+            verticalLayout.setOrientation(LinearLayout.VERTICAL);
             result.getResults().forEach((model,name) ->{
                 TextView modelResultView = new TextView(caller);
-                modelResultView.setGravity(Gravity.CENTER);
                 modelResultView.setText(model + ": " + name);
-                showResultLayout.addView(modelResultView);
+                verticalLayout.addView(modelResultView);
             });
+            showResultLayout.addView(horizontalLayout);
+            Space space = new Space(caller);
+            space.setMinimumHeight(60);
+            showResultLayout.addView(space);
+        }
+    }
+
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
         }
     }
 }

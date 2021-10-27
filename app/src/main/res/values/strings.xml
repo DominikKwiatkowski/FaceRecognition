@@ -14,4 +14,6 @@
     <string name="settings_userMode">Choose model to be used in app</string>
     <string name="settings_userModel_key">UserModel</string>
     <string name="settings_userModel_suffix">Benchmark</string>
+
+    <string name="camerapreview_captureButton_desc">Capture</string>
 </resources>

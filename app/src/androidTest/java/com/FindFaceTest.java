@@ -11,7 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.face.Face;
-import com.libs.facerecognition.FacePreProcessor;
+import com.libs.facerecognition.FacePreprocessor;
 import com.libs.globaldata.GlobalData;
 
 import org.junit.Test;
@@ -34,11 +34,7 @@ public class FindFaceTest {
     private static final int margin = 10;
     private static final int testCases = 2;
 
-    static {
-        System.loadLibrary("opencv_java3");
-    }
-
-    private FacePreProcessor preProcessor;
+    private FacePreprocessor preProcessor;
 
     /**
      * Function to check if results are correct. We use margin, which is equal to margin field.

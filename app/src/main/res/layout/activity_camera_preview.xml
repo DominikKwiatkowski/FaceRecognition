@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cameraPreviewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/switchCameraButton"
+        android:layout_width="@dimen/switchCameraButtonMedium"
+        android:layout_height="@dimen/switchCameraButtonMedium"
+        android:layout_marginStart="@dimen/switchCameraButtonMargin"
+        android:layout_marginTop="@dimen/switchCameraButtonMargin"
+        android:background="@drawable/ic_switch_camera"
+        android:contentDescription="@string/camerapreview_captureButton_desc"
+        android:elevation="1dp"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/cameraCaptureButton"
+        android:layout_width="@dimen/captureButtonLarge"
+        android:layout_height="@dimen/captureButtonLarge"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/captureButtonMargin"
+        android:background="@drawable/ic_shutter"
+        android:contentDescription="@string/camerapreview_captureButton_desc"
+        android:elevation="1dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/cameraPreviewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

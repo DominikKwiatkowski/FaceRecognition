@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
-import com.libs.facerecognition.FacePreProcessor;
+import com.libs.facerecognition.FacePreprocessor;
 import com.libs.facerecognition.NeuralModel;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
@@ -62,7 +62,7 @@ public class AddFaceActivity extends AppCompatActivity {
     // ToastWrapper Instance
     private ToastWrapper toastWrapper = null;
 
-    private FacePreProcessor facePreProcessor = null;
+    private FacePreprocessor facePreProcessor = null;
     // ChoosePhoto Intent launcher
     ActivityResultLauncher<Intent> choosePhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -81,7 +81,7 @@ public class AddFaceActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     // Get filename from activity result, read photo from internal app storage and process it
                     try {
-                        String filename = result.getData().getStringExtra("UserPhoto");
+                        String filename = result.getData().getStringExtra(CameraPreviewActivity.CAPTURED_FRAME_KEY);
                         FileInputStream fis = getApplicationContext().openFileInput(filename);
                         Bitmap photo = BitmapFactory.decodeStream(fis);
                         fis.close();
@@ -160,56 +160,18 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
-     * Start file chooser activity with image constraint.
+     * Unlock button for adding user if true passed, lock otherwise.
      *
-     * @param view - current view.
+     * @param state desired state of button
      */
-    public void choosePhoto(View view) {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
-    }
-
-    /**
-     * Start CameraActivity with in photo taking mode.
-     *
-     * @param view - current view.
-     */
-    public void takePhoto(View view) {
-        Intent takePhotoIntent = new Intent(this, CameraActivity.class);
-        takePhotoIntent.putExtra("TakePhotoMode", true);
-        takePhotoLauncher.launch(takePhotoIntent);
-    }
-
-    /**
-     * Exit activity without adding user.
-     *
-     * @param view - current view.
-     */
-    public void cancel(View view) {
-        finish();
-    }
-
-    /**
-     * Create UserRecord with data from last processed image and user input.
-     *
-     * @param view - current view.
-     */
-    public void addUser(View view) {
-        EditText usernameInput = findViewById(R.id.usernameInput);
-        String username = usernameInput.getText().toString();
-        Resources res = getResources();
-
-        if (username.isEmpty() || currentFaceVector == null) {
-            toastWrapper.showToast(res.getString(R.string.addface_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
-            return;
+    void setAddButtonState(boolean state) {
+        if (state) {
+            addButton.setClickable(true);
+            addButton.setAlpha(1f);
+        } else {
+            addButton.setClickable(false);
+            addButton.setAlpha(0.5f);
         }
-
-        UserRecord userRecord = new UserRecord(username, currentFaceVector);
-        userDatabase.addUserRecord(userRecord);
-        toastWrapper.showToast(String.format(res.getString(R.string.addface_UserAdded_toast), username), Toast.LENGTH_SHORT);
-        finish();
     }
 
     /**
@@ -233,7 +195,6 @@ public class AddFaceActivity extends AppCompatActivity {
         return BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
     }
 
-
     /**
      * Process chosen photo using NeuralModel, display found face, save face vector.
      *
@@ -250,21 +211,6 @@ public class AddFaceActivity extends AppCompatActivity {
                             CompletableFuture.runAsync(() -> processFace(result));
                         }
                 );
-    }
-
-    /**
-     * Unlock button for adding user if true passed, lock otherwise.
-     *
-     * @param state desired state of button
-     */
-    void setAddButtonState(boolean state) {
-        if (state) {
-            addButton.setClickable(true);
-            addButton.setAlpha(1f);
-        } else {
-            addButton.setClickable(false);
-            addButton.setAlpha(0.5f);
-        }
     }
 
     /**
@@ -298,22 +244,6 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
-     * Convert detected face to bitmap and display it on face image View.
-     *
-     * @param face detected face.
-     */
-    private void displayFace(Bitmap face) {
-        // Display found face on screen in ImageView
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                currentFaceImage.setImageBitmap(face);
-                photoLoading(false);
-            }
-        });
-    }
-
-    /**
      * Pre-process selected image or camera frame. Returns crop face image.
      *
      * @param image image or camera frame.
@@ -331,6 +261,22 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
+     * Convert detected face to bitmap and display it on face image View.
+     *
+     * @param face detected face.
+     */
+    private void displayFace(Bitmap face) {
+        // Display found face on screen in ImageView
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                currentFaceImage.setImageBitmap(face);
+                photoLoading(false);
+            }
+        });
+    }
+
+    /**
      * Process face image using neural model and enable add user button when done.
      *
      * @param face face image.
@@ -339,5 +285,59 @@ public class AddFaceActivity extends AppCompatActivity {
         currentFaceVector = model.resizeAndProcess(face)[0];
         // Unlock "add" button
         setAddButtonState(true);
+    }
+
+    /**
+     * Start file chooser activity with image constraint.
+     *
+     * @param view - current view.
+     */
+    public void choosePhoto(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+    }
+
+    /**
+     * Start CameraActivity with in photo taking mode.
+     *
+     * @param view - current view.
+     */
+    public void takePhoto(View view) {
+        Intent takePhotoIntent = new Intent(this, CameraPreviewActivity.class);
+        takePhotoIntent.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
+                CameraPreviewActivity.CameraPreviewMode.CAPTURE);
+        takePhotoLauncher.launch(takePhotoIntent);
+    }
+
+    /**
+     * Exit activity without adding user.
+     *
+     * @param view - current view.
+     */
+    public void cancel(View view) {
+        finish();
+    }
+
+    /**
+     * Create UserRecord with data from last processed image and user input.
+     *
+     * @param view - current view.
+     */
+    public void addUser(View view) {
+        EditText usernameInput = findViewById(R.id.usernameInput);
+        String username = usernameInput.getText().toString();
+        Resources res = getResources();
+
+        if (username.isEmpty() || currentFaceVector == null) {
+            toastWrapper.showToast(res.getString(R.string.addface_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
+            return;
+        }
+
+        UserRecord userRecord = new UserRecord(username, currentFaceVector);
+        userDatabase.addUserRecord(userRecord);
+        toastWrapper.showToast(String.format(res.getString(R.string.addface_UserAdded_toast), username), Toast.LENGTH_SHORT);
+        finish();
     }
 }

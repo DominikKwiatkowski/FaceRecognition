@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.face.Face;
-import com.libs.facerecognition.FacePreProcessor;
+import com.libs.facerecognition.FacePreprocessor;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 import com.libs.globaldata.userdatabase.UserRecord;
@@ -42,7 +42,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private final AddPhotoLayout addPhotoLayout;
 
     private final ArrayList<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
-    private final FacePreProcessor facePreProcessor;
+    private final FacePreprocessor facePreProcessor;
     private final ArrayList<Pair<String, String>> supportedModels;
     private ArrayList<BenchmarkResult> testResults = new ArrayList<>();
     private Button returnButton;

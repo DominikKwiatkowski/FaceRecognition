@@ -14,7 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
-import com.activities.CameraActivity;
+import com.activities.CameraPreviewActivity;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,7 +61,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         // Get filename from activity result, read photo from internal app storage and process it
                         try {
-                            String filename = result.getData().getStringExtra("UserPhoto");
+                            String filename = result.getData().getStringExtra(CameraPreviewActivity.CAPTURED_FRAME_KEY);
                             FileInputStream fis = caller.getApplicationContext().openFileInput(filename);
                             Bitmap photo = BitmapFactory.decodeStream(fis);
                             addNewTempPhoto(photo);
@@ -121,8 +121,9 @@ public class AddPhotoLayout implements LayoutClassInterface {
      * Call camera activity and proceed it after return.
      */
     private void makePhoto() {
-        Intent takePhotoIntent = new Intent(caller, CameraActivity.class);
-        takePhotoIntent.putExtra("TakePhotoMode", true);
+        Intent takePhotoIntent = new Intent(caller, CameraPreviewActivity.class);
+        takePhotoIntent.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
+                CameraPreviewActivity.CameraPreviewMode.CAPTURE);
         takePhotoLauncher.launch(takePhotoIntent);
     }
 

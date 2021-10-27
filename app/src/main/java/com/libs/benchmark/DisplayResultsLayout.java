@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +34,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DisplayResultsLayout  implements LayoutClassInterface{
     private final AppCompatActivity caller;
@@ -48,7 +49,6 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
     private LinearLayout showResultLayout;
     private ScrollView scrollView;
     private final FacePreProcessor facePreProcessor;
-    private final int faceSize = 300;
     private final ArrayList<Pair<String, String>> supportedModels;
 
     public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, ArrayList<Pair<String, String>> supportedModels){
@@ -179,43 +179,46 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
      * Show model result for every proceeded face.
      */
     private void showModelsResults(){
+        int pixels = 100;
+        AtomicInteger id = new AtomicInteger(1);
         for(BenchmarkResult result :testResults){
             
             // Create horizontal layout to collect all data for one face.
-            LinearLayout horizontalLayout = new LinearLayout(caller);
-            horizontalLayout.setGravity(Gravity.CENTER);
+            RelativeLayout objectLayout = new RelativeLayout(caller);
 
             // Create and setup image view
             ImageView faceMini = new ImageView(caller);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(3*pixels, 3*pixels);
+            layoutParams.setMargins(pixels/2,0,pixels/2,pixels);
             faceMini.setImageBitmap(result.getPhoto());
-            faceMini.setForegroundGravity(Gravity.LEFT);
-            faceMini.setMaxHeight(faceSize);
-            faceMini.setMaxWidth(faceSize);
-            faceMini.setMinimumWidth(faceSize);
-            faceMini.setMinimumHeight(faceSize);
-            horizontalLayout.addView(faceMini);
 
-            Space space = new Space(caller);
-            space.setMinimumWidth(150);
-            horizontalLayout.addView(space);
+            faceMini.setLayoutParams(layoutParams);
+            faceMini.setId(id.getAndIncrement());
+            objectLayout.addView(faceMini);
 
-            // Create vertical layout to gather all models results.
-            LinearLayout verticalLayout = new LinearLayout(caller);
-            horizontalLayout.addView(verticalLayout);
-            verticalLayout.setOrientation(LinearLayout.VERTICAL);
-
+            AtomicReference<TextView> previous = new AtomicReference<>();
+            previous.set(null);
             // Add textView for every result model.
             result.getResults().forEach((model,name) ->{
+                // Create and setup text view for model output
                 TextView modelResultView = new TextView(caller);
                 modelResultView.setText(model + ": " + name);
-                verticalLayout.addView(modelResultView);
+                modelResultView.setId(id.getAndIncrement());
+
+                RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                viewParams.addRule(RelativeLayout.RIGHT_OF, faceMini.getId());
+                if(previous.get() != null){
+                    viewParams.addRule(RelativeLayout.BELOW, previous.get().getId());
+                }
+
+                modelResultView.setPadding(pixels/10,pixels/10,pixels/10,pixels/10);
+                objectLayout.addView(modelResultView, viewParams);
+                previous.set(modelResultView);
             });
 
-            showResultLayout.addView(horizontalLayout);
-            // Add space between each result to make it clearer
-            space = new Space(caller);
-            space.setMinimumHeight(100);
-            showResultLayout.addView(space);
+            showResultLayout.addView(objectLayout);
         }
     }
 }

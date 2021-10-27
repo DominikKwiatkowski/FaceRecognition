@@ -11,9 +11,11 @@
       android:id="@+id/BenchAddFace"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="16dp"
+      android:layout_marginStart="140dp"
+      android:layout_marginTop="32dp"
+      android:layout_marginEnd="140dp"
       android:text="Dodaj tawrz"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,10 +23,12 @@
       android:id="@+id/BenchMakePhoto"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:layout_marginEnd="16dp"
+      android:layout_marginStart="104dp"
+      android:layout_marginTop="104dp"
+      android:layout_marginEnd="104dp"
       android:text="Dodaj zdjęcie testowe"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button

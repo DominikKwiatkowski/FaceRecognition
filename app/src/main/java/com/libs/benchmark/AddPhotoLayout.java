@@ -25,23 +25,21 @@ import static com.common.BitmapOperations.resolveContentToBitmap;
 /**
  * Specifies all operations within Add photo layout. Provides events and process given data.
  */
-public class AddPhotoLayout implements LayoutClassInterface{
+public class AddPhotoLayout implements LayoutClassInterface {
+    private final ActivityResultLauncher<Intent> choosePhotoLauncher;
+    private final ActivityResultLauncher<Intent> takePhotoLauncher;
+    public ArrayList<Bitmap> testPhotos = new ArrayList<>();
     AppCompatActivity caller;
     LayoutClassInterface benchmarkLayout;
-    public ArrayList<Bitmap> testPhotos = new ArrayList<>();
     private ArrayList<Bitmap> tempPhotos = new ArrayList<>();
-
     private ImageView addPhoto_ImageView;
     private Button leftButton;
     private Button rightButton;
     private Button deletePhotoButton;
     private TextView numberOfPhotosTextView;
-    private final ActivityResultLauncher<Intent> choosePhotoLauncher;
-
-    private final ActivityResultLauncher<Intent> takePhotoLauncher;
     private int indexer = 0;
 
-    public AddPhotoLayout(AppCompatActivity caller, LayoutClassInterface benchmarkLayout){
+    public AddPhotoLayout(AppCompatActivity caller, LayoutClassInterface benchmarkLayout) {
         this.caller = caller;
         this.benchmarkLayout = benchmarkLayout;
 
@@ -105,7 +103,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * Cancel being in this layout, return to previous layout. Clear all uploaded photos.
      */
-    private void cancel(){
+    private void cancel() {
         tempPhotos.clear();
         benchmarkLayout.makeActive();
     }
@@ -113,7 +111,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * Add all given photo to be proceed. Return to main benchmark layout.
      */
-    private void addTestPhotos(){
+    private void addTestPhotos() {
         testPhotos.addAll(tempPhotos);
         tempPhotos.clear();
         benchmarkLayout.makeActive();
@@ -122,7 +120,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * Call camera activity and proceed it after return.
      */
-    private void makePhoto(){
+    private void makePhoto() {
         Intent takePhotoIntent = new Intent(caller, CameraActivity.class);
         takePhotoIntent.putExtra("TakePhotoMode", true);
         takePhotoLauncher.launch(takePhotoIntent);
@@ -131,7 +129,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * Call intent to chose photo from disk and proceed it after return.
      */
-    private void chosePhoto(){
+    private void chosePhoto() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -140,11 +138,12 @@ public class AddPhotoLayout implements LayoutClassInterface{
 
     /**
      * Refresh UI and add photo to proper structures.
+     *
      * @param image image added by user
      */
-    private void addNewTempPhoto(Bitmap image){
+    private void addNewTempPhoto(Bitmap image) {
         tempPhotos.add(image);
-        indexer = tempPhotos.size()-1;
+        indexer = tempPhotos.size() - 1;
         updateUI();
     }
 
@@ -152,26 +151,23 @@ public class AddPhotoLayout implements LayoutClassInterface{
      * Update UI after some user operation. It will change display photo if required and menage
      * other UI part such as button visibility and correctness of texts.
      */
-    private void updateUI(){
-        if(tempPhotos.size()>0) {
+    private void updateUI() {
+        if (tempPhotos.size() > 0) {
             addPhoto_ImageView.setImageBitmap(tempPhotos.get(indexer));
             deletePhotoButton.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             addPhoto_ImageView.setImageResource(0);
             deletePhotoButton.setVisibility(View.INVISIBLE);
         }
 
-        if(indexer == 0){
+        if (indexer == 0) {
             leftButton.setVisibility(View.INVISIBLE);
-        }
-        else{
+        } else {
             leftButton.setVisibility(View.VISIBLE);
         }
-        if(indexer >= tempPhotos.size() - 1){
+        if (indexer >= tempPhotos.size() - 1) {
             rightButton.setVisibility(View.INVISIBLE);
-        }
-        else{
+        } else {
             rightButton.setVisibility(View.VISIBLE);
         }
 
@@ -181,7 +177,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * set next photo to be displayed.
      */
-    private void nextPhoto(){
+    private void nextPhoto() {
         indexer++;
         updateUI();
     }
@@ -189,7 +185,7 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * set previous photo to be displayed.
      */
-    private void previousPhoto(){
+    private void previousPhoto() {
         indexer--;
         updateUI();
     }
@@ -197,9 +193,9 @@ public class AddPhotoLayout implements LayoutClassInterface{
     /**
      * Delete photo from set to be added to tests.
      */
-    private void deletePhoto(){
+    private void deletePhoto() {
         tempPhotos.remove(indexer);
-        if(indexer > 0)
+        if (indexer > 0)
             indexer--;
         updateUI();
     }

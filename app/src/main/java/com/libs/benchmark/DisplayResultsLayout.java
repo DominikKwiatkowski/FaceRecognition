@@ -37,21 +37,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DisplayResultsLayout  implements LayoutClassInterface{
+public class DisplayResultsLayout implements LayoutClassInterface {
     private final AppCompatActivity caller;
     private final AddPhotoLayout addPhotoLayout;
 
     private final ArrayList<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
-    private ArrayList<BenchmarkResult> testResults= new ArrayList<>();
+    private final FacePreProcessor facePreProcessor;
+    private final ArrayList<Pair<String, String>> supportedModels;
+    private ArrayList<BenchmarkResult> testResults = new ArrayList<>();
     private Button returnButton;
     private LinearLayout modelLegend;
     private ProgressBar progressBar;
     private LinearLayout showResultLayout;
     private ScrollView scrollView;
-    private final FacePreProcessor facePreProcessor;
-    private final ArrayList<Pair<String, String>> supportedModels;
 
-    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, ArrayList<Pair<String, String>> supportedModels){
+    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, ArrayList<Pair<String, String>> supportedModels) {
         this.caller = caller;
         this.addPhotoLayout = addPhotoLayout;
         this.supportedModels = supportedModels;
@@ -64,7 +64,7 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
         modelLegend = caller.findViewById(R.id.showResultModelLegendTable);
         progressBar = caller.findViewById(R.id.showResultProgressBar);
         returnButton = caller.findViewById(R.id.showResultReturnButton);
-        returnButton.setOnClickListener(v->caller.finish());
+        returnButton.setOnClickListener(v -> caller.finish());
         showResultLayout = caller.findViewById(R.id.showResultLayout);
         scrollView = caller.findViewById(R.id.showResultView);
         Executor executor = Executors.newSingleThreadExecutor();
@@ -76,18 +76,18 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
      * creates results structure. Also creates thread for every model(max 6 threads) and run
      * processModel in this threads.
      */
-    private void processPhotos(){
+    private void processPhotos() {
         // 1. Pro process all photos
         ArrayList<Task<List<Face>>> faceDetectionTasks = new ArrayList<>();
         ArrayList<Bitmap> testPhotos = addPhotoLayout.testPhotos;
-        for(Bitmap photo : testPhotos){
+        for (Bitmap photo : testPhotos) {
             faceDetectionTasks.add(facePreProcessor.detectAllFacesUsingML(photo));
         }
 
         // 2. Gather all returned data
-        Assert.assertEquals(faceDetectionTasks.size(),testPhotos.size());
+        Assert.assertEquals(faceDetectionTasks.size(), testPhotos.size());
         ArrayList<Bitmap> preProcessedFaces = new ArrayList<>();
-        for(int i = 0; i< faceDetectionTasks.size();i++){
+        for (int i = 0; i < faceDetectionTasks.size(); i++) {
             facePreProcessor.waitForTask(faceDetectionTasks.get(i));
             preProcessedFaces.addAll(facePreProcessor.preProcessAllFaces(
                     testPhotos.get(i),
@@ -95,25 +95,25 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
         }
 
         // 3. Creates result structure
-        for(Bitmap face : preProcessedFaces){
+        for (Bitmap face : preProcessedFaces) {
             testResults.add(new BenchmarkResult(face));
         }
 
         // 4. Run process models in separate threads
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         ArrayList<Pair<String, Future<Long>>> results = new ArrayList<>();
-        for(Pair<String,String> model : supportedModels){
+        for (Pair<String, String> model : supportedModels) {
             results.add(new Pair(
                     model.first,
-                    executorService.submit(() ->processModel(model.first,model.second))
+                    executorService.submit(() -> processModel(model.first, model.second))
             ));
         }
 
         // 5. Gather time results from model processing
-        for(Pair<String, Future<Long>> result : results){
+        for (Pair<String, Future<Long>> result : results) {
             try {
                 Long time = result.second.get();
-                benchmarkTimeResults.add(new Pair(result.first,time));
+                benchmarkTimeResults.add(new Pair(result.first, time));
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -125,27 +125,28 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
 
     /**
      * Process all faces in given model.
-     * @param modelName - name of model on which we want to process data
+     *
+     * @param modelName    - name of model on which we want to process data
      * @param databaseName - name of database which we want to use in face prediction
      * @return Time taken to proceed
      */
-    private Long processModel(String modelName, String databaseName){
+    private Long processModel(String modelName, String databaseName) {
         long startTime = System.nanoTime();
-        ModelObject model = GlobalData.getModel(caller,modelName, databaseName);
-        for(BenchmarkResult processingResult : testResults){
+        ModelObject model = GlobalData.getModel(caller, modelName, databaseName);
+        for (BenchmarkResult processingResult : testResults) {
             UserRecord record = model.userDatabase.findClosestRecord(
                     model.neuralModel.resizeAndProcess(processingResult.getPhoto())[0]);
             processingResult.addResult(modelName, record.username);
         }
         long endTime = System.nanoTime();
 
-        return (endTime - startTime)/1000000;
+        return (endTime - startTime) / 1000000;
     }
 
     /**
      * Display all gathered processing results on screen
      */
-    private void displayResults(){
+    private void displayResults() {
         progressBar.setVisibility(View.INVISIBLE);
         showTimeResult();
         showModelsResults();
@@ -157,8 +158,8 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
     /**
      * Show time results in headline of activity
      */
-    private void showTimeResult(){
-        for (Pair<String, Long> result : benchmarkTimeResults){
+    private void showTimeResult() {
+        for (Pair<String, Long> result : benchmarkTimeResults) {
 
             TextView timeResultView = new TextView(caller);
             timeResultView.setText(result.first + ": " +
@@ -178,19 +179,19 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
     /**
      * Show model result for every proceeded face.
      */
-    private void showModelsResults(){
+    private void showModelsResults() {
         int pixels = 100;
         AtomicInteger id = new AtomicInteger(1);
-        for(BenchmarkResult result :testResults){
-            
+        for (BenchmarkResult result : testResults) {
+
             // Create horizontal layout to collect all data for one face.
             RelativeLayout objectLayout = new RelativeLayout(caller);
 
             // Create and setup image view
             ImageView faceMini = new ImageView(caller);
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(3*pixels, 3*pixels);
-            layoutParams.setMargins(pixels/2,0,pixels/2,pixels);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(3 * pixels, 3 * pixels);
+            layoutParams.setMargins(pixels / 2, 0, pixels / 2, pixels);
             faceMini.setImageBitmap(result.getPhoto());
 
             faceMini.setLayoutParams(layoutParams);
@@ -200,7 +201,7 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
             AtomicReference<TextView> previous = new AtomicReference<>();
             previous.set(null);
             // Add textView for every result model.
-            result.getResults().forEach((model,name) ->{
+            result.getResults().forEach((model, name) -> {
                 // Create and setup text view for model output
                 TextView modelResultView = new TextView(caller);
                 modelResultView.setText(model + ": " + name);
@@ -209,11 +210,11 @@ public class DisplayResultsLayout  implements LayoutClassInterface{
                 RelativeLayout.LayoutParams viewParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
                 viewParams.addRule(RelativeLayout.RIGHT_OF, faceMini.getId());
-                if(previous.get() != null){
+                if (previous.get() != null) {
                     viewParams.addRule(RelativeLayout.BELOW, previous.get().getId());
                 }
 
-                modelResultView.setPadding(pixels/10,pixels/10,pixels/10,pixels/10);
+                modelResultView.setPadding(pixels / 10, pixels / 10, pixels / 10, pixels / 10);
                 objectLayout.addView(modelResultView, viewParams);
                 previous.set(modelResultView);
             });

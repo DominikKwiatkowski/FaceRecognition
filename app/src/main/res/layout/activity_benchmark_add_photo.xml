@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BenchmarkModeActivity">
+    tools:context=".activities.BenchmarkModeActivity"
+    android:screenOrientation="portrait">
 
     <Button
         android:id="@+id/rightButton"
@@ -28,6 +29,7 @@
         android:layout_width="300dp"
         android:layout_height="291dp"
         android:layout_marginTop="80dp"
+        android:contentDescription="@string/BenchmarkMode_ImageView_ContentDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +42,7 @@
         android:layout_height="90dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Dodaj"
+        android:text="@string/BenchmarkMode_Add_Text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -50,7 +52,7 @@
         android:layout_height="90dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Anuluj"
+        android:text="@string/BenchmarkMode_CancelButton_Text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -60,7 +62,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="52dp"
-        android:text="Zrób zdjęcie"
+        android:text="@string/BenchmarkMode_MakeImage_Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/benchSelectedImage" />
 
@@ -70,7 +72,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="56dp"
         android:layout_marginTop="4dp"
-        android:text="Wybierz zdjęcia"
+        android:text="@string/BenchmarkMode_ChosePhoto_Text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/benchSelectedImage" />
 
@@ -98,7 +100,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="150dp"
         android:layout_marginBottom="28dp"
-        android:text="Liczba zdjęć: 0"
+        android:text="@string/BenchmarkMode_PhotoCount_Text"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/benchSelectedImage"
         app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +114,7 @@
         android:layout_marginStart="142dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="142dp"
-        android:text="Usuń zdjęcie"
+        android:text="@string/BenchmarkMode_DeletePhoto_Text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

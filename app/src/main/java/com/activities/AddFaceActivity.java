@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -36,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -51,7 +51,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private ProgressBar progressBar = null;
 
     // Contains all models given by user.
-    private ArrayList<Pair<ModelObject,float[]>> models = new ArrayList<>();
+    private List<Pair<ModelObject, float[]>> models = new ArrayList<>();
 
     // ToastWrapper Instance
     private ToastWrapper toastWrapper = null;
@@ -131,15 +131,15 @@ public class AddFaceActivity extends AppCompatActivity {
         // Disable add button before photo selected
         setAddButtonState(false);
 
-        ArrayList<String> requestedModels = (ArrayList<String>) getIntent().getSerializableExtra(getString(R.string.addFace_ChooseModelName_intentValue));
+        ArrayList<String> requestedModels = (ArrayList<String>) getIntent().
+                getSerializableExtra(getString(R.string.addFace_ChooseModelName_intentValue));
 
-        for(int i = 0; i< requestedModels.size()/2;i++)
-        {
+        for (int i = 0; i < requestedModels.size() / 2; i++) {
             ModelObject modelObject = GlobalData.getModel(
                     getApplicationContext(),
-                    requestedModels.get(2*i),
-                    requestedModels.get(2*i + 1));
-            if(!models.contains(modelObject)) {
+                    requestedModels.get(2 * i),
+                    requestedModels.get(2 * i + 1));
+            if (!models.contains(modelObject)) {
                 models.add(new Pair<>(modelObject, null));
             }
 
@@ -199,14 +199,18 @@ public class AddFaceActivity extends AppCompatActivity {
             return;
         }
 
-        for( Pair<ModelObject, float[]> model : models) {
-            if(model.second == null) {
-                toastWrapper.showToast(res.getString(R.string.addFace_countNotFinish_toast), Toast.LENGTH_SHORT);
+        for (Pair<ModelObject, float[]> model : models) {
+            if (model.second == null) {
+                toastWrapper.showToast(res.getString(R.string.addFace_calculationNotFinished_toast), Toast.LENGTH_SHORT);
                 return;
             }
+        }
+
+        for (Pair<ModelObject, float[]> model : models) {
             UserRecord userRecord = new UserRecord(username, model.second);
             model.first.userDatabase.addUserRecord(userRecord);
         }
+
         toastWrapper.showToast(String.format(res.getString(R.string.addFace_UserAdded_toast), username), Toast.LENGTH_SHORT);
         finish();
     }
@@ -298,7 +302,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param face face image.
      */
     private void processFace(Bitmap face) {
-        for( int i = 0;i<models.size();i++) {
+        for (int i = 0; i < models.size(); i++) {
             models.set(i, new Pair<>(models.get(i).first, models.get(i).first.neuralModel.resizeAndProcess(face)[0]));
         }
         // Unlock "add" button

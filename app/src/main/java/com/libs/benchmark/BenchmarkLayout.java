@@ -28,7 +28,7 @@ public class BenchmarkLayout implements LayoutClassInterface {
         // Read supported models.
         for (String model : caller.getResources().getStringArray(R.array.models)) {
             if (userSettings.getBoolean(model + caller.getString(R.string.settings_benchModel_suffix), true)) {
-                supportedModels.add(new Pair<>(model, model + caller.getString(R.string.benchmarkMode_modelDatabaseName_suffix)));
+                supportedModels.add(new Pair<>(model, model + caller.getString(R.string.BenchmarkMode_ModelDatabaseName_Suffix)));
             }
         }
 
@@ -39,13 +39,13 @@ public class BenchmarkLayout implements LayoutClassInterface {
     @Override
     public void makeActive() {
         caller.setContentView(R.layout.activity_benchmark_mode);
-        Button addUserButton = caller.findViewById(R.id.BenchAddFace);
+        Button addUserButton = caller.findViewById(R.id.benchAddFace);
         addUserButton.setOnClickListener(v -> addUser());
 
-        Button addPhotoButton = caller.findViewById(R.id.BenchMakePhoto);
+        Button addPhotoButton = caller.findViewById(R.id.benchMakePhoto);
         addPhotoButton.setOnClickListener(v -> addPhoto());
 
-        Button testButton = caller.findViewById(R.id.BenchTest);
+        Button testButton = caller.findViewById(R.id.benchTest);
         testButton.setOnClickListener(v -> test());
     }
 

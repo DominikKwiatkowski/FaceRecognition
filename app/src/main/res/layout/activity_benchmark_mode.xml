@@ -5,40 +5,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BenchmarkModeActivity">
+    tools:context=".activities.BenchmarkModeActivity"
+    android:screenOrientation="portrait">
 
   <Button
-      android:id="@+id/BenchAddFace"
+      android:id="@+id/benchAddFace"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="140dp"
       android:layout_marginTop="32dp"
       android:layout_marginEnd="140dp"
-      android:text="Dodaj tawrz"
+      android:text="@string/BenchmarkMode_AddFace_Text"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
-      android:id="@+id/BenchMakePhoto"
+      android:id="@+id/benchMakePhoto"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="104dp"
       android:layout_marginTop="104dp"
       android:layout_marginEnd="104dp"
-      android:text="Dodaj zdjęcie testowe"
+      android:text="@string/BenchmarkMode_MakePhoto_Text"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
-      android:id="@+id/BenchTest"
+      android:id="@+id/benchTest"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="162dp"
       android:layout_marginEnd="162dp"
       android:layout_marginBottom="37dp"
-      android:text="Testuj"
+      android:text="@string/BenchmarkMode_Text_Text"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />

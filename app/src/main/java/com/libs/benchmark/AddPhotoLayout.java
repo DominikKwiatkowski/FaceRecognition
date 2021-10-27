@@ -29,8 +29,8 @@ public class AddPhotoLayout implements LayoutClassInterface {
     private final ActivityResultLauncher<Intent> choosePhotoLauncher;
     private final ActivityResultLauncher<Intent> takePhotoLauncher;
     public ArrayList<Bitmap> testPhotos = new ArrayList<>();
-    AppCompatActivity caller;
-    LayoutClassInterface benchmarkLayout;
+    private AppCompatActivity caller;
+    private LayoutClassInterface benchmarkLayout;
     private ArrayList<Bitmap> tempPhotos = new ArrayList<>();
     private ImageView addPhoto_ImageView;
     private Button leftButton;
@@ -175,7 +175,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
     }
 
     /**
-     * set next photo to be displayed.
+     * Set next photo to be displayed.
      */
     private void nextPhoto() {
         indexer++;
@@ -183,7 +183,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
     }
 
     /**
-     * set previous photo to be displayed.
+     * Set previous photo to be displayed.
      */
     private void previousPhoto() {
         indexer--;

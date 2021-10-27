@@ -7,4 +7,5 @@
     <item android:id="@+id/clearModel" android:title="Clear model"/>
     <item android:id="@+id/addUser" android:title="Add user"/>
     <item android:id="@+id/settings" android:title="Settings"/>
+    <item android:id="@+id/benchmarkMode" android:title="Benchmark mode"/>
 </menu>

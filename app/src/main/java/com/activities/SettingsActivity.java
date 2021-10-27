@@ -41,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (!userSettings.contains(getString(R.string.settings_userModel_key))) {
             editor.putString(getString(R.string.settings_userModel_key), models[0]);
             for (String model : models) {
-                editor.putBoolean(model + getString(R.string.settings_userModel_suffix), true);
+                editor.putBoolean(model + getString(R.string.settings_benchModel_suffix), true);
             }
             // We want to use commit here, because data must be stored before next loop will work
             editor.commit();
@@ -52,12 +52,12 @@ public class SettingsActivity extends AppCompatActivity {
             // Create switch
             Switch modelSwitch = new Switch(this);
             modelSwitch.setText(model);
-            modelSwitch.setChecked(userSettings.getBoolean(model + getString(R.string.settings_userModel_suffix), true));
+            modelSwitch.setChecked(userSettings.getBoolean(model + getString(R.string.settings_benchModel_suffix), true));
             // If value changed, update preferences.
             modelSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     //commit prefs on change
-                    editor.putBoolean(model + getString(R.string.settings_userModel_suffix), isChecked);
+                    editor.putBoolean(model + getString(R.string.settings_benchModel_suffix), isChecked);
                     editor.apply();
                 }
             });

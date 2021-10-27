@@ -3,10 +3,13 @@
 
     <string name="main_NoPermissions_hint">Brakujące kluczowe uprawnienia. Aplikacja zostanie zamknięta.</string>
 
-    <string name="addface_Username_hint">Nazwa użytkownika</string>
-    <string name="addface_UsernameNotGiven_toast">Nie wprowadzono nazwy!</string>
-    <string name="addface_UserAdded_toast">Dodano użytkownika %s</string>
-    <string name="addface_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
+    <string name="addFace_Username_hint">Nazwa użytkownika</string>
+    <string name="addFace_UsernameNotGiven_toast">Nie wprowadzono nazwy!</string>
+    <string name="addFace_UserAdded_toast">Dodano użytkownika %s</string>
+    <string name="addFace_NotOneFaceFound_toast">"Brak lub więcej niż jedna twarz na zdjęciu"</string>
+    <string name="addFace_resultData_name">ResultData</string>
+    <string name="addFace_calculationNotFinished_toast">Nie skończono obliczeń!</string>
+    <string name="addFace_ChooseModelName_intentValue">usedModels</string>
 
     <string name="settings_title_activity">SettingsActivity</string>
     <string name="settings_userName">userSettings</string>
@@ -16,4 +19,20 @@
     <string name="settings_userModel_suffix">Benchmark</string>
 
     <string name="camerapreview_captureButton_desc">Capture</string>
+
+    <string name="settings_benchModel_suffix">Benchmark</string>
+
+    <string name="BenchmarkMode_ModelDatabaseName_Suffix">_benchmark</string>
+    <string name="BenchmarkMode_Return_Text">Return</string>
+    <string name="BenchmarkMode_Add_Text">Dodaj</string>
+    <string name="BenchmarkMode_CancelButton_Text">Anuluj</string>
+    <string name="BenchmarkMode_MakeImage_Text">Zrób zdjęcie</string>
+    <string name="BenchmarkMode_ChosePhoto_Text">Wybierz zdjęcia</string>
+    <string name="BenchmarkMode_PhotoCount_Text">Liczba zdjęć: 0</string>
+    <string name="BenchmarkMode_DeletePhoto_Text">Usuń zdjęcie</string>
+    <string name="BenchmarkMode_ImageView_ContentDescription">Chosen photo view</string>
+    <string name="BenchmarkMode_AddFace_Text">Dodaj tawrz</string>
+    <string name="BenchmarkMode_MakePhoto_Text">Dodaj zdjęcie testowe</string>
+    <string name="BenchmarkMode_Text_Text">Testuj</string>
+
 </resources>

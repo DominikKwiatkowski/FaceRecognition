@@ -1,14 +1,18 @@
 package com.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,8 +20,11 @@ import com.R;
 import com.common.PermissionsWrapper;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
+import com.libs.globaldata.userdatabase.UserRecord;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -116,13 +123,26 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);
+                ArrayList<String> chosenModels= new ArrayList<>();
+                SharedPreferences userSettings = GlobalData.getUserSettings(this);
+                chosenModels.add(
+                        userSettings.getString(
+                            getString(R.string.settings_userModel_key),
+                            getResources().getStringArray(R.array.models)[0]));
+                chosenModels.add(userSettings.getString(
+                            getString(R.string.settings_userModel_key),
+                            getResources().getStringArray(R.array.models)[0]));
+                addFaceIntent.putExtra(getResources().getString(R.string.addFace_ChooseModelName_intentValue),chosenModels);
                 startActivity(addFaceIntent);
                 break;
             case R.id.settings:
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 break;
-
+            case R.id.benchmarkMode:
+                Intent benchmark = new Intent(this, BenchmarkModeActivity.class);
+                startActivity(benchmark);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

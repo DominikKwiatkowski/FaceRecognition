@@ -107,7 +107,7 @@ public class FindFaceTest {
 
 
         for (int i = 0; i < testCases; i++) {
-            assertTrue(photoIsCorrect(images[i], faces[i]););
+            assertTrue(photoIsCorrect(images[i], faces[i]));
         }
     }
 }

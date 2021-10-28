@@ -66,4 +66,4 @@ jobs:
           # sdcard-path-or-size: 3G
           disable-animations: true
           emulator-build: 7425822   # Use it as a fix for "no emulator bug"
-          script: ./gradlew connectedCheck -s
+          script: ./gradlew connectedCheck -S

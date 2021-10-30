@@ -24,7 +24,7 @@ public class BenchmarkLayout implements LayoutClassInterface {
         this.caller = caller;
 
         SharedPreferences userSettings = GlobalData.getUserSettings(caller);
-
+        // TODO Clear models before every start!!!
         // Read supported models.
         for (String model : caller.getResources().getStringArray(R.array.models)) {
             if (userSettings.getBoolean(model + caller.getString(R.string.settings_benchModel_suffix), true)) {

@@ -34,5 +34,6 @@
     <string name="BenchmarkMode_AddFace_Text">Dodaj twarz</string>
     <string name="BenchmarkMode_MakePhoto_Text">Dodaj zdjęcie testowe</string>
     <string name="BenchmarkMode_Text_Text">Testuj</string>
+    <string name="BenchmarkMode_NoPhotoSelected_Toast">Nie wybrano zdjęcia</string>
 
 </resources>

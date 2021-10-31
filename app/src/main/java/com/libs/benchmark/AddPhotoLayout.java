@@ -53,12 +53,12 @@ public class AddPhotoLayout implements LayoutClassInterface {
                     // Process picked image
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         // Single photo case
-                        if(result.getData().getData()!=null) {
+                        if (result.getData().getData() != null) {
                             Bitmap photo = resolveContentToBitmap(result.getData().getData(), caller);
                             addNewTempPhoto(photo);
                         }
                         // Many photo case
-                        else if(result.getData().getClipData() != null){
+                        else if (result.getData().getClipData() != null) {
                             ClipData clipData = result.getData().getClipData();
                             for (int i = 0; i < clipData.getItemCount(); i++) {
                                 Bitmap photo = resolveContentToBitmap(clipData.getItemAt(i).getUri(), caller);
@@ -66,7 +66,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
                             }
                         }
                         // No photo case
-                        else{
+                        else {
                             toastWrapper.showToast(caller.getString(R.string.BenchmarkMode_NoPhotoSelected_Toast), Toast.LENGTH_LONG);
                         }
                     }

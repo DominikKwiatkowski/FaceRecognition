@@ -60,7 +60,7 @@ public class UserDatabase {
      * @return closest UserRecord - null if not found
      */
     public UserRecord findClosestRecord(float[] vector) {
-        if(vector == null){
+        if (vector == null) {
             return null;
         }
         if (validateVector(vector)) {
@@ -201,12 +201,13 @@ public class UserDatabase {
 
     /**
      * Get the number of currently added Users.
+     *
      * @return int Number of users
      */
-    public int getNumberOfUsers()
-    {
+    public int getNumberOfUsers() {
         return getUsersArray().length;
     }
+
     /**
      * Get list of all users.
      *

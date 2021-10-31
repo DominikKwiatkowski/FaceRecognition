@@ -42,7 +42,7 @@ public class NeuralModel {
         try {
             Interpreter.Options options = new Interpreter.Options();
             CompatibilityList compatList = new CompatibilityList();
-            if(compatList.isDelegateSupportedOnThisDevice()){
+            if (compatList.isDelegateSupportedOnThisDevice()) {
                 // if the device has a supported GPU, add the GPU delegate
                 GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
                 GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
@@ -62,9 +62,9 @@ public class NeuralModel {
         outputSize = model.getOutputTensor(0).shape()[1];
 
         imageProcessor = new ImageProcessor.Builder()
-                        .add(new ResizeOp(imageHeight, imageWidth, ResizeOp.ResizeMethod.BILINEAR))
-                        .add(new NormalizeOp(127.5f, 127.5f))
-                        .build();
+                .add(new ResizeOp(imageHeight, imageWidth, ResizeOp.ResizeMethod.BILINEAR))
+                .add(new NormalizeOp(127.5f, 127.5f))
+                .build();
     }
 
     /**

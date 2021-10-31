@@ -41,9 +41,9 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private final AppCompatActivity caller;
     private final AddPhotoLayout addPhotoLayout;
 
-    private final ArrayList<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
+    private final List<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
     private final FacePreprocessor facePreProcessor;
-    private final ArrayList<Pair<String, String>> supportedModels;
+    private final List<Pair<String, String>> supportedModels;
     private ArrayList<BenchmarkResult> testResults = new ArrayList<>();
     private Button returnButton;
     private LinearLayout modelLegend;
@@ -51,7 +51,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private LinearLayout showResultLayout;
     private ScrollView scrollView;
 
-    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, ArrayList<Pair<String, String>> supportedModels) {
+    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, List<Pair<String, String>> supportedModels) {
         this.caller = caller;
         this.addPhotoLayout = addPhotoLayout;
         this.supportedModels = supportedModels;

@@ -37,5 +37,6 @@
     <string name="BenchmarkMode_NoPhotoSelected_Toast">Nie wybrano zdjęcia</string>
     <string name="BenchmarkMode_NumberOfUsers_Format">W bazie danych jest %d użytkowników</string>
     <string name="BenchmarkMode_NumberOfPhotos_Format">Do testów dodano %d zdjęć</string>
+    <string name="BenchmarkMode_NoPhoto_Toast">Lacking supported model</string>
 
 </resources>

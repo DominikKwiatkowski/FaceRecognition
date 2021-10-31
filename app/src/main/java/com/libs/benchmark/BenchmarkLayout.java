@@ -16,16 +16,17 @@ import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BenchmarkLayout implements LayoutClassInterface {
-    private final ArrayList<Pair<String, String>> supportedModels = new ArrayList<>();
+    private final List<Pair<String, String>> supportedModels = new ArrayList<>();
     private final AppCompatActivity caller;
 
     private final AddPhotoLayout addPhotoLayout;
     private final LayoutClassInterface displayResultLayout;
     // This field is only to get data about state of database
     private final ModelObject sampleModelObject;
-    ToastWrapper toastWrapper;
+    private final ToastWrapper toastWrapper;
 
     public BenchmarkLayout(AppCompatActivity caller) {
         this.caller = caller;
@@ -39,18 +40,17 @@ public class BenchmarkLayout implements LayoutClassInterface {
             }
         }
         // Check if there is a supported model
-        if(supportedModels.size()==0){
-            toastWrapper.showToast("Lacking supported model!!!", Toast.LENGTH_LONG);
+        if (supportedModels.size() == 0) {
+            toastWrapper.showToast(caller.getString(R.string.BenchmarkMode_NoPhoto_Toast), Toast.LENGTH_LONG);
             caller.finish();
-
         }
 
         addPhotoLayout = new AddPhotoLayout(caller, this);
         displayResultLayout = new DisplayResultsLayout(
-                caller, (AddPhotoLayout) addPhotoLayout, supportedModels);
+                caller, addPhotoLayout, supportedModels);
 
         sampleModelObject = GlobalData.getModel(
-                caller,supportedModels.get(0).first,supportedModels.get(0).second);
+                caller, supportedModels.get(0).first, supportedModels.get(0).second);
     }
 
     @Override

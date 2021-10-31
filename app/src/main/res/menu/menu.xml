@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/cameraPreview" android:title="cameraPreview"/>
-    <item android:id="@+id/addUser" android:title="Add user"/>
-    <item android:id="@+id/deleteUser" android:title="Delete user"/>
-    <item android:id="@+id/settings" android:title="Settings"/>
-    <item android:id="@+id/benchmarkMode" android:title="Benchmark mode"/>
-</menu>

@@ -87,10 +87,10 @@
       android:id="@+id/addFromDirectory"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="60dp"
-      android:layout_marginBottom="56dp"
-      android:text="Dodaj z katalogu"
+      android:layout_marginEnd="52dp"
+      android:layout_marginBottom="72dp"
       android:onClick="chooseTestDirectory"
+      android:text="Dodaj z katalogu"
       app:layout_constraintBottom_toTopOf="@+id/addUser"
       app:layout_constraintEnd_toEndOf="parent" />
 

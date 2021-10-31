@@ -1,6 +1,7 @@
 package com.activities;
 
 import com.R;
+import com.google.android.material.navigation.NavigationView;
 import com.libs.globaldata.GlobalData;
 
 import android.content.SharedPreferences;
@@ -13,7 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -27,6 +31,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        // Set toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Settings");
+        setSupportActionBar(toolbar);
+
         layout = findViewById(R.id.settingsLayout);
         modelChoiceSpinner = findViewById(R.id.chooseModelSpinner);
 

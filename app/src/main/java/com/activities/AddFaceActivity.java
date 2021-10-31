@@ -31,6 +31,7 @@ import androidx.documentfile.provider.DocumentFile;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
+import com.common.TransitionsLibrary;
 import com.libs.facerecognition.FacePreprocessor;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
@@ -197,6 +198,7 @@ public class AddFaceActivity extends AppCompatActivity {
      */
     public void cancel(View view) {
         finish();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 
     /**
@@ -242,7 +244,9 @@ public class AddFaceActivity extends AppCompatActivity {
         }
 
         toastWrapper.showToast(String.format(res.getString(R.string.addFace_UserAdded_toast), username), Toast.LENGTH_SHORT);
+
         finish();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 
     /**
@@ -376,7 +380,9 @@ public class AddFaceActivity extends AppCompatActivity {
                 loadFacesFromDirectory(file);
             }
         }
+
         finish();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 
     /**
@@ -407,5 +413,12 @@ public class AddFaceActivity extends AppCompatActivity {
             }
         }
         Log.d("Bulk add", "Added user: " + name);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 }

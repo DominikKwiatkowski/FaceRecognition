@@ -10,9 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.R;
 import com.common.ToastWrapper;
+import com.common.TransitionsLibrary;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 import com.libs.globaldata.userdatabase.UserDatabase;
@@ -30,6 +32,12 @@ public class DeleteUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_user);
+
+        // Set toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Delete Users");
+        setSupportActionBar(toolbar);
+
         toastWrapper = new ToastWrapper(this);
         tableLayout = this.findViewById(R.id.deleteUserTableLayout);
 
@@ -50,7 +58,8 @@ public class DeleteUserActivity extends AppCompatActivity {
         if (models.size() == 0) {
             toastWrapper.showToast(
                     this.getString(R.string.BenchmarkMode_NoPhoto_Toast), Toast.LENGTH_LONG);
-            this.finish();
+            finish();
+            TransitionsLibrary.executeToRightTransition(this);
         }
 
         // Even with many models, they database users have to be same.
@@ -99,5 +108,12 @@ public class DeleteUserActivity extends AppCompatActivity {
             model.userDatabase.removeUserRecord(user);
         }
         tableLayout.removeView((View) v.getParent());
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 }

@@ -26,7 +26,7 @@ import static android.graphics.Bitmap.createBitmap;
 public class FacePreprocessor {
     public final String Tag = "ImagePreProcessor";
     private final FaceDetector faceDetector;
-
+    private final int FaceMargin = 10;
     /**
      * Create pre processor instance. Build google face detector.
      */
@@ -48,7 +48,7 @@ public class FacePreprocessor {
      * @param image image of face which will be preprocessed
      * @return Matrix of preprocessed face
      */
-    public Bitmap preProcessOneFace(Bitmap image) throws FaceProcessingException {
+    public Bitmap detectAndPreProcessOneFace(Bitmap image) throws FaceProcessingException {
         Task<List<Face>> task = detectAllFacesUsingML(image);
         waitForTask(task);
         // Check number of detected faces.
@@ -170,7 +170,16 @@ public class FacePreprocessor {
         List<Bitmap> cutFaces = new ArrayList<>();
 
         for (Face face : listOfFaces) {
-            cutFaces.add(rotateAndTrimFace(frame, face));
+            // Check if face is on image.
+            if(face.getBoundingBox().top<=FaceMargin ||
+            face.getBoundingBox().left<=FaceMargin ||
+            face.getBoundingBox().bottom>=frame.getHeight()-FaceMargin ||
+            face.getBoundingBox().right >= frame.getWidth()-FaceMargin) {
+                cutFaces.add(null);
+            }
+            else {
+                cutFaces.add(rotateAndTrimFace(frame, face));
+            }
         }
 
         Log.d(Tag, "Preprocessed all images");

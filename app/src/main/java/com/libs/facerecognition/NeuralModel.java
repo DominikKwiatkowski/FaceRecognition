@@ -82,11 +82,10 @@ public class NeuralModel {
      *
      * @param image image to be prepared
      * @return tImage image processed and ready to be putted by neural network.
-     * @throws NullPointerException in case of null image
      */
     public TensorImage changeImageRes(Bitmap image) {
         if (image == null) {
-            throw new NullPointerException("Image can't be null");
+            return null;
         }
 
         TensorImage tImage = new TensorImage(DataType.UINT8);
@@ -101,7 +100,7 @@ public class NeuralModel {
      * @param image image to be prepared
      * @return probabilityBuffer Buffer of face properties
      */
-    public float[][] resizeAndProcess(Bitmap image) {
+    public float[] resizeAndProcess(Bitmap image) {
         return processImage(changeImageRes(image));
     }
 
@@ -112,16 +111,16 @@ public class NeuralModel {
      * @return probabilityBuffer Buffer of face properties. Sized of buffer must be specified
      * @throws NullPointerException in case of null image
      */
-    public synchronized float[][] processImage(TensorImage tImage) {
+    public synchronized float[] processImage(TensorImage tImage) {
         if (tImage == null) {
-            throw new NullPointerException("Image can't be null");
+            return null;
         }
 
         float[][] probabilityBuffer = new float[1][outputSize];
         model.run(tImage.getBuffer(), probabilityBuffer);
         Log.i(Tag + modelFilename, "Processed image successfully");
 
-        return probabilityBuffer;
+        return probabilityBuffer[0];
     }
 
 

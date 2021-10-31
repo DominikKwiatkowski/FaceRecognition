@@ -35,5 +35,7 @@
     <string name="BenchmarkMode_MakePhoto_Text">Dodaj zdjęcie testowe</string>
     <string name="BenchmarkMode_Text_Text">Testuj</string>
     <string name="BenchmarkMode_NoPhotoSelected_Toast">Nie wybrano zdjęcia</string>
+    <string name="BenchmarkMode_NumberOfUsers_Format">W bazie danych jest %d użytkowników</string>
+    <string name="BenchmarkMode_NumberOfPhotos_Format">Do testów dodano %d zdjęć</string>
 
 </resources>

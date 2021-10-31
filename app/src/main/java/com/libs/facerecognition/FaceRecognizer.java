@@ -83,7 +83,7 @@ public class FaceRecognizer {
             for (int i = 0; i < faceImages.size(); i++) {
                 float[] result = null;
                 try {
-                    result = model.resizeAndProcess(faceImages.get(i))[0];
+                    result = model.resizeAndProcess(faceImages.get(i));
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 } finally {

@@ -38,7 +38,6 @@ public class FacePreprocessor {
                         .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
                         .build();
 
-
         faceDetector = FaceDetection.getClient(options);
     }
 

@@ -19,8 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.tensorflow.lite.support.image.TensorImage;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -62,9 +60,9 @@ public class MainActivityTest {
 
         // Process and proceed all test photos
         for (int i = 0; i < photos.length; i++) {
-            Bitmap faceImage = facePreProcessor.preProcessOneFace(photos[i]);
+            Bitmap faceImage = facePreProcessor.detectAndPreProcessOneFace(photos[i]);
             TensorImage image = model.changeImageRes(faceImage);
-            result[i] = model.processImage(image)[0];
+            result[i] = model.processImage(image);
         }
 
         // Check if same person is closer than other one

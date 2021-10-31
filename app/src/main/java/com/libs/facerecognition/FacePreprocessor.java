@@ -48,7 +48,7 @@ public class FacePreprocessor {
      * @param image image of face which will be preprocessed
      * @return Matrix of preprocessed face
      */
-    public Bitmap preProcessOneFace(Bitmap image) throws FaceProcessingException {
+    public Bitmap detectAndPreProcessOneFace(Bitmap image) throws FaceProcessingException {
         Task<List<Face>> task = detectAllFacesUsingML(image);
         waitForTask(task);
         // Check number of detected faces.
@@ -170,10 +170,28 @@ public class FacePreprocessor {
         List<Bitmap> cutFaces = new ArrayList<>();
 
         for (Face face : listOfFaces) {
-            cutFaces.add(rotateAndTrimFace(frame, face));
+            // Check if face is on image.
+            if (isFaceOnImage(face, frame)) {
+                cutFaces.add(rotateAndTrimFace(frame, face));
+            } else {
+                cutFaces.add(null);
+            }
         }
 
         Log.d(Tag, "Preprocessed all images");
         return cutFaces;
+    }
+
+    /**
+     * Check if all face is on image.
+     * @param face face to be checked
+     * @param image image on which this face is
+     * @return true if face is on image, false otherwise
+     */
+    private boolean isFaceOnImage(Face face, Bitmap image) {
+        return face.getBoundingBox().top > 0 &&
+                face.getBoundingBox().left > 0 &&
+                face.getBoundingBox().bottom < image.getHeight() &&
+                face.getBoundingBox().right < image.getWidth();
     }
 }

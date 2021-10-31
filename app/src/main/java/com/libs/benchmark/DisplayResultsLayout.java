@@ -41,9 +41,9 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private final AppCompatActivity caller;
     private final AddPhotoLayout addPhotoLayout;
 
-    private final ArrayList<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
+    private final List<Pair<String, Long>> benchmarkTimeResults = new ArrayList<>();
     private final FacePreprocessor facePreProcessor;
-    private final ArrayList<Pair<String, String>> supportedModels;
+    private final List<Pair<String, String>> supportedModels;
     private ArrayList<BenchmarkResult> testResults = new ArrayList<>();
     private Button returnButton;
     private LinearLayout modelLegend;
@@ -51,7 +51,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private LinearLayout showResultLayout;
     private ScrollView scrollView;
 
-    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, ArrayList<Pair<String, String>> supportedModels) {
+    public DisplayResultsLayout(AppCompatActivity caller, AddPhotoLayout addPhotoLayout, List<Pair<String, String>> supportedModels) {
         this.caller = caller;
         this.addPhotoLayout = addPhotoLayout;
         this.supportedModels = supportedModels;
@@ -135,7 +135,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
         ModelObject model = GlobalData.getModel(caller, modelName, databaseName);
         for (BenchmarkResult processingResult : testResults) {
             UserRecord record = model.userDatabase.findClosestRecord(
-                    model.neuralModel.resizeAndProcess(processingResult.getPhoto())[0]);
+                    model.neuralModel.resizeAndProcess(processingResult.getPhoto()));
             processingResult.addResult(modelName, record.username);
         }
         long endTime = System.nanoTime();

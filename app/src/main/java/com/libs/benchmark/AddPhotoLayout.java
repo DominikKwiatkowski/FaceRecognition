@@ -1,6 +1,7 @@
 package com.libs.benchmark;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
 import com.activities.CameraPreviewActivity;
+import com.common.ToastWrapper;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +31,7 @@ import static com.common.BitmapOperations.resolveContentToBitmap;
 public class AddPhotoLayout implements LayoutClassInterface {
     private final ActivityResultLauncher<Intent> choosePhotoLauncher;
     private final ActivityResultLauncher<Intent> takePhotoLauncher;
+    private final ToastWrapper toastWrapper;
     public ArrayList<Bitmap> testPhotos = new ArrayList<>();
     private AppCompatActivity caller;
     private LayoutClassInterface benchmarkLayout;
@@ -42,15 +46,29 @@ public class AddPhotoLayout implements LayoutClassInterface {
     public AddPhotoLayout(AppCompatActivity caller, LayoutClassInterface benchmarkLayout) {
         this.caller = caller;
         this.benchmarkLayout = benchmarkLayout;
-
+        toastWrapper = new ToastWrapper(caller);
         choosePhotoLauncher = caller.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     // Process picked image
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        // show picked image
-                        Bitmap photo = resolveContentToBitmap(result.getData().getData(), caller);
-                        addNewTempPhoto(photo);
+                        // Single photo case
+                        if (result.getData().getData() != null) {
+                            Bitmap photo = resolveContentToBitmap(result.getData().getData(), caller);
+                            addNewTempPhoto(photo);
+                        }
+                        // Many photo case
+                        else if (result.getData().getClipData() != null) {
+                            ClipData clipData = result.getData().getClipData();
+                            for (int i = 0; i < clipData.getItemCount(); i++) {
+                                Bitmap photo = resolveContentToBitmap(clipData.getItemAt(i).getUri(), caller);
+                                addNewTempPhoto(photo);
+                            }
+                        }
+                        // No photo case
+                        else {
+                            toastWrapper.showToast(caller.getString(R.string.BenchmarkMode_NoPhotoSelected_Toast), Toast.LENGTH_LONG);
+                        }
                     }
                 });
 
@@ -133,6 +151,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
     private void chosePhoto() {
         Intent intent = new Intent();
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }

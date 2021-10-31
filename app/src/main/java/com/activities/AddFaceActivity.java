@@ -272,7 +272,7 @@ public class AddFaceActivity extends AppCompatActivity {
     private Bitmap preProcessFace(Bitmap image) {
         Resources res = getResources();
         try {
-            return facePreProcessor.preProcessOneFace(image);
+            return facePreProcessor.detectAndPreProcessOneFace(image);
         } catch (FaceProcessingException e) {
             e.printStackTrace();
             toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
@@ -303,7 +303,7 @@ public class AddFaceActivity extends AppCompatActivity {
      */
     private void processFace(Bitmap face) {
         for (int i = 0; i < models.size(); i++) {
-            models.set(i, new Pair<>(models.get(i).first, models.get(i).first.neuralModel.resizeAndProcess(face)[0]));
+            models.set(i, new Pair<>(models.get(i).first, models.get(i).first.neuralModel.resizeAndProcess(face)));
         }
         // Unlock "add" button
         setAddButtonState(true);

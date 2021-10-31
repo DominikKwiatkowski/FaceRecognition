@@ -38,7 +38,6 @@ public class CameraPreview {
     private final List<CameraPreviewListener> cameraPreviewListeners = new ArrayList<>();
 
     private ProcessCameraProvider cameraProvider;
-    private Size previewResolution;
     private int targetCamera = CameraSelector.LENS_FACING_BACK;
 
     /**
@@ -50,11 +49,6 @@ public class CameraPreview {
     public CameraPreview(Activity targetActivity, PreviewView previewView) {
         this.targetActivity = targetActivity;
         this.previewView = previewView;
-
-        // Get screen resolution
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        targetActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        previewResolution = new Size(displayMetrics.widthPixels, displayMetrics.heightPixels);
     }
 
     /**
@@ -85,7 +79,9 @@ public class CameraPreview {
      * Close camera connection.
      */
     public void closeCamera() {
-        cameraProvider.unbindAll();
+        if(cameraProvider != null){
+            cameraProvider.unbindAll();
+        }
     }
 
     /**
@@ -112,16 +108,11 @@ public class CameraPreview {
      * Initialize stream configuration and bind it to preview.
      */
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        if (previewResolution == null) {
-            throw new AssertionError("No preview resolution.");
-        }
-
         this.cameraProvider = cameraProvider;
 
         Preview preview = new Preview.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setTargetRotation(Surface.ROTATION_0)
-                //        .setTargetResolution(previewResolution)
                 .build();
 
         // // Preview image's resolution (larger image takes longer to process)
@@ -133,7 +124,6 @@ public class CameraPreview {
         ImageAnalysis.Builder imageAnalysisBuilder = new ImageAnalysis.Builder()
                 .setTargetAspectRatio(AspectRatio.RATIO_4_3)
                 .setTargetRotation(Surface.ROTATION_0)
-                //        .setTargetResolution(new Size(imageAnalysisWidth, imageAnalysisHeight))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888);
 

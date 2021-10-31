@@ -182,6 +182,12 @@ public class FacePreprocessor {
         return cutFaces;
     }
 
+    /**
+     * Check if all face is on image.
+     * @param face face to be checked
+     * @param image image on which this face is
+     * @return true if face is on image, false otherwise
+     */
     private boolean isFaceOnImage(Face face, Bitmap image) {
         return face.getBoundingBox().top > 0 &&
                 face.getBoundingBox().left > 0 &&

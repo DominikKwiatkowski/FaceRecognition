@@ -172,9 +172,9 @@ public class FacePreprocessor {
         for (Face face : listOfFaces) {
             // Check if face is on image.
             if (isFaceOnImage(face, frame)) {
-                cutFaces.add(null);
-            } else {
                 cutFaces.add(rotateAndTrimFace(frame, face));
+            } else {
+                cutFaces.add(null);
             }
         }
 

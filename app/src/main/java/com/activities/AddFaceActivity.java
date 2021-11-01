@@ -131,6 +131,7 @@ public class AddFaceActivity extends AppCompatActivity {
         // Disable add button before photo selected
         setAddButtonState(false);
 
+        // Get all models.
         ArrayList<String> requestedModels = (ArrayList<String>) getIntent().
                 getSerializableExtra(getString(R.string.addFace_ChooseModelName_intentValue));
 
@@ -142,7 +143,6 @@ public class AddFaceActivity extends AppCompatActivity {
             if (!models.contains(modelObject)) {
                 models.add(new Pair<>(modelObject, null));
             }
-
         }
 
         // Create ToastWrapper Instance

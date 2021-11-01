@@ -9,10 +9,12 @@ import com.libs.benchmark.LayoutClassInterface;
 
 
 public class BenchmarkModeActivity extends AppCompatActivity {
+    private LayoutClassInterface benchmarkLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutClassInterface benchmarkLayout = new BenchmarkLayout(this);
+        benchmarkLayout = new BenchmarkLayout(this);
         benchmarkLayout.makeActive();
     }
 }

@@ -32,4 +32,13 @@ public class UserRecord implements Serializable {
             throw new AssertionError("Incorrect vector length");
         }
     }
+
+    /**
+     * Get weight of this record.
+     *
+     * @return weight
+     */
+    public int getWeight() {
+        return weight;
+    }
 }

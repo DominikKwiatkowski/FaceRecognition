@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.R;
 import com.common.FaceProcessingException;
@@ -43,16 +47,14 @@ import static com.common.BitmapOperations.resolveContentToBitmap;
 
 public class AddFaceActivity extends AppCompatActivity {
 
+    // Contains all models given by user.
+    private final List<Pair<ModelObject, float[]>> models = new ArrayList<>();
     private ImageView currentFaceImage = null;
     private Button addButton = null;
     private Button addFromPhotoButton = null;
     private Button addFromCameraButton = null;
     private EditText usernameEditText = null;
     private ProgressBar progressBar = null;
-
-    // Contains all models given by user.
-    private List<Pair<ModelObject, float[]>> models = new ArrayList<>();
-
     // ToastWrapper Instance
     private ToastWrapper toastWrapper = null;
 
@@ -86,6 +88,15 @@ public class AddFaceActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+
+    ActivityResultLauncher<Intent> chooseCatalogLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                // Load data from picked catalog
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    loadTestDirectory(result.getData().getData());
                 }
             });
 
@@ -175,7 +186,7 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
-     * Create UserRecord with data from last processed image and user input.
+     * Toggle state of buttons for adding users
      *
      * @param state desired state of button
      */
@@ -189,6 +200,11 @@ public class AddFaceActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Create UserRecord with data from last processed image and user input.
+     *
+     * @param view current View
+     */
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
@@ -221,8 +237,6 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param image Bitmap of face which will be preprocessed.
      */
     private void processPhoto(Bitmap image) {
-        // Convert Bitmap to Mat
-
         photoLoading(true);
         setAddButtonState(false);
         CompletableFuture.supplyAsync(() -> preProcessFace(image))
@@ -250,7 +264,6 @@ public class AddFaceActivity extends AppCompatActivity {
                     addFromPhotoButton.setAlpha(0.5f);
                     addFromCameraButton.setClickable(false);
                     addFromPhotoButton.setClickable(false);
-
                 } else {
                     currentFaceImage.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
@@ -283,7 +296,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Convert detected face to bitmap and display it on face image View.
      *
-     * @param face detected face.
+     * @param face - Detected face.
      */
     private void displayFace(Bitmap face) {
         // Display found face on screen in ImageView
@@ -299,7 +312,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Process face image using neural model and enable add user button when done.
      *
-     * @param face face image.
+     * @param face - Face image.
      */
     private void processFace(Bitmap face) {
         for (int i = 0; i < models.size(); i++) {
@@ -312,12 +325,64 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Start CameraActivity with in photo taking mode.
      *
-     * @param view - current view.
+     * @param view - Current view.
      */
     public void takePhoto(View view) {
         Intent takePhotoIntent = new Intent(this, CameraPreviewActivity.class);
         takePhotoIntent.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
                 CameraPreviewActivity.CameraPreviewMode.CAPTURE);
         takePhotoLauncher.launch(takePhotoIntent);
+    }
+
+    /**
+     * Choose directory containing photos for bulk adding users.
+     *
+     * @param view - Current view.
+     */
+    public void chooseTestDirectory(View view) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        chooseCatalogLauncher.launch(Intent.createChooser(intent, "Select Directory"));
+    }
+
+    /**
+     * Add faces from each directory in passed root directory to database.
+     *
+     * @param directory - Root of directory with photos for bulk adding.
+     */
+    private void loadTestDirectory(Uri directory) {
+        DocumentFile dir = DocumentFile.fromTreeUri(this, directory);
+        DocumentFile[] files = dir.listFiles();
+        if (files != null) {
+            for (DocumentFile file : files) {
+                if (file.isDirectory()) {
+                    loadFacesFromDirectory(file);
+                }
+            }
+        }
+        finish();
+    }
+
+    /**
+     * Process all photos in directory and add them to database with name of passed directory.
+     *
+     * @param directory - Directory containing photos of single person.
+     */
+    private void loadFacesFromDirectory(DocumentFile directory) {
+        DocumentFile[] files = directory.listFiles();
+        String name = directory.getName();
+        if (files != null && !name.matches("\\..*")) {
+            for (DocumentFile file : files) {
+                if (file.isFile()) {
+                    Bitmap photo = resolveContentToBitmap(file.getUri(), this);
+                    processFace(preProcessFace(photo));
+                    for (Pair<ModelObject, float[]> model : models) {
+                        UserRecord userRecord = new UserRecord(name, model.second);
+                        model.first.userDatabase.addUserRecord(userRecord);
+                    }
+                }
+            }
+        }
+        Log.d("Bulk add", "Added user: " + name);
     }
 }

@@ -1,46 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com"
-android:installLocation="preferExternal">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com"
+    android:installLocation="preferExternal">
 
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-<uses-feature
-    android:name="android.hardware.camera"
-    android:required="false" />
-<uses-feature
-    android:name="android.hardware.camera.autofocus"
-    android:required="false" />
-<uses-feature
-    android:name="android.hardware.camera.front"
-    android:required="false" />
-<uses-feature
-    android:name="android.hardware.camera.front.autofocus"
-    android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front.autofocus"
+        android:required="false" />
 
-<application
-    android:allowBackup="true"
-    android:icon="@mipmap/app_logo"
-    android:label="@string/app_name"
-    android:logo="@mipmap/app_logo"
-    android:roundIcon="@mipmap/app_logo_round"
-    android:supportsRtl="true"
-    android:theme="@style/Theme.Inz">
-    <activity android:name="com.activities.MainActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/app_logo"
+        android:label="@string/app_name"
+        android:logo="@mipmap/app_logo"
+        android:roundIcon="@mipmap/app_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Inz">
+        <activity android:name="com.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name="com.activities.CameraPreviewActivity"
-        android:screenOrientation="portrait" />
-    <activity android:name="com.activities.AddFaceActivity" />
-    <activity
-        android:name="com.activities.SettingsActivity"
-        android:label="@string/settings_title_activity" />
-    <activity android:name="com.activities.BenchmarkModeActivity"></activity>
-    <activity android:name="com.activities.DeleteUserActivity"></activity>
-</application>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.activities.CameraPreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.activities.AddFaceActivity" />
+        <activity
+            android:name="com.activities.SettingsActivity"
+            android:label="@string/settings_title_activity" />
+        <activity android:name="com.activities.BenchmarkModeActivity"></activity>
+        <activity android:name="com.activities.DeleteUserActivity"></activity>
+    </application>
 </manifest>

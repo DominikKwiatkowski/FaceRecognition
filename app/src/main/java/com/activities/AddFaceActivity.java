@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -353,11 +352,11 @@ public class AddFaceActivity extends AppCompatActivity {
     private void loadTestDirectory(Uri directory) {
         DocumentFile dir = DocumentFile.fromTreeUri(this, directory);
         DocumentFile[] files = dir.listFiles();
-        if (files != null) {
-            for (DocumentFile file : files) {
-                if (file.isDirectory()) {
-                    loadFacesFromDirectory(file);
-                }
+        if (files == null)
+            return;
+        for (DocumentFile file : files) {
+            if (file.isDirectory() && !file.getName().matches("\\..*")) {
+                loadFacesFromDirectory(file);
             }
         }
         finish();
@@ -370,16 +369,18 @@ public class AddFaceActivity extends AppCompatActivity {
      */
     private void loadFacesFromDirectory(DocumentFile directory) {
         DocumentFile[] files = directory.listFiles();
+        if (files == null)
+            return;
         String name = directory.getName();
-        if (files != null && !name.matches("\\..*")) {
-            for (DocumentFile file : files) {
-                if (file.isFile()) {
-                    Bitmap photo = resolveContentToBitmap(file.getUri(), this);
-                    processFace(preProcessFace(photo));
-                    for (Pair<ModelObject, float[]> model : models) {
-                        UserRecord userRecord = new UserRecord(name, model.second);
-                        model.first.userDatabase.addUserRecord(userRecord);
-                    }
+        for (DocumentFile file : files) {
+            if (file.isFile()) {
+                Bitmap photo = resolveContentToBitmap(file.getUri(), this);
+                if (photo == null)
+                    continue;
+                processFace(preProcessFace(photo));
+                for (Pair<ModelObject, float[]> model : models) {
+                    UserRecord userRecord = new UserRecord(name, model.second);
+                    model.first.userDatabase.addUserRecord(userRecord);
                 }
             }
         }

@@ -165,7 +165,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * Unlock button for adding user if true passed, lock otherwise.
      * Start file chooser activity with image constraint.
      *
-     * @param view - current view.
+     * @param view Current view.
      */
     public void choosePhoto(View view) {
         Intent intent = new Intent();
@@ -178,7 +178,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Exit activity without adding user.
      *
-     * @param view - current view.
+     * @param view current view.
      */
     public void cancel(View view) {
         finish();
@@ -187,7 +187,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Toggle state of buttons for adding users
      *
-     * @param state desired state of button
+     * @param state Desired state of button.
      */
     void setAddButtonState(boolean state) {
         if (state) {
@@ -202,7 +202,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Create UserRecord with data from last processed image and user input.
      *
-     * @param view current View
+     * @param view Current View.
      */
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
@@ -239,9 +239,11 @@ public class AddFaceActivity extends AppCompatActivity {
         photoLoading(true);
         setAddButtonState(false);
         CompletableFuture.supplyAsync(() -> preProcessFace(image))
-                .thenAccept(result -> {
-                            CompletableFuture.runAsync(() -> displayFace(result));
-                            CompletableFuture.runAsync(() -> processFace(result));
+                .whenComplete((result, exception) -> {
+                            if (exception == null) {
+                                CompletableFuture.runAsync(() -> displayFace(result));
+                                CompletableFuture.runAsync(() -> processFace(result));
+                            }
                         }
                 );
     }
@@ -250,7 +252,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * Hide face image and show loading animation if true passed,
      * show face image and hide loading animation if false passed.
      *
-     * @param state desired state of loading animation.
+     * @param state Desired state of loading animation.
      */
     void photoLoading(boolean state) {
         runOnUiThread(new Runnable() {
@@ -279,7 +281,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * Pre-process selected image or camera frame. Returns crop face image.
      *
      * @param image image or camera frame.
-     * @return cropped face image.
+     * @return Cropped face image.
      */
     private Bitmap preProcessFace(Bitmap image) {
         Resources res = getResources();
@@ -295,7 +297,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Convert detected face to bitmap and display it on face image View.
      *
-     * @param face - Detected face.
+     * @param face Detected face.
      */
     private void displayFace(Bitmap face) {
         // Display found face on screen in ImageView
@@ -311,7 +313,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Process face image using neural model and enable add user button when done.
      *
-     * @param face - Face image.
+     * @param face Face image.
      */
     private void processFace(Bitmap face) {
         for (int i = 0; i < models.size(); i++) {
@@ -324,7 +326,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Start CameraActivity with in photo taking mode.
      *
-     * @param view - Current view.
+     * @param view Current view.
      */
     public void takePhoto(View view) {
         Intent takePhotoIntent = new Intent(this, CameraPreviewActivity.class);
@@ -336,7 +338,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Choose directory containing photos for bulk adding users.
      *
-     * @param view - Current view.
+     * @param view Current view.
      */
     public void chooseTestDirectory(View view) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -347,7 +349,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Add faces from each directory in passed root directory to database.
      *
-     * @param directory - Root of directory with photos for bulk adding.
+     * @param directory Root of directory with photos for bulk adding.
      */
     private void loadTestDirectory(Uri directory) {
         DocumentFile dir = DocumentFile.fromTreeUri(this, directory);
@@ -365,7 +367,7 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Process all photos in directory and add them to database with name of passed directory.
      *
-     * @param directory - Directory containing photos of single person.
+     * @param directory Directory containing photos of single person.
      */
     private void loadFacesFromDirectory(DocumentFile directory) {
         DocumentFile[] files = directory.listFiles();
@@ -377,7 +379,11 @@ public class AddFaceActivity extends AppCompatActivity {
                 Bitmap photo = resolveContentToBitmap(file.getUri(), this);
                 if (photo == null)
                     continue;
-                processFace(preProcessFace(photo));
+                try {
+                    processFace(facePreProcessor.detectAndPreProcessOneFace(photo));
+                } catch (FaceProcessingException e) {
+                    continue;
+                }
                 for (Pair<ModelObject, float[]> model : models) {
                     UserRecord userRecord = new UserRecord(name, model.second);
                     model.first.userDatabase.addUserRecord(userRecord);

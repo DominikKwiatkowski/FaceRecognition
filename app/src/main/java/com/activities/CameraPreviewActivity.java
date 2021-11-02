@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
@@ -165,7 +168,7 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
     /**
      * Called on new camera frame event.
      *
-     * @param newFrame captured frame
+     * @param newFrame        captured frame
      * @param rotationDegrees rotation of the captured frame
      */
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -293,9 +296,8 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
     /**
      * Map face's coordinates from frame space to screen space.
      *
-     * @param faceLocation face coordinates in frame space
+     * @param faceLocation    face coordinates in frame space
      * @param frameDimensions dimensions of frame
-     *
      * @return face coordinates in screen space
      */
     private RectF mapOutputCoordinates(Rect faceLocation, Size frameDimensions) {
@@ -318,26 +320,69 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
         }
 
         // Set location to preview's with given margin and aspectRatio
-        float margin = 0.2f;
-        float requestedRatio = (float) getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().heightPixels;
         float midX = (correctedLocation.left + correctedLocation.right) / 2f;
         float midY = (correctedLocation.top + correctedLocation.bottom) / 2f;
 
-        if (previewView.getWidth() < previewView.getHeight()) {
-            return new RectF(
-                    midX - (1f + margin) * requestedRatio * correctedLocation.width() / 2f,
-                    midY - (1f - margin) * correctedLocation.height() / 2f,
-                    midX + (1f + margin) * requestedRatio * correctedLocation.width() / 2f,
-                    midY + (1f - margin) * correctedLocation.height() / 2f
-            );
-        } else {
-            return new RectF(
-                    midX - (1f - margin) * correctedLocation.width() / 2f,
-                    midY - (1f + margin) * requestedRatio * correctedLocation.height() / 2f,
-                    midX + (1f - margin) * correctedLocation.width() / 2f,
-                    midY + (1f + margin) * requestedRatio * correctedLocation.height() / 2f
-            );
+        RectF result = new RectF(
+                midX - correctedLocation.width() / 2f,
+                midY - correctedLocation.height() / 2f,
+                midX + correctedLocation.width() / 2f,
+                midY + correctedLocation.height() / 2f
+        );
+
+        // Keep these logs in case something still doesn't work
+        if(false) {
+            Log.d(Tag, String.format("Org size: %d x %d",
+                    frameDimensions.getHeight(),
+                    frameDimensions.getWidth()));
+            Log.d(Tag, String.format("Org box ltrb: [%d, %d, %d, %d]",
+                    faceLocation.left,
+                    faceLocation.top,
+                    faceLocation.right,
+                    faceLocation.bottom));
+            Log.d(Tag, String.format("Org box size: %d x %d",
+                    faceLocation.bottom - faceLocation.top,
+                    faceLocation.right - faceLocation.left));
+
+            Log.d(Tag, String.format("Corrected box ltrb: [%d, %d, %d, %d]",
+                    (int) correctedLocation.left,
+                    (int) correctedLocation.top,
+                    (int) correctedLocation.right,
+                    (int) correctedLocation.bottom));
+            Log.d(Tag, String.format("Corrected box size: %d x %d",
+                    (int) correctedLocation.bottom - (int) correctedLocation.top,
+                    (int) correctedLocation.right - (int) correctedLocation.left));
+
+            Log.d(Tag, String.format("New size: %d x %d",
+                    getResources().getDisplayMetrics().heightPixels,
+                    getResources().getDisplayMetrics().widthPixels));
+            Log.d(Tag, String.format("New box ltrb: [%d, %d, %d, %d]",
+                    (int) result.left,
+                    (int) result.top,
+                    (int) result.right,
+                    (int) result.bottom));
+            Log.d(Tag, String.format("New box size: %d x %d",
+                    (int) result.bottom - (int) result.top,
+                    (int) result.right - (int) result.left));
+
+            if (false) {
+                Log.d(Tag, String.format("Relative width org: %f, new: %f",
+                        (faceLocation.right - faceLocation.left) / (float) frameDimensions.getWidth(),
+                        ((int) result.right - (int) result.left) / (float) getResources().getDisplayMetrics().widthPixels));
+                Log.d(Tag, String.format("Relative height org: %f, new: %f",
+                        (faceLocation.bottom - faceLocation.top) / (float) frameDimensions.getHeight(),
+                        ((int) result.bottom - (int) result.top) / (float) getResources().getDisplayMetrics().heightPixels));
+            }
+
+            Log.d(Tag, String.format("Relative width diff: %f",
+                    (faceLocation.right - faceLocation.left) / (float) frameDimensions.getWidth() -
+                            ((int) result.right - (int) result.left) / (float) getResources().getDisplayMetrics().widthPixels));
+            Log.d(Tag, String.format("Relative height diff: %f",
+                    (faceLocation.bottom - faceLocation.top) / (float) frameDimensions.getHeight() -
+                            ((int) result.bottom - (int) result.top) / (float) getResources().getDisplayMetrics().heightPixels));
         }
+
+        return result;
     }
 
     public enum CameraPreviewMode {

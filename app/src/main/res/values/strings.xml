@@ -38,5 +38,10 @@
     <string name="BenchmarkMode_NumberOfUsers_Format">W bazie danych jest %d użytkowników</string>
     <string name="BenchmarkMode_NumberOfPhotos_Format">Do testów dodano %d zdjęć</string>
     <string name="BenchmarkMode_NoPhoto_Toast">Lacking supported model</string>
+    <string name="BenchmarkMode_DeleteFaceButton_Text">Usuń Twarz</string>
+
+    <string name="DeleteUser_UserName_Text">Nazwa użytkownika</string>
+    <string name="DeleteUser_NumberOfPhotos_Text">Liczba zdjęć</string>
+    <string name="DeleteUser_DeleteUserButton_Text">Usuń</string>
 
 </resources>

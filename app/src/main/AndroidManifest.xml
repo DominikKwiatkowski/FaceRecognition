@@ -42,5 +42,6 @@
             android:name="com.activities.SettingsActivity"
             android:label="@string/settings_title_activity" />
         <activity android:name="com.activities.BenchmarkModeActivity"></activity>
+        <activity android:name="com.activities.DeleteUserActivity"></activity>
     </application>
 </manifest>

@@ -7,10 +7,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
 import com.activities.AddFaceActivity;
+import com.activities.DeleteUserActivity;
 import com.common.ToastWrapper;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
@@ -24,9 +27,12 @@ public class BenchmarkLayout implements LayoutClassInterface {
 
     private final AddPhotoLayout addPhotoLayout;
     private final LayoutClassInterface displayResultLayout;
-    // This field is only to get data about state of database
-    private final ModelObject sampleModelObject;
     private final ToastWrapper toastWrapper;
+    private final ActivityResultLauncher<Intent> faceOperationLauncher;
+    // This field is only to get data about state of database
+    private ModelObject sampleModelObject;
+    private TextView numberOfPhotos;
+    private TextView numberOfFaces;
 
     public BenchmarkLayout(AppCompatActivity caller) {
         this.caller = caller;
@@ -51,11 +57,19 @@ public class BenchmarkLayout implements LayoutClassInterface {
 
         sampleModelObject = GlobalData.getModel(
                 caller, supportedModels.get(0).first, supportedModels.get(0).second);
+
+        faceOperationLauncher = caller.registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    updateUI();
+                }
+        );
     }
 
     @Override
     public void makeActive() {
         caller.setContentView(R.layout.activity_benchmark_mode);
+
         Button addUserButton = caller.findViewById(R.id.benchAddFace);
         addUserButton.setOnClickListener(v -> addUser());
 
@@ -64,19 +78,37 @@ public class BenchmarkLayout implements LayoutClassInterface {
 
         Button testButton = caller.findViewById(R.id.benchTest);
         testButton.setOnClickListener(v -> test());
+        testButton.setEnabled(addPhotoLayout.testPhotos.size() != 0 &&
+                sampleModelObject.userDatabase.getNumberOfUsers() != 0);
 
-        TextView numberOfFaces = caller.findViewById(R.id.numberOfFacesView);
+        Button deleteUserButton = caller.findViewById(R.id.benchDeleteFace);
+        deleteUserButton.setOnClickListener(v -> deleteUser());
+
+        numberOfFaces = caller.findViewById(R.id.numberOfFacesView);
         numberOfFaces.setText(String.format(
                 caller.getString(R.string.BenchmarkMode_NumberOfUsers_Format),
                 sampleModelObject.userDatabase.getNumberOfUsers()));
 
-        TextView numberOfPhotos = caller.findViewById(R.id.numberOfPhotosView);
+        numberOfPhotos = caller.findViewById(R.id.numberOfPhotosView);
         numberOfPhotos.setText(String.format(
                 caller.getString(R.string.BenchmarkMode_NumberOfPhotos_Format),
                 addPhotoLayout.testPhotos.size()));
+    }
 
-        testButton.setEnabled(addPhotoLayout.testPhotos.size() != 0 &&
-                sampleModelObject.userDatabase.getNumberOfUsers() != 0);
+    /**
+     * Update UI after user database activities are finished.
+     */
+    private void updateUI() {
+        //TODO check why this get is necessary
+        sampleModelObject = GlobalData.getModel(
+                caller, supportedModels.get(0).first, supportedModels.get(0).second);
+
+        numberOfFaces.setText(String.format(
+                caller.getString(R.string.BenchmarkMode_NumberOfUsers_Format),
+                sampleModelObject.userDatabase.getNumberOfUsers()));
+        numberOfPhotos.setText(String.format(
+                caller.getString(R.string.BenchmarkMode_NumberOfPhotos_Format),
+                addPhotoLayout.testPhotos.size()));
     }
 
     /**
@@ -90,7 +122,21 @@ public class BenchmarkLayout implements LayoutClassInterface {
             chosenModels.add(model.second);
         }
         addFaceIntent.putExtra(caller.getString(R.string.addFace_ChooseModelName_intentValue), chosenModels);
-        caller.startActivity(addFaceIntent);
+        faceOperationLauncher.launch(addFaceIntent);
+    }
+
+    /**
+     * Start delete user activity.
+     */
+    private void deleteUser() {
+        Intent deleteFaceIntent = new Intent(caller, DeleteUserActivity.class);
+        ArrayList<String> chosenModels = new ArrayList<>();
+        for (Pair<String, String> model : supportedModels) {
+            chosenModels.add(model.first);
+            chosenModels.add(model.second);
+        }
+        deleteFaceIntent.putExtra(caller.getString(R.string.addFace_ChooseModelName_intentValue), chosenModels);
+        faceOperationLauncher.launch(deleteFaceIntent);
     }
 
     /**

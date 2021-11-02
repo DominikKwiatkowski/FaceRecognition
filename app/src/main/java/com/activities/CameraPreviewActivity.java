@@ -210,7 +210,6 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
             });
 
             for (int i = 0; i < detectedFaces.size(); i++) {
-
                 // Map face coordinates to screen coordinates
                 Size frameDimensions = new Size(transformedFrame.getWidth(), transformedFrame.getHeight());
                 final RectF mappedFaceLocation = mapOutputCoordinates(detectedFaces.get(i).getBoundingBox(), frameDimensions);
@@ -321,7 +320,6 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
         }
 
         // Set location to preview's with given margin and aspectRatio
-        float margin = 0.0f;
         float midX = (correctedLocation.left + correctedLocation.right) / 2f;
         float midY = (correctedLocation.top + correctedLocation.bottom) / 2f;
 

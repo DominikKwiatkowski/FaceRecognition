@@ -58,7 +58,6 @@ public class BenchmarkLayout implements LayoutClassInterface {
         sampleModelObject = GlobalData.getModel(
                 caller, supportedModels.get(0).first, supportedModels.get(0).second);
 
-
         faceOperationLauncher = caller.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -110,7 +109,6 @@ public class BenchmarkLayout implements LayoutClassInterface {
         numberOfPhotos.setText(String.format(
                 caller.getString(R.string.BenchmarkMode_NumberOfPhotos_Format),
                 addPhotoLayout.testPhotos.size()));
-
     }
 
     /**

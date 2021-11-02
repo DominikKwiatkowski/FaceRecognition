@@ -34,7 +34,7 @@ public class DeleteUserActivity extends AppCompatActivity {
         tableLayout = this.findViewById(R.id.deleteUserTableLayout);
 
         // Get all models.
-        ArrayList<String> requestedModels = (ArrayList<String>) getIntent().
+        List<String> requestedModels = (List<String>) getIntent().
                 getSerializableExtra(getString(R.string.addFace_ChooseModelName_intentValue));
         for (int i = 0; i < requestedModels.size() / 2; i++) {
             ModelObject modelObject = GlobalData.getModel(
@@ -55,7 +55,7 @@ public class DeleteUserActivity extends AppCompatActivity {
 
         // Even with many models, they database users have to be same.
         UserDatabase database = models.get(0).userDatabase;
-        // Count padding size( in dp).
+        // Count padding size (in dp).
         int pixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
         for (String user : database.getUsersArray()) {
@@ -67,12 +67,12 @@ public class DeleteUserActivity extends AppCompatActivity {
 
             // Set up user name view.
             userTextView.setText(user);
-            userTextView.setTextSize(textSize);
+            userTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
             userTextView.setPadding(pixels, pixels, pixels, pixels);
 
             // Set up number of photos view.
             numberOfPhotosView.setText(String.valueOf(database.getUserRecord(user).getWeight()));
-            numberOfPhotosView.setTextSize(textSize);
+            numberOfPhotosView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
             numberOfPhotosView.setPadding(pixels, pixels, pixels, pixels);
 
             // Set up delete button.
@@ -92,7 +92,7 @@ public class DeleteUserActivity extends AppCompatActivity {
      * Remove user from all given databases
      *
      * @param user name of user
-     * @param v    Button, which trigger on click event
+     * @param v    Button, which triggers on click event
      */
     private void removeUser(String user, View v) {
         for (ModelObject model : models) {

@@ -382,6 +382,7 @@ public class AddFaceActivity extends AppCompatActivity {
                 try {
                     processFace(facePreProcessor.detectAndPreProcessOneFace(photo));
                 } catch (FaceProcessingException e) {
+                    Log.d("Bulk add", "Skipped photo with none or multiple faces in directory " + name);
                     continue;
                 }
                 for (Pair<ModelObject, float[]> model : models) {

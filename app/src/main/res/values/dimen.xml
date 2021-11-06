@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="captureButtonSmall">32dp</dimen>
+    <dimen name="captureButtonMedium">64dp</dimen>
+    <dimen name="captureButtonLarge">92dp</dimen>
+
+    <dimen name="captureButtonMargin">20dp</dimen>
+
+
+    <dimen name="switchCameraButtonSmall">32dp</dimen>
+    <dimen name="switchCameraButtonMedium">64dp</dimen>
+    <dimen name="switchCameraButtonLarge">92dp</dimen>
+
+    <dimen name="switchCameraButtonMargin">10dp</dimen>
+</resources>

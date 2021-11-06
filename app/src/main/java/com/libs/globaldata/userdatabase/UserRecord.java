@@ -2,7 +2,9 @@ package com.libs.globaldata.userdatabase;
 
 import androidx.annotation.NonNull;
 
-public class UserRecord {
+import java.io.Serializable;
+
+public class UserRecord implements Serializable {
     public String username;
     public float[] vector;
     private int weight;
@@ -29,5 +31,14 @@ public class UserRecord {
         } else {
             throw new AssertionError("Incorrect vector length");
         }
+    }
+
+    /**
+     * Get weight of this record.
+     *
+     * @return weight
+     */
+    public int getWeight() {
+        return weight;
     }
 }

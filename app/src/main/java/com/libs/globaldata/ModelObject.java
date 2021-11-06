@@ -26,6 +26,6 @@ public class ModelObject {
      * Remove database of the ModelObject.
      */
     public void clear() {
-        userDatabase.clearFile();
+        userDatabase.clear();
     }
 }

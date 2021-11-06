@@ -57,9 +57,12 @@ public class UserDatabase {
      * on database type.
      *
      * @param vector of n-dimensions, for which the closest equivalent wil be found
-     * @return closest UserRecord
+     * @return closest UserRecord - null if not found
      */
     public UserRecord findClosestRecord(float[] vector) {
+        if (vector == null) {
+            return null;
+        }
         if (validateVector(vector)) {
             UserRecord closestRecord = null;
             double minDist = Double.MAX_VALUE;
@@ -197,6 +200,15 @@ public class UserDatabase {
     }
 
     /**
+     * Get the number of currently added Users.
+     *
+     * @return int Number of users
+     */
+    public int getNumberOfUsers() {
+        return getUsersArray().length;
+    }
+
+    /**
      * Get list of all users.
      *
      * @return array of users names
@@ -284,7 +296,9 @@ public class UserDatabase {
     /**
      * Removes database file if created.
      */
-    public void clearFile() {
+    public void clear() {
+        usersRecords.clear();
+
         if (databaseFile.exists()) {
             if (databaseFile.delete()) {
                 Log.d(Tag + "_" + id, "Database file removed.");

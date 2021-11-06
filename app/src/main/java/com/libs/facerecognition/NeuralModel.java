@@ -42,7 +42,7 @@ public class NeuralModel {
         try {
             Interpreter.Options options = new Interpreter.Options();
             CompatibilityList compatList = new CompatibilityList();
-            if(compatList.isDelegateSupportedOnThisDevice()){
+            if (compatList.isDelegateSupportedOnThisDevice()) {
                 // if the device has a supported GPU, add the GPU delegate
                 GpuDelegate.Options delegateOptions = compatList.getBestOptionsForThisDevice();
                 GpuDelegate gpuDelegate = new GpuDelegate(delegateOptions);
@@ -62,9 +62,9 @@ public class NeuralModel {
         outputSize = model.getOutputTensor(0).shape()[1];
 
         imageProcessor = new ImageProcessor.Builder()
-                        .add(new ResizeOp(imageHeight, imageWidth, ResizeOp.ResizeMethod.BILINEAR))
-                        .add(new NormalizeOp(127.5f, 127.5f))
-                        .build();
+                .add(new ResizeOp(imageHeight, imageWidth, ResizeOp.ResizeMethod.BILINEAR))
+                .add(new NormalizeOp(127.5f, 127.5f))
+                .build();
     }
 
     /**
@@ -82,11 +82,10 @@ public class NeuralModel {
      *
      * @param image image to be prepared
      * @return tImage image processed and ready to be putted by neural network.
-     * @throws NullPointerException in case of null image
      */
     public TensorImage changeImageRes(Bitmap image) {
         if (image == null) {
-            throw new NullPointerException("Image can't be null");
+            return null;
         }
 
         TensorImage tImage = new TensorImage(DataType.UINT8);
@@ -101,7 +100,7 @@ public class NeuralModel {
      * @param image image to be prepared
      * @return probabilityBuffer Buffer of face properties
      */
-    public float[][] resizeAndProcess(Bitmap image) {
+    public float[] resizeAndProcess(Bitmap image) {
         return processImage(changeImageRes(image));
     }
 
@@ -112,16 +111,16 @@ public class NeuralModel {
      * @return probabilityBuffer Buffer of face properties. Sized of buffer must be specified
      * @throws NullPointerException in case of null image
      */
-    public synchronized float[][] processImage(TensorImage tImage) {
+    public synchronized float[] processImage(TensorImage tImage) {
         if (tImage == null) {
-            throw new NullPointerException("Image can't be null");
+            return null;
         }
 
         float[][] probabilityBuffer = new float[1][outputSize];
         model.run(tImage.getBuffer(), probabilityBuffer);
         Log.i(Tag + modelFilename, "Processed image successfully");
 
-        return probabilityBuffer;
+        return probabilityBuffer[0];
     }
 
 

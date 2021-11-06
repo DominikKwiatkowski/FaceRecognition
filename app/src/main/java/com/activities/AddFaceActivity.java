@@ -3,14 +3,13 @@ package com.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,19 +28,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.R;
 import com.common.FaceProcessingException;
 import com.common.ToastWrapper;
-import com.libs.facerecognition.FacePreProcessor;
-import com.libs.facerecognition.NeuralModel;
+import com.libs.facerecognition.FacePreprocessor;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
-import com.libs.globaldata.userdatabase.UserDatabase;
 import com.libs.globaldata.userdatabase.UserRecord;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+
+import static com.common.BitmapOperations.resolveContentToBitmap;
 
 public class AddFaceActivity extends AppCompatActivity {
 
@@ -52,26 +52,21 @@ public class AddFaceActivity extends AppCompatActivity {
     private EditText usernameEditText = null;
     private ProgressBar progressBar = null;
 
-    // NeuralModel singleton reference
-    private NeuralModel model = null;
-
-    // UserDatabase singleton reference
-    private UserDatabase userDatabase = null;
-
-    // Vector representation of face found on selected photo
-    private float[] currentFaceVector = null;
+    // Contains all models given by user.
+    private List<Pair<ModelObject, float[]>> models = new ArrayList<>();
 
     // ToastWrapper Instance
     private ToastWrapper toastWrapper = null;
 
-    private FacePreProcessor facePreProcessor = null;
+    private FacePreprocessor facePreProcessor = null;
+
     // ChoosePhoto Intent launcher
     ActivityResultLauncher<Intent> choosePhotoLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 // Process picked image
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    processPhoto(resolveContentToBitmap(result.getData().getData()));
+                    processPhoto(resolveContentToBitmap(result.getData().getData(), this));
                 }
             });
 
@@ -83,7 +78,7 @@ public class AddFaceActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     // Get filename from activity result, read photo from internal app storage and process it
                     try {
-                        String filename = result.getData().getStringExtra("UserPhoto");
+                        String filename = result.getData().getStringExtra(CameraPreviewActivity.CAPTURED_FRAME_KEY);
                         FileInputStream fis = getApplicationContext().openFileInput(filename);
                         Bitmap photo = BitmapFactory.decodeStream(fis);
                         fis.close();
@@ -150,22 +145,19 @@ public class AddFaceActivity extends AppCompatActivity {
         // Disable add button before photo selected
         setAddButtonState(false);
 
-        // Initialize Imgcodecs class
-        SharedPreferences userSettings = GlobalData.getUserSettings(this);
+        // Get all models.
+        ArrayList<String> requestedModels = (ArrayList<String>) getIntent().
+                getSerializableExtra(getString(R.string.addFace_ChooseModelName_intentValue));
 
-        ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]));
-
-        // Get network model instance
-        model = modelObject.neuralModel;
-
-        // Get database instance
-        userDatabase = modelObject.userDatabase;
+        for (int i = 0; i < requestedModels.size() / 2; i++) {
+            ModelObject modelObject = GlobalData.getModel(
+                    getApplicationContext(),
+                    requestedModels.get(2 * i),
+                    requestedModels.get(2 * i + 1));
+            if (!models.contains(modelObject)) {
+                models.add(new Pair<>(modelObject, null));
+            }
+        }
 
         // Create ToastWrapper Instance
         toastWrapper = new ToastWrapper(getApplicationContext());
@@ -174,6 +166,7 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
+     * Unlock button for adding user if true passed, lock otherwise.
      * Start file chooser activity with image constraint.
      *
      * @param view - current view.
@@ -185,16 +178,6 @@ public class AddFaceActivity extends AppCompatActivity {
         choosePhotoLauncher.launch(Intent.createChooser(intent, "Select Picture"));
     }
 
-    /**
-     * Start CameraActivity with in photo taking mode.
-     *
-     * @param view - current view.
-     */
-    public void takePhoto(View view) {
-        Intent takePhotoIntent = new Intent(this, CameraActivity.class);
-        takePhotoIntent.putExtra("TakePhotoMode", true);
-        takePhotoLauncher.launch(takePhotoIntent);
-    }
 
     /**
      * Exit activity without adding user.
@@ -208,45 +191,43 @@ public class AddFaceActivity extends AppCompatActivity {
     /**
      * Create UserRecord with data from last processed image and user input.
      *
-     * @param view - current view.
+     * @param state desired state of button
      */
+    void setAddButtonState(boolean state) {
+        if (state) {
+            addButton.setClickable(true);
+            addButton.setAlpha(1f);
+        } else {
+            addButton.setClickable(false);
+            addButton.setAlpha(0.5f);
+        }
+    }
+
     public void addUser(View view) {
         EditText usernameInput = findViewById(R.id.usernameInput);
         String username = usernameInput.getText().toString();
         Resources res = getResources();
 
-        if (username.isEmpty() || currentFaceVector == null) {
-            toastWrapper.showToast(res.getString(R.string.addface_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
+        if (username.isEmpty()) {
+            toastWrapper.showToast(res.getString(R.string.addFace_UsernameNotGiven_toast), Toast.LENGTH_SHORT);
             return;
         }
 
-        UserRecord userRecord = new UserRecord(username, currentFaceVector);
-        userDatabase.addUserRecord(userRecord);
-        toastWrapper.showToast(String.format(res.getString(R.string.addface_UserAdded_toast), username), Toast.LENGTH_SHORT);
-        finish();
-    }
-
-    /**
-     * Resolve photo uri to bitmap
-     *
-     * @param photo - uri to image.
-     * @return Bitmap of resolved image.
-     */
-    private Bitmap resolveContentToBitmap(Uri photo) {
-        InputStream stream = null;
-        try {
-            // Open file in stream
-            stream = getContentResolver().openInputStream(photo);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        for (Pair<ModelObject, float[]> model : models) {
+            if (model.second == null) {
+                toastWrapper.showToast(res.getString(R.string.addFace_calculationNotFinished_toast), Toast.LENGTH_SHORT);
+                return;
+            }
         }
 
-        // Decode photo to Bitmap
-        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
-        bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeStream(stream, null, bmpFactoryOptions);
-    }
+        for (Pair<ModelObject, float[]> model : models) {
+            UserRecord userRecord = new UserRecord(username, model.second);
+            model.first.userDatabase.addUserRecord(userRecord);
+        }
 
+        toastWrapper.showToast(String.format(res.getString(R.string.addFace_UserAdded_toast), username), Toast.LENGTH_SHORT);
+        finish();
+    }
 
     /**
      * Process chosen photo using NeuralModel, display found face, save face vector.
@@ -264,21 +245,6 @@ public class AddFaceActivity extends AppCompatActivity {
                             CompletableFuture.runAsync(() -> processFace(result));
                         }
                 );
-    }
-
-    /**
-     * Unlock button for adding user if true passed, lock otherwise.
-     *
-     * @param state desired state of button
-     */
-    void setAddButtonState(boolean state) {
-        if (state) {
-            addButton.setClickable(true);
-            addButton.setAlpha(1f);
-        } else {
-            addButton.setClickable(false);
-            addButton.setAlpha(0.5f);
-        }
     }
 
     /**
@@ -312,6 +278,23 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
+     * Pre-process selected image or camera frame. Returns crop face image.
+     *
+     * @param image image or camera frame.
+     * @return cropped face image.
+     */
+    private Bitmap preProcessFace(Bitmap image) {
+        Resources res = getResources();
+        try {
+            return facePreProcessor.detectAndPreProcessOneFace(image);
+        } catch (FaceProcessingException e) {
+            e.printStackTrace();
+            toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
+            throw new CompletionException(e);
+        }
+    }
+
+    /**
      * Convert detected face to bitmap and display it on face image View.
      *
      * @param face detected face.
@@ -328,30 +311,27 @@ public class AddFaceActivity extends AppCompatActivity {
     }
 
     /**
-     * Pre-process selected image or camera frame. Returns crop face image.
-     *
-     * @param image image or camera frame.
-     * @return cropped face image.
-     */
-    private Bitmap preProcessFace(Bitmap image) {
-        Resources res = getResources();
-        try {
-            return facePreProcessor.preProcessOneFace(image);
-        } catch (FaceProcessingException e) {
-            e.printStackTrace();
-            toastWrapper.showToast(res.getString(R.string.addface_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
-            throw new CompletionException(e);
-        }
-    }
-
-    /**
      * Process face image using neural model and enable add user button when done.
      *
      * @param face face image.
      */
     private void processFace(Bitmap face) {
-        currentFaceVector = model.resizeAndProcess(face)[0];
+        for (int i = 0; i < models.size(); i++) {
+            models.set(i, new Pair<>(models.get(i).first, models.get(i).first.neuralModel.resizeAndProcess(face)));
+        }
         // Unlock "add" button
         setAddButtonState(true);
+    }
+
+    /**
+     * Start CameraActivity with in photo taking mode.
+     *
+     * @param view - current view.
+     */
+    public void takePhoto(View view) {
+        Intent takePhotoIntent = new Intent(this, CameraPreviewActivity.class);
+        takePhotoIntent.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
+                CameraPreviewActivity.CameraPreviewMode.CAPTURE);
+        takePhotoLauncher.launch(takePhotoIntent);
     }
 }

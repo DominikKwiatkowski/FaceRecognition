@@ -40,30 +40,30 @@ jobs:
       - name: Run Unit tests with Gradle
         run: ./gradlew test
 
-#  instrumented-tests:
-#    name: Run instrumented tests on emulator with Gradle
-#    runs-on: macos-latest   # It is recommended to run this action on a macOS to take advantage of hardware acceleration support provided by HAXM
-#    needs: build      # Require build to run
-#
-#    strategy:
-#      matrix:
-#        api-level: [26, 29]   # Choose Api versions to run instrumented tests on
-#        target: [default]
-#
-#    steps:
-#      - if: github.event_name != 'pull_request'
-#        uses: actions/checkout@v2
-#      - if: github.event_name == 'pull_request'
-#        uses: actions/checkout@v2
-#        with:
-#          ref: ${{ github.event.pull_request.head.ref }}
-#
-#      - name: Run instrumented tests on emulator
-#        uses: reactivecircus/android-emulator-runner@v2
-#        with:
-#          api-level: ${{ matrix.api-level }}
-#          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-#          sdcard-path-or-size: 3G
-#          disable-animations: true
-#          emulator-build: 7425822   # Use it as a fix for "no emulator bug"
-#          script: ./gradlew connectedCheck
+  instrumented-tests:
+    name: Run instrumented tests on emulator with Gradle
+    runs-on: macos-latest   # It is recommended to run this action on a macOS to take advantage of hardware acceleration support provided by HAXM
+    needs: build      # Require build to run
+
+    strategy:
+      matrix:
+        api-level: [26, 29]   # Choose Api versions to run instrumented tests on
+        target: [default]
+
+    steps:
+      - if: github.event_name != 'pull_request'
+        uses: actions/checkout@v2
+      - if: github.event_name == 'pull_request'
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Run instrumented tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -partition-size 2048 -camera-back none
+          # sdcard-path-or-size: 3G
+          disable-animations: true
+          emulator-build: 7425822   # Use it as a fix for "no emulator bug"
+          script: ./gradlew connectedCheck -S

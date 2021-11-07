@@ -46,10 +46,8 @@ public class FindFaceTest {
      */
     boolean photoIsCorrect(Bitmap image, Rect face) {
         Task<List<Face>> task = preProcessor.detectAllFacesUsingML(image);
-        while(!task.isComplete())
-        {
+        while(!task.isComplete());
 
-        }
         ArrayList<Rect> result = new ArrayList<>();
         for(Face faceRes : task.getResult()){
             result.add(faceRes.getBoundingBox());

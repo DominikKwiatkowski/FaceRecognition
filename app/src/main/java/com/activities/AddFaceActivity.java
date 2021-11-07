@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -110,12 +112,23 @@ public class AddFaceActivity extends AppCompatActivity {
         addFromCameraButton = findViewById(R.id.addFromCamera);
         usernameEditText = findViewById(R.id.usernameInput);
 
+        InputFilter whitespaceFilter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
+                                       int dstart, int dend) {
+                return source.toString().replaceAll("\\s+", " ");
+            }
+        };
+
+        InputFilter lengthFilter = new InputFilter.LengthFilter(10);
+        usernameEditText.setFilters(new InputFilter[] { whitespaceFilter, lengthFilter});
+
         usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    usernameEditText.clearFocus();
                     return true;
                 }
                 return false;
@@ -128,6 +141,7 @@ public class AddFaceActivity extends AppCompatActivity {
                 if (key == KeyEvent.KEYCODE_ENTER) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
+                    usernameEditText.clearFocus();
                     return true;
                 }
                 return false;

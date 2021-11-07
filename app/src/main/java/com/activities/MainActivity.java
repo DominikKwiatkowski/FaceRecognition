@@ -22,10 +22,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // TODO: remove after basic workflow is finished
-    ModelObject modelObject = null;
-    private ArrayList<String> chosenModels = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,27 +34,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
         PermissionsWrapper.validatePermissions(targetPermissions, this);
-
-        SharedPreferences userSettings = GlobalData.getUserSettings(this);
-        // TODO: remove after basic workflow is finished
-        // Load NeuralModel
-        modelObject = GlobalData.getModel(getApplicationContext(),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]));
-
-        // Setup user model.
-        userSettings = GlobalData.getUserSettings(this);
-        chosenModels.add(
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]));
-        chosenModels.add(userSettings.getString(
-                getString(R.string.settings_userModel_key),
-                getResources().getStringArray(R.array.models)[0]));
     }
 
     /**
@@ -102,6 +77,28 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences userSettings = GlobalData.getUserSettings(this);
+        ArrayList<String> chosenModels = new ArrayList<>();
+        ModelObject modelObject = null;
+        // TODO: remove after basic workflow is finished
+        // Load NeuralModel
+        modelObject = GlobalData.getModel(getApplicationContext(),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]));
+
+        // Setup user model.
+        userSettings = GlobalData.getUserSettings(this);
+        chosenModels.add(
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]));
+        chosenModels.add(userSettings.getString(
+                getString(R.string.settings_userModel_key),
+                getResources().getStringArray(R.array.models)[0]));
         switch (item.getItemId()) {
             case R.id.cameraPreview:
                 Intent i2 = new Intent(this, CameraPreviewActivity.class);

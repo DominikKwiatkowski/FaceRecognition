@@ -79,10 +79,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         SharedPreferences userSettings = GlobalData.getUserSettings(this);
         ArrayList<String> chosenModels = new ArrayList<>();
-        ModelObject modelObject = null;
-        // TODO: remove after basic workflow is finished
-        // Load NeuralModel
-        modelObject = GlobalData.getModel(getApplicationContext(),
+
+        // Load NeuralModel.
+        ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
                 userSettings.getString(
                         getString(R.string.settings_userModel_key),
                         getResources().getStringArray(R.array.models)[0]),
@@ -99,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
         chosenModels.add(userSettings.getString(
                 getString(R.string.settings_userModel_key),
                 getResources().getStringArray(R.array.models)[0]));
+
+        // Switch between options.
         switch (item.getItemId()) {
             case R.id.cameraPreview:
                 Intent i2 = new Intent(this, CameraPreviewActivity.class);

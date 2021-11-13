@@ -15,7 +15,6 @@ import com.R;
 import com.activities.AddFaceActivity;
 import com.activities.DeleteUserActivity;
 import com.common.ToastWrapper;
-import com.libs.facerecognition.NeuralModelProvider;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 
@@ -40,13 +39,16 @@ public class BenchmarkLayout implements LayoutClassInterface {
         this.caller = caller;
         toastWrapper = new ToastWrapper(caller);
         SharedPreferences userSettings = GlobalData.getUserSettings(caller);
-        // TODO Clear models before every start!!!
+
         // Read supported models.
         for (String model : caller.getResources().getStringArray(R.array.models)) {
             if (userSettings.getBoolean(model + caller.getString(R.string.settings_benchModel_suffix), true)) {
                 supportedModels.add(new Pair<>(model, model + caller.getString(R.string.BenchmarkMode_ModelDatabaseName_Suffix)));
             }
         }
+
+        CompletableFuture.runAsync(() -> initModels());
+
         // Check if there is a supported model
         if (supportedModels.size() == 0) {
             toastWrapper.showToast(caller.getString(R.string.BenchmarkMode_NoPhoto_Toast), Toast.LENGTH_LONG);
@@ -66,8 +68,6 @@ public class BenchmarkLayout implements LayoutClassInterface {
                     updateUI();
                 }
         );
-
-        CompletableFuture.runAsync(() -> loadData());
     }
 
     @Override
@@ -159,11 +159,13 @@ public class BenchmarkLayout implements LayoutClassInterface {
 
     /**
      * Load all requested models asynchronously.
+     * Clear models and disable their database saving.
      */
-    private void loadData()
-    {
-        for (Pair<String,String> supportedModel:supportedModels) {
-            NeuralModelProvider.getInstance(caller,supportedModel.first);
+    private void initModels() {
+        for (Pair<String, String> supportedModel : supportedModels) {
+            ModelObject model = GlobalData.getModel(caller, supportedModel.first, supportedModel.second);
+            model.clear();
+            model.userDatabase.disableDatabaseSaving();
         }
     }
 }

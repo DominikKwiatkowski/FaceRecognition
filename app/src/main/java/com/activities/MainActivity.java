@@ -84,24 +84,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences userSettings = GlobalData.getUserSettings(this);
         ArrayList<String> chosenModels = new ArrayList<>();
 
-        // TODO: remove after basic workflow is finished
-        // Load NeuralModel
-        ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]),
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]));
-
-        chosenModels.add(
-                userSettings.getString(
-                        getString(R.string.settings_userModel_key),
-                        getResources().getStringArray(R.array.models)[0]));
         chosenModels.add(userSettings.getString(
                 getString(R.string.settings_userModel_key),
                 getResources().getStringArray(R.array.models)[0]));
-        
+        chosenModels.add(userSettings.getString(
+                getString(R.string.settings_userModel_key),
+                getResources().getStringArray(R.array.models)[0]));
+
         // Switch between options.
         switch (item.getItemId()) {
             case R.id.cameraPreview:
@@ -109,22 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 i2.putExtra(CameraPreviewActivity.CAMERA_MODE_KEY,
                         CameraPreviewActivity.CameraPreviewMode.RECOGNITION);
                 startActivity(i2);
-                break;
-            case R.id.sampleDatabase:
-                // TODO: remove after all basic workflow is finished
-                modelObject.userDatabase.loadSampleDatabase(getApplicationContext());
-                break;
-            case R.id.loadDatabase:
-                // TODO: remove after all basic workflow is finished
-                modelObject.userDatabase.loadDatabase();
-                break;
-            case R.id.saveDatabase:
-                // TODO: remove after all basic workflow is finished
-                modelObject.userDatabase.saveDatabase();
-                break;
-            case R.id.clearModel:
-                // TODO: remove after all basic workflow is finished
-                modelObject.clear();
                 break;
             case R.id.addUser:
                 Intent addFaceIntent = new Intent(this, AddFaceActivity.class);

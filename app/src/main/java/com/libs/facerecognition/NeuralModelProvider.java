@@ -23,6 +23,7 @@ public class NeuralModelProvider {
             synchronized (NeuralModel.class) {
                 if (neuralModel == null) {
                     neuralModel = new NeuralModel(modelTag, modelTag + ".tflite", context);
+                    neuralModelsStorage.put(modelTag,neuralModel);
                 }
             }
         }

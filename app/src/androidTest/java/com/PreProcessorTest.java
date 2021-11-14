@@ -126,7 +126,7 @@ public class PreProcessorTest {
 
     @Test
     /**
-     * Testing if face on image works correctly.
+     * Test if face on image works correctly.
      */
     public void IsFaceOnImageTest(){
         Bitmap faceNotInImagePhoto = BitmapFactory.decodeResource(res, R.drawable.face_not_in_image);
@@ -139,30 +139,7 @@ public class PreProcessorTest {
         preProcessor.waitForTask(faceInsideImage);
 
         assertFalse(preProcessor.isFaceOnImage(faceOutsideImage.getResult().get(0), faceNotInImagePhoto));
+
         assertTrue(preProcessor.isFaceOnImage(faceInsideImage.getResult().get(0), faceInImagePhoto));
-    }
-
-    @Test
-    /**
-     * Check rotate and trim face works correctly.
-     */
-    public void rotateAndTrimFace(){
-        Bitmap faceInImagePhoto = BitmapFactory.decodeResource(res, R.drawable.face_in_image);
-        Task<List<Face>> faceInsideImage = preProcessor.detectAllFacesUsingML(faceInImagePhoto);
-        preProcessor.waitForTask(faceInsideImage);
-
-        Bitmap trimmed = preProcessor.rotateAndTrimFace(faceInImagePhoto, faceInsideImage.getResult().get(0));
-        Bitmap expectedTrimmed = BitmapFactory.decodeResource(res, R.drawable.face_trimmed);
-        equals(trimmed,expectedTrimmed);
-    }
-
-    private boolean equals(Bitmap bitmap1, Bitmap bitmap2) {
-        ByteBuffer buffer1 = ByteBuffer.allocate(bitmap1.getHeight() * bitmap1.getRowBytes());
-        bitmap1.copyPixelsToBuffer(buffer1);
-
-        ByteBuffer buffer2 = ByteBuffer.allocate(bitmap2.getHeight() * bitmap2.getRowBytes());
-        bitmap2.copyPixelsToBuffer(buffer2);
-
-        return Arrays.equals(buffer1.array(), buffer2.array());
     }
 }

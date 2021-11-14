@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import static com.common.BitmapOperations.loadBitmapFromUri;
 import static com.common.BitmapOperations.resolveContentToBitmap;
 
 public class AddFaceActivity extends AppCompatActivity {
@@ -67,7 +68,7 @@ public class AddFaceActivity extends AppCompatActivity {
             result -> {
                 // Process picked image
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    processPhoto(resolveContentToBitmap(result.getData().getData(), this));
+                    processPhoto(loadBitmapFromUri(result.getData().getData(),this));
                 }
             });
 

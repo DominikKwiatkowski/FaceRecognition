@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import static com.common.BitmapOperations.loadBitmapFromUri;
 import static com.common.BitmapOperations.resolveContentToBitmap;
 
 /**
@@ -54,15 +55,17 @@ public class AddPhotoLayout implements LayoutClassInterface {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         // Single photo case
                         if (result.getData().getData() != null) {
-                            Bitmap photo = resolveContentToBitmap(result.getData().getData(), caller);
-                            addNewTempPhoto(photo);
+                            Bitmap photo = loadBitmapFromUri(result.getData().getData(), caller);
+                            if (photo != null)
+                                addNewTempPhoto(photo);
                         }
                         // Many photo case
                         else if (result.getData().getClipData() != null) {
                             ClipData clipData = result.getData().getClipData();
                             for (int i = 0; i < clipData.getItemCount(); i++) {
-                                Bitmap photo = resolveContentToBitmap(clipData.getItemAt(i).getUri(), caller);
-                                addNewTempPhoto(photo);
+                                Bitmap photo = loadBitmapFromUri(clipData.getItemAt(i).getUri(), caller);
+                                if (photo != null)
+                                    addNewTempPhoto(photo);
                             }
                         }
                         // No photo case

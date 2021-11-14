@@ -10,6 +10,7 @@
     <string name="addFace_resultData_name">ResultData</string>
     <string name="addFace_calculationNotFinished_toast">Nie skończono obliczeń!</string>
     <string name="addFace_ChooseModelName_intentValue">usedModels</string>
+    <string name="addFace_photoLoading_toast">Photo loading error</string>
 
     <string name="settings_title_activity">SettingsActivity</string>
     <string name="settings_userName">userSettings</string>

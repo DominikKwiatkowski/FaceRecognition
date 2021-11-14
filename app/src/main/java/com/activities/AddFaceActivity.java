@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
+import static com.common.BitmapOperations.loadBitmapFromUri;
 import static com.common.BitmapOperations.resolveContentToBitmap;
 
 public class AddFaceActivity extends AppCompatActivity {
@@ -67,7 +68,7 @@ public class AddFaceActivity extends AppCompatActivity {
             result -> {
                 // Process picked image
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    processPhoto(resolveContentToBitmap(result.getData().getData(), this));
+                    processPhoto(loadBitmapFromUri(result.getData().getData(), this));
                 }
             });
 
@@ -120,7 +121,7 @@ public class AddFaceActivity extends AppCompatActivity {
         };
 
         InputFilter lengthFilter = new InputFilter.LengthFilter(10);
-        usernameEditText.setFilters(new InputFilter[] { whitespaceFilter, lengthFilter});
+        usernameEditText.setFilters(new InputFilter[]{whitespaceFilter, lengthFilter});
 
         usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -250,6 +251,9 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param image Bitmap of face which will be preprocessed.
      */
     private void processPhoto(Bitmap image) {
+        if(image == null){
+            toastWrapper.showToast(getString(R.string.addFace_photoLoading_toast), Toast.LENGTH_LONG);
+        }
         photoLoading(true);
         setAddButtonState(false);
         CompletableFuture.supplyAsync(() -> preProcessFace(image))
@@ -257,8 +261,7 @@ public class AddFaceActivity extends AppCompatActivity {
                             if (exception == null) {
                                 CompletableFuture.runAsync(() -> displayFace(result));
                                 CompletableFuture.runAsync(() -> processFace(result));
-                            }
-                            else{
+                            } else {
                                 photoLoading(false);
                                 setAddButtonState(true);
                             }
@@ -274,21 +277,21 @@ public class AddFaceActivity extends AppCompatActivity {
      */
     void photoLoading(boolean state) {
         runOnUiThread(() -> {
-                if (state) {
-                    currentFaceImage.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
-                    addFromCameraButton.setAlpha(0.5f);
-                    addFromPhotoButton.setAlpha(0.5f);
-                    addFromCameraButton.setClickable(false);
-                    addFromPhotoButton.setClickable(false);
-                } else {
-                    currentFaceImage.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    addFromCameraButton.setAlpha(1);
-                    addFromPhotoButton.setAlpha(1);
-                    addFromCameraButton.setClickable(true);
-                    addFromPhotoButton.setClickable(true);
-                }
+            if (state) {
+                currentFaceImage.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                addFromCameraButton.setAlpha(0.5f);
+                addFromPhotoButton.setAlpha(0.5f);
+                addFromCameraButton.setClickable(false);
+                addFromPhotoButton.setClickable(false);
+            } else {
+                currentFaceImage.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+                addFromCameraButton.setAlpha(1);
+                addFromPhotoButton.setAlpha(1);
+                addFromCameraButton.setClickable(true);
+                addFromPhotoButton.setClickable(true);
+            }
         });
     }
 
@@ -304,7 +307,7 @@ public class AddFaceActivity extends AppCompatActivity {
             return facePreProcessor.detectAndPreProcessOneFace(image);
         } catch (FaceProcessingException e) {
             e.printStackTrace();
-            runOnUiThread(()-> toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_LONG));
+            runOnUiThread(() -> toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_LONG));
             throw new CompletionException(e);
         }
     }
@@ -317,9 +320,9 @@ public class AddFaceActivity extends AppCompatActivity {
     private void displayFace(Bitmap face) {
         // Display found face on screen in ImageView
         runOnUiThread(() -> {
-                currentFaceImage.setImageBitmap(face);
-                photoLoading(false);
-            });
+            currentFaceImage.setImageBitmap(face);
+            photoLoading(false);
+        });
     }
 
     /**

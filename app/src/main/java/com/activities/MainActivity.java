@@ -13,12 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
 import com.common.PermissionsWrapper;
+import com.libs.facerecognition.NeuralModelProvider;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         );
 
         PermissionsWrapper.validatePermissions(targetPermissions, this);
+
+        CompletableFuture.runAsync(() -> loadData());
     }
 
     /**
@@ -90,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
                         getString(R.string.settings_userModel_key),
                         getResources().getStringArray(R.array.models)[0]));
 
-        // Setup user model.
-        userSettings = GlobalData.getUserSettings(this);
         chosenModels.add(
                 userSettings.getString(
                         getString(R.string.settings_userModel_key),
@@ -144,5 +146,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Load all requested models asynchronously.
+     */
+    private void loadData()
+    {
+        GlobalData.getFacePreProcessor();
+        SharedPreferences userSettings = GlobalData.getUserSettings(this);
+        NeuralModelProvider.getInstance(getApplicationContext(),
+                userSettings.getString(
+                        getString(R.string.settings_userModel_key),
+                        getResources().getStringArray(R.array.models)[0]));
     }
 }

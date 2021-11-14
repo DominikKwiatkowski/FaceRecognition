@@ -251,6 +251,9 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param image Bitmap of face which will be preprocessed.
      */
     private void processPhoto(Bitmap image) {
+        if(image == null){
+            toastWrapper.showToast(getString(R.string.addFace_photoLoading_toast), Toast.LENGTH_LONG);
+        }
         photoLoading(true);
         setAddButtonState(false);
         CompletableFuture.supplyAsync(() -> preProcessFace(image))

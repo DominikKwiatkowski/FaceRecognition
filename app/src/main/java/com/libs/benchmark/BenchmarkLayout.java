@@ -65,7 +65,7 @@ public class BenchmarkLayout implements LayoutClassInterface {
         faceOperationLauncher = caller.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    updateUI();
+                    makeActive();
                 }
         );
     }
@@ -94,22 +94,6 @@ public class BenchmarkLayout implements LayoutClassInterface {
                 sampleModelObject.userDatabase.getNumberOfUsers()));
 
         numberOfPhotos = caller.findViewById(R.id.numberOfPhotosView);
-        numberOfPhotos.setText(String.format(
-                caller.getString(R.string.BenchmarkMode_NumberOfPhotos_Format),
-                addPhotoLayout.testPhotos.size()));
-    }
-
-    /**
-     * Update UI after user database activities are finished.
-     */
-    private void updateUI() {
-        //TODO check why this get is necessary
-        sampleModelObject = GlobalData.getModel(
-                caller, supportedModels.get(0).first, supportedModels.get(0).second);
-
-        numberOfFaces.setText(String.format(
-                caller.getString(R.string.BenchmarkMode_NumberOfUsers_Format),
-                sampleModelObject.userDatabase.getNumberOfUsers()));
         numberOfPhotos.setText(String.format(
                 caller.getString(R.string.BenchmarkMode_NumberOfPhotos_Format),
                 addPhotoLayout.testPhotos.size()));

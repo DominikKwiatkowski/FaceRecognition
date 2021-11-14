@@ -15,11 +15,13 @@ import com.R;
 import com.activities.AddFaceActivity;
 import com.activities.DeleteUserActivity;
 import com.common.ToastWrapper;
+import com.libs.facerecognition.NeuralModelProvider;
 import com.libs.globaldata.GlobalData;
 import com.libs.globaldata.ModelObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BenchmarkLayout implements LayoutClassInterface {
     private final List<Pair<String, String>> supportedModels = new ArrayList<>();
@@ -64,6 +66,8 @@ public class BenchmarkLayout implements LayoutClassInterface {
                     updateUI();
                 }
         );
+
+        CompletableFuture.runAsync(() -> loadData());
     }
 
     @Override
@@ -151,5 +155,15 @@ public class BenchmarkLayout implements LayoutClassInterface {
      */
     private void test() {
         displayResultLayout.makeActive();
+    }
+
+    /**
+     * Load all requested models asynchronously.
+     */
+    private void loadData()
+    {
+        for (Pair<String,String> supportedModel:supportedModels) {
+            NeuralModelProvider.getInstance(caller,supportedModel.first);
+        }
     }
 }

@@ -170,7 +170,7 @@ public class AddFaceActivity extends AppCompatActivity {
         }
 
         // Create ToastWrapper Instance
-        toastWrapper = new ToastWrapper(getApplicationContext());
+        toastWrapper = new ToastWrapper(this);
 
         facePreProcessor = GlobalData.getFacePreProcessor();
     }
@@ -258,6 +258,10 @@ public class AddFaceActivity extends AppCompatActivity {
                                 CompletableFuture.runAsync(() -> displayFace(result));
                                 CompletableFuture.runAsync(() -> processFace(result));
                             }
+                            else{
+                                photoLoading(false);
+                                setAddButtonState(true);
+                            }
                         }
                 );
     }
@@ -269,9 +273,7 @@ public class AddFaceActivity extends AppCompatActivity {
      * @param state Desired state of loading animation.
      */
     void photoLoading(boolean state) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread(() -> {
                 if (state) {
                     currentFaceImage.setVisibility(View.INVISIBLE);
                     progressBar.setVisibility(View.VISIBLE);
@@ -287,7 +289,6 @@ public class AddFaceActivity extends AppCompatActivity {
                     addFromCameraButton.setClickable(true);
                     addFromPhotoButton.setClickable(true);
                 }
-            }
         });
     }
 
@@ -303,7 +304,7 @@ public class AddFaceActivity extends AppCompatActivity {
             return facePreProcessor.detectAndPreProcessOneFace(image);
         } catch (FaceProcessingException e) {
             e.printStackTrace();
-            toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_SHORT);
+            runOnUiThread(()-> toastWrapper.showToast(res.getString(R.string.addFace_NotOneFaceFound_toast), Toast.LENGTH_LONG));
             throw new CompletionException(e);
         }
     }
@@ -315,13 +316,10 @@ public class AddFaceActivity extends AppCompatActivity {
      */
     private void displayFace(Bitmap face) {
         // Display found face on screen in ImageView
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread(() -> {
                 currentFaceImage.setImageBitmap(face);
                 photoLoading(false);
-            }
-        });
+            });
     }
 
     /**

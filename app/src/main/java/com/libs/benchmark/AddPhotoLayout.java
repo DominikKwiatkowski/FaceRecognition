@@ -5,8 +5,6 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,17 +14,13 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.R;
 import com.activities.CameraPreviewActivity;
-import com.common.BitmapOperations;
 import com.common.ToastWrapper;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import static com.common.BitmapOperations.loadBitmapFromUri;
@@ -61,8 +55,8 @@ public class AddPhotoLayout implements LayoutClassInterface {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         // Single photo case
                         if (result.getData().getData() != null) {
-                            Bitmap photo = loadBitmapFromUri(result.getData().getData(),caller);
-                            if(photo != null)
+                            Bitmap photo = loadBitmapFromUri(result.getData().getData(), caller);
+                            if (photo != null)
                                 addNewTempPhoto(photo);
                         }
                         // Many photo case

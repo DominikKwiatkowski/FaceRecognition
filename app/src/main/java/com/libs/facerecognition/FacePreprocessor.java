@@ -100,7 +100,7 @@ public class FacePreprocessor {
      * @param face  Face from face detection
      * @return rotated image
      */
-    private Bitmap rotateAndTrimFace(Bitmap image, Face face) {
+    public Bitmap rotateAndTrimFace(Bitmap image, Face face) {
         double angle = face.getHeadEulerAngleZ();
         Matrix rotationMatrix = new Matrix();
 
@@ -187,7 +187,7 @@ public class FacePreprocessor {
      * @param image image on which this face is
      * @return true if face is on image, false otherwise
      */
-    private boolean isFaceOnImage(Face face, Bitmap image) {
+    public boolean isFaceOnImage(Face face, Bitmap image) {
         return face.getBoundingBox().top > 0 &&
                 face.getBoundingBox().left > 0 &&
                 face.getBoundingBox().bottom < image.getHeight() &&

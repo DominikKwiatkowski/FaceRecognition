@@ -14,13 +14,18 @@ import com.google.mlkit.vision.face.Face;
 import com.libs.facerecognition.FacePreprocessor;
 import com.libs.globaldata.GlobalData;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -28,14 +33,23 @@ import static org.junit.Assert.assertTrue;
  * of using different methods.
  */
 @RunWith(AndroidJUnit4.class)
-public class FindFaceTest {
+public class PreProcessorTest {
 
     // Number of margin percentage
     private static final int margin = 10;
     private static final int testCases = 2;
 
     private FacePreprocessor preProcessor;
+    private Resources res;
+    private Context appContext;
 
+    public PreProcessorTest()
+    {
+        appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        res = appContext.getResources();
+        // Name of model does not have any impact on results, it is never used.
+        preProcessor = GlobalData.getFacePreProcessor();
+    }
     /**
      * Function to check if results are correct. We use margin, which is equal to margin field.
      * It is only possible to test photo with one face on it.
@@ -88,13 +102,10 @@ public class FindFaceTest {
 
     @Test
     /**
-     * Check if face detector found the face on the image and if position of face is close to where it should be.
+     * Check if face detector found the face on the image and if position of face is close to where
+     * it should be.
      */
-    public void performTest() {
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        Resources res = appContext.getResources();
-        // Name of model does not have any impact on results, it is never used.
-        preProcessor = GlobalData.getFacePreProcessor();
+    public void FindFaceTest() {
 
         // Expected Results
         Rect[] faces = new Rect[testCases];
@@ -111,5 +122,24 @@ public class FindFaceTest {
         for (int i = 0; i < testCases; i++) {
             assertTrue(photoIsCorrect(images[i], faces[i]));
         }
+    }
+
+    @Test
+    /**
+     * Test if face on image works correctly.
+     */
+    public void IsFaceOnImageTest(){
+        Bitmap faceNotInImagePhoto = BitmapFactory.decodeResource(res, R.drawable.face_not_in_image);
+        Bitmap faceInImagePhoto = BitmapFactory.decodeResource(res, R.drawable.face_in_image);
+
+        Task<List<Face>> faceOutsideImage = preProcessor.detectAllFacesUsingML(faceNotInImagePhoto);
+        Task<List<Face>> faceInsideImage = preProcessor.detectAllFacesUsingML(faceInImagePhoto);
+
+        preProcessor.waitForTask(faceOutsideImage);
+        preProcessor.waitForTask(faceInsideImage);
+
+        assertFalse(preProcessor.isFaceOnImage(faceOutsideImage.getResult().get(0), faceNotInImagePhoto));
+
+        assertTrue(preProcessor.isFaceOnImage(faceInsideImage.getResult().get(0), faceInImagePhoto));
     }
 }

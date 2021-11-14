@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences userSettings = GlobalData.getUserSettings(this);
         ArrayList<String> chosenModels = new ArrayList<>();
 
-        // Load NeuralModel.
+        // TODO: remove after basic workflow is finished
+        // Load NeuralModel
         ModelObject modelObject = GlobalData.getModel(getApplicationContext(),
                 userSettings.getString(
                         getString(R.string.settings_userModel_key),
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         chosenModels.add(userSettings.getString(
                 getString(R.string.settings_userModel_key),
                 getResources().getStringArray(R.array.models)[0]));
-
+        
         // Switch between options.
         switch (item.getItemId()) {
             case R.id.cameraPreview:

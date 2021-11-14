@@ -64,7 +64,12 @@ public class DisplayResultsLayout implements LayoutClassInterface {
         modelLegend = caller.findViewById(R.id.showResultModelLegendTable);
         progressBar = caller.findViewById(R.id.showResultProgressBar);
         returnButton = caller.findViewById(R.id.showResultReturnButton);
-        returnButton.setOnClickListener(v -> caller.finish());
+        returnButton.setOnClickListener(v -> {
+            for (Pair<String, String> supportedModel : supportedModels) {
+                GlobalData.clearModel(supportedModel.first, supportedModel.second);
+            }
+            caller.finish();
+        });
         showResultLayout = caller.findViewById(R.id.showResultLayout);
         scrollView = caller.findViewById(R.id.showResultView);
         Executor executor = Executors.newSingleThreadExecutor();
@@ -114,9 +119,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
             try {
                 Long time = result.second.get();
                 benchmarkTimeResults.add(new Pair(result.first, time));
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }

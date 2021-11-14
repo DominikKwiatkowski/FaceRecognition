@@ -38,18 +38,41 @@ public class UserDatabase {
     private final Type userDatabaseType;
     private Map<String, UserRecord> usersRecords;
 
-    public UserDatabase(Context context, String databaseName, int vectorLength) {
+    // Enable saving database to internal device's storage
+    // Default is true
+    private boolean saveToFile;
+
+    public UserDatabase(Context context, String databaseName, int vectorLength, boolean loadOnCreation) {
         this.databaseFile = new File(context.getFilesDir(), Tag + "_" + databaseName + ".json");
         Log.d(Tag, databaseFile.getAbsolutePath());
         this.id = databaseName;
         this.vectorLength = vectorLength;
         this.userDatabaseType = new TypeToken<Map<String, UserRecord>>() {
         }.getType();
+        this.saveToFile = true;
 
-        usersRecords = new HashMap<String, UserRecord>();
+        this.usersRecords = new HashMap<String, UserRecord>();
 
-        // Load Database on creation
-        loadDatabase();
+        if (loadOnCreation) {
+            // Load Database on creation
+            loadDatabase();
+        }
+    }
+
+    /**
+     * Enable database saving so that after every modification changes are also applied to the
+     * copy from device's storage.
+     */
+    public void enableDatabaseSaving() {
+        saveToFile = true;
+    }
+
+    /**
+     * Disable database saving so that after every modification changes take place only in RAM
+     * and won't be saved to device's storage.
+     */
+    public void disableDatabaseSaving() {
+        saveToFile = false;
     }
 
     /**
@@ -110,7 +133,6 @@ public class UserDatabase {
         return true;
     }
 
-
     /**
      * Add new UserRecord to the database.
      *
@@ -122,13 +144,14 @@ public class UserDatabase {
                 // If user doesn't exist in database, insert the record
                 usersRecords.put(userRecord.username, userRecord);
             } else {
-                // If user exists in database, correct the record
+                // If user exists in database, update the record
                 usersRecords.get(userRecord.username).correctVector(userRecord.vector);
             }
 
             // Serialize database immediately
-            // TODO: Later on it might be reasonable to save database on application closure (faster)
-            saveDatabase();
+            if (saveToFile) {
+                saveDatabase();
+            }
         } else {
             throw new AssertionError("Invalid vector.");
         }
@@ -144,8 +167,9 @@ public class UserDatabase {
             usersRecords.put(userRecord.username, userRecord);
 
             // Serialize database immediately
-            // TODO: Later on it might be reasonable to save database on application closure (faster)
-            saveDatabase();
+            if (saveToFile) {
+                saveDatabase();
+            }
         } else {
             throw new AssertionError("Invalid vector.");
         }
@@ -161,8 +185,9 @@ public class UserDatabase {
         usersRecords.remove(userName);
 
         // Serialize database immediately
-        // TODO: Later on it might be reasonable to save database on application closure (faster)
-        saveDatabase();
+        if (saveToFile) {
+            saveDatabase();
+        }
     }
 
     /**
@@ -175,8 +200,9 @@ public class UserDatabase {
         usersRecords.remove(userRecord.username);
 
         // Serialize database immediately
-        // TODO: Later on it might be reasonable to save database on application closure (faster)
-        saveDatabase();
+        if (saveToFile) {
+            saveDatabase();
+        }
     }
 
     /**
@@ -254,7 +280,6 @@ public class UserDatabase {
         String serializedUserRecords = databaseJson.get("UserRecords").getAsString();
 
         // Validate database
-        // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
         assertEquals("Wrong type of database", id, loadedId);
         assertEquals("Wrong size of database", vectorLength, loadedVectorLength);
 
@@ -306,46 +331,5 @@ public class UserDatabase {
                 throw new AssertionError("Cannot remove the database file");
             }
         }
-    }
-
-    /**
-     * Load sample database from resource files.
-     */
-    public void loadSampleDatabase(Context context) {
-        // Load sample_database.json from resources to a String
-        String resourceString;
-        InputStream is = context.getResources().openRawResource(R.raw.sample_database);
-        int size = 0;
-
-        try {
-            size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            resourceString = new String(buffer, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            Log.e(Tag + "_" + id, "Cannot load sample database");
-            e.printStackTrace();
-            throw new AssertionError("Cannot load sample database");
-        }
-
-        // Deserialize database string
-        Gson gson = new Gson();
-        JsonObject databaseJson = gson.fromJson(resourceString, JsonObject.class);
-
-        String loadedId = databaseJson.get("Id").getAsString();
-        int loadedVectorLength = databaseJson.get("VectorLength").getAsInt();
-        String serializedUserRecords = databaseJson.get("UserRecords").getAsString();
-
-        // Validate database
-        // TODO: Later it might be better to throw exception here (in order to display dialog box or sth)
-        assertEquals("Wrong type of database", id, loadedId);
-        assertEquals("Wrong size of database", vectorLength, loadedVectorLength);
-
-        // Load users records
-        usersRecords.clear();
-        usersRecords = gson.fromJson(serializedUserRecords, userDatabaseType);
-
-        Log.d(Tag + "_" + id, "Sample database file loaded form resources");
     }
 }

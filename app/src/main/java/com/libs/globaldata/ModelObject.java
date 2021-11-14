@@ -19,7 +19,7 @@ public class ModelObject {
      */
     ModelObject(Context context, String modelName, String databaseName) {
         neuralModel = NeuralModelProvider.getInstance(context, modelName);
-        userDatabase = new UserDatabase(context, databaseName, neuralModel.getOutputSize());
+        userDatabase = new UserDatabase(context, databaseName, neuralModel.getOutputSize(), true);
     }
 
     /**

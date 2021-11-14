@@ -29,7 +29,7 @@ public class GlobalData {
             model = modelsStorage.get(databaseName);
             if (model == null) {
                 model = new ModelObject(context, modelName, databaseName);
-                modelsStorage.put(modelName, model);
+                modelsStorage.put(databaseName, model);
             }
         }
         return model;
@@ -38,17 +38,17 @@ public class GlobalData {
     /**
      * Remove given ModelObject with it's database if exists.
      *
-     * @param modelName - name of the neural network model
-     * @param context   - app/activity context
+     * @param modelName     - name of the neural network model
+     * @param databaseName  - name of database, it must be unique
      */
-    public static void clearModel(String modelName, Context context) {
+    public static void clearModel(String modelName, String databaseName) {
         ModelObject model;
 
         synchronized (ModelObject.class) {
-            model = modelsStorage.get(modelName);
+            model = modelsStorage.get(databaseName);
             if (model != null) {
                 model.clear();
-                modelsStorage.remove(modelName);
+                modelsStorage.remove(databaseName);
             }
         }
     }

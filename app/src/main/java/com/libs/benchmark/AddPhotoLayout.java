@@ -63,8 +63,9 @@ public class AddPhotoLayout implements LayoutClassInterface {
                         else if (result.getData().getClipData() != null) {
                             ClipData clipData = result.getData().getClipData();
                             for (int i = 0; i < clipData.getItemCount(); i++) {
-                                Bitmap photo = resolveContentToBitmap(clipData.getItemAt(i).getUri(), caller);
-                                addNewTempPhoto(photo);
+                                Bitmap photo = loadBitmapFromUri(clipData.getItemAt(i).getUri(), caller);
+                                if (photo != null)
+                                    addNewTempPhoto(photo);
                             }
                         }
                         // No photo case

@@ -40,7 +40,7 @@ public class BitmapOperations {
      *
      * @param uri     uri to image to be loaded
      * @param context current app context
-     * @return
+     * @return correctImage fixed image
      */
     public static Bitmap loadBitmapFromUri(Uri uri, Context context) {
         Bitmap bitmap = resolveContentToBitmap(uri, context);
@@ -66,11 +66,11 @@ public class BitmapOperations {
     }
 
     /**
-     * Gets the Amount of Degress of rotation using the exif integer to determine how much
+     * Gets the amount of degrees of rotation using the exif integer to determine how much
      * we should rotate the image.
      *
-     * @param exifOrientation - the Exif data for Image Orientation
-     * @return - how much to rotate in degrees
+     * @param exifOrientation the Exif data for Image Orientation
+     * @return degree         how much to rotate in degrees
      */
     public static int exifToDegrees(int exifOrientation) {
         if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
@@ -80,6 +80,7 @@ public class BitmapOperations {
         } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
             return 270;
         }
+
         return 0;
     }
 }

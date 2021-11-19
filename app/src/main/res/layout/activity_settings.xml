@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settingsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,17 +7,28 @@
     android:orientation="vertical"
     android:textAlignment="center">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/Theme.PopupOverlay" />
+
     <TextView
         android:id="@+id/chooseModel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/settings_userMode"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
 
     <Spinner
         android:id="@+id/chooseModelSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/BenchmarkModeSettings"
@@ -24,5 +36,8 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_benchmarkMode"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="20sp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"/>
 </LinearLayout>

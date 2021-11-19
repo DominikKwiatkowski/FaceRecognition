@@ -55,6 +55,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.google.mlkit:face-detection:16.1.2'
+    implementation 'androidx.navigation:navigation-fragment:2.3.5'
+    implementation 'androidx.navigation:navigation-ui:2.3.5'
 
     def camerax_version = "1.0.2"
     implementation "androidx.camera:camera-core:${camerax_version}"

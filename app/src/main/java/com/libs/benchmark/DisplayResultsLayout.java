@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.R;
+import com.common.TransitionsLibrary;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.face.Face;
 import com.libs.facerecognition.FacePreprocessor;
@@ -69,6 +70,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
                 GlobalData.clearModel(supportedModel.first, supportedModel.second);
             }
             caller.finish();
+            TransitionsLibrary.executeToRightTransition(caller);
         });
         showResultLayout = caller.findViewById(R.id.showResultLayout);
         scrollView = caller.findViewById(R.id.showResultView);

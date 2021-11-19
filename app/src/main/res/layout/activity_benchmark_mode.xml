@@ -10,34 +10,41 @@
 
   <Button
       android:id="@+id/benchAddFace"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="60dp"
+      android:layout_width="150dp"
+      android:layout_height="70dp"
+      android:layout_marginStart="30dp"
       android:layout_marginTop="84dp"
       android:text="@string/BenchmarkMode_AddFace_Text"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
+      android:id="@+id/benchDeleteFace"
+      android:layout_width="150dp"
+      android:layout_height="70dp"
+      android:layout_marginTop="84dp"
+      android:layout_marginEnd="20dp"
+      android:text="@string/BenchmarkMode_DeleteFaceButton_Text"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <Button
       android:id="@+id/benchMakePhoto"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="104dp"
+      android:layout_width="220dp"
+      android:layout_height="70dp"
       android:layout_marginTop="220dp"
-      android:layout_marginEnd="104dp"
       android:text="@string/BenchmarkMode_MakePhoto_Text"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
       android:id="@+id/benchTest"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="150dp"
+      android:layout_height="70dp"
       android:layout_marginStart="162dp"
       android:layout_marginEnd="162dp"
-      android:layout_marginBottom="37dp"
+      android:layout_marginBottom="30dp"
       android:text="@string/BenchmarkMode_Text_Text"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
@@ -66,14 +73,4 @@
       app:layout_constraintBottom_toTopOf="@+id/benchMakePhoto"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
-
-  <Button
-      android:id="@+id/benchDeleteFace"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="84dp"
-      android:layout_marginEnd="60dp"
-      android:text="@string/BenchmarkMode_DeleteFaceButton_Text"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

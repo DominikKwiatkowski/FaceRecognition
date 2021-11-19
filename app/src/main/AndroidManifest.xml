@@ -26,7 +26,8 @@
         android:logo="@mipmap/app_logo"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Inz">
+        android:theme="@style/AppTheme">
+
         <activity android:name="com.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -26,6 +26,7 @@ import androidx.camera.view.PreviewView;
 
 import com.R;
 import com.common.PermissionsWrapper;
+import com.common.TransitionsLibrary;
 import com.customviews.BoundingBox;
 import com.google.mlkit.vision.face.Face;
 import com.libs.customcamera.CameraPreview;
@@ -269,6 +270,7 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
         // Close activity
         cameraPreview.closeCamera();
         finish();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 
     private void prepareBoundingBoxes(int targetBoxesNum) {
@@ -388,5 +390,12 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
     public enum CameraPreviewMode {
         RECOGNITION,
         CAPTURE
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        TransitionsLibrary.executeToRightTransition(this);
     }
 }

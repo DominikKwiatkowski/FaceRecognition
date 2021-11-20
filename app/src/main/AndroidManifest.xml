@@ -28,21 +28,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.activities.MainActivity">
+        <activity
+            android:name="com.activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.activities.CameraPreviewActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.activities.AddFaceActivity" />
+        <activity
+            android:name="com.activities.AddFaceActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.activities.SettingsActivity"
-            android:label="@string/settings_title_activity" />
-        <activity android:name="com.activities.BenchmarkModeActivity"></activity>
-        <activity android:name="com.activities.DeleteUserActivity"></activity>
+            android:label="@string/settings_title_activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.activities.BenchmarkModeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.activities.DeleteUserActivity"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

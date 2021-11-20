@@ -226,8 +226,8 @@ public class CameraPreviewActivity extends AppCompatActivity implements CameraPr
                 String[] finalRecognizedNames = recognizedNames;
                 runOnUiThread(() -> {
                     boundingBoxesList.get(currIndex).setPosition(
-                            (int) mappedFaceLocation.left,
-                            (int) mappedFaceLocation.top,
+                            Math.max((int) mappedFaceLocation.left, 0),
+                            Math.max((int) mappedFaceLocation.top, 0),
                             (int) mappedFaceLocation.right,
                             (int) mappedFaceLocation.bottom);
 

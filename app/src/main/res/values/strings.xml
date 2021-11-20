@@ -3,6 +3,9 @@
 
     <string name="main_NoPermissions_hint">Missing key permissions. The application will be closed.</string>
     <string name="main_deleteUser_button">Delete user</string>
+    <string name="main_addUser_button">Add user</string>
+    <string name="main_openPreview_button">Open Preview</string>
+    <string name="main_openBenchmark_button">Open benchmark</string>
 
     <string name="addFace_Username_hint">User name (Max 10 characters)</string>
     <string name="addFace_UsernameNotGiven_toast">No user name entered!</string>
@@ -12,6 +15,11 @@
     <string name="addFace_calculationNotFinished_toast">The calculations have not been completed!</string>
     <string name="addFace_ChooseModelName_intentValue">usedModels</string>
     <string name="addFace_photoLoading_toast">Photo loading error</string>
+    <string name="addFace_Add_button">Add</string>
+    <string name="addFace_Cancel_button">Cancel</string>
+    <string name="addFace_TakePicture_button">Take a picture</string>
+    <string name="addFace_ChooseFromDisk_button">Choose from disk</string>
+    <string name="addFace_AddMany_button">Add many from dir</string>
 
     <string name="settings_title_activity">SettingsActivity</string>
     <string name="settings_userName">userSettings</string>
@@ -28,7 +36,7 @@
     <string name="BenchmarkMode_Return_Text">Return</string>
     <string name="BenchmarkMode_Add_Text">Add</string>
     <string name="BenchmarkMode_CancelButton_Text">Cancel</string>
-    <string name="BenchmarkMode_MakeImage_Text">Capture photo</string>
+    <string name="BenchmarkMode_MakeImage_Text">Take a picture</string>
     <string name="BenchmarkMode_ChoosePhoto_Text">Choose images</string>
     <string name="BenchmarkMode_PhotoCount_Text">Images number: 0</string>
     <string name="BenchmarkMode_DeletePhoto_Text">Delete image</string>
@@ -51,8 +59,5 @@
 
     <string name="navDrawer_open_state">Open</string>
     <string name="navDrawer_close_state">Close</string>
-    <string name="main_addUser_button">Add user</string>
-    <string name="main_openPreview_button">Open Preview</string>
-    <string name="main_openBenchmark_button">Open benchmark</string>
 
 </resources>

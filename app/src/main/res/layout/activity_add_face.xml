@@ -36,7 +36,7 @@
       android:layout_marginEnd="16dp"
       android:layout_marginBottom="16dp"
       android:onClick="addUser"
-      android:text="Dodaj"
+      android:text="@string/addFace_Add_button"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent" />
 
@@ -47,7 +47,7 @@
       android:layout_marginStart="16dp"
       android:layout_marginBottom="16dp"
       android:onClick="cancel"
-      android:text="Anuluj"
+      android:text="@string/addFace_Cancel_button"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent" />
 
@@ -58,7 +58,7 @@
       android:layout_marginTop="4dp"
       android:layout_marginEnd="52dp"
       android:onClick="takePhoto"
-      android:text="Zrób zdjęcie"
+      android:text="@string/addFace_TakePicture_button"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
@@ -69,7 +69,7 @@
       android:layout_marginStart="56dp"
       android:layout_marginTop="4dp"
       android:onClick="choosePhoto"
-      android:text="Wybierz zdjęcia"
+      android:text="@string/addFace_ChooseFromDisk_button"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/selectedImage" />
 
@@ -90,7 +90,7 @@
       android:layout_marginEnd="52dp"
       android:layout_marginBottom="72dp"
       android:onClick="chooseTestDirectory"
-      android:text="Dodaj z katalogu"
+      android:text="@string/addFace_AddMany_button"
       app:layout_constraintBottom_toTopOf="@+id/addUser"
       app:layout_constraintEnd_toEndOf="parent" />
 

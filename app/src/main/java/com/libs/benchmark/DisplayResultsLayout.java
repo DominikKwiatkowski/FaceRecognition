@@ -103,7 +103,9 @@ public class DisplayResultsLayout implements LayoutClassInterface {
 
         // 3. Creates result structure
         for (Bitmap face : preProcessedFaces) {
-            testResults.add(new BenchmarkResult(face));
+            if (face != null) {
+                testResults.add(new BenchmarkResult(face));
+            }
         }
 
         // 4. Run process models in separate threads

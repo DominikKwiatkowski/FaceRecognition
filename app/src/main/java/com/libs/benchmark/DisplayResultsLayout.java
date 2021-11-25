@@ -108,25 +108,14 @@ public class DisplayResultsLayout implements LayoutClassInterface {
             }
         }
 
-        // 4. Run process models in separate threads
+        // 4. Run process models. Running on seprate threads affects result, so it will be run in
+        // single one.
         ExecutorService executorService = Executors.newFixedThreadPool(6);
         ArrayList<Pair<String, Future<Long>>> results = new ArrayList<>();
         for (Pair<String, String> model : supportedModels) {
-            results.add(new Pair(
-                    model.first,
-                    executorService.submit(() -> processModel(model.first, model.second))
-            ));
+            benchmarkTimeResults.add(new Pair(model.first, processModel(model.first, model.second)));
         }
 
-        // 5. Gather time results from model processing
-        for (Pair<String, Future<Long>> result : results) {
-            try {
-                Long time = result.second.get();
-                benchmarkTimeResults.add(new Pair(result.first, time));
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         caller.runOnUiThread(this::displayResults);
     }
 

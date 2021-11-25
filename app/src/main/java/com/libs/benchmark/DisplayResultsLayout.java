@@ -136,7 +136,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
         }
         long endTime = System.nanoTime();
 
-        return (endTime - startTime) / 1000000;
+        return (endTime - startTime) / 1000000 / testResults.size();
     }
 
     /**

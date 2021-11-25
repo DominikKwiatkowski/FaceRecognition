@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,10 +34,10 @@ public class AddPhotoLayout implements LayoutClassInterface {
     private final ActivityResultLauncher<Intent> choosePhotoLauncher;
     private final ActivityResultLauncher<Intent> takePhotoLauncher;
     private final ToastWrapper toastWrapper;
-    public ArrayList<Bitmap> testPhotos = new ArrayList<>();
+    public ArrayList<Pair<String,Bitmap>> testPhotos = new ArrayList<>();
     private AppCompatActivity caller;
     private LayoutClassInterface benchmarkLayout;
-    private ArrayList<Bitmap> tempPhotos = new ArrayList<>();
+    private ArrayList<Pair<String,Bitmap>> tempPhotos = new ArrayList<>();
     private ImageView addPhoto_ImageView;
     private Button leftButton;
     private Button rightButton;
@@ -65,7 +66,7 @@ public class AddPhotoLayout implements LayoutClassInterface {
                             for (int i = 0; i < clipData.getItemCount(); i++) {
                                 Bitmap photo = loadBitmapFromUri(clipData.getItemAt(i).getUri(), caller);
                                 if (photo != null)
-                                    addNewTempPhoto(photo);
+                                    addNewTempPhoto(photo, clipData.getItemAt(i).getUri().getPath());
                             }
                         }
                         // No photo case
@@ -92,6 +93,8 @@ public class AddPhotoLayout implements LayoutClassInterface {
                     }
                 });
     }
+
+
 
     @Override
     public void makeActive() {
@@ -165,18 +168,23 @@ public class AddPhotoLayout implements LayoutClassInterface {
      * @param image image added by user
      */
     private void addNewTempPhoto(Bitmap image) {
-        tempPhotos.add(image);
+        tempPhotos.add(new Pair<>("",image));
         indexer = tempPhotos.size() - 1;
         updateUI();
     }
 
+    private void addNewTempPhoto(Bitmap image, String path) {
+        tempPhotos.add(new Pair<>(path,image));
+        indexer = tempPhotos.size() - 1;
+        updateUI();
+    }
     /**
      * Update UI after some user operation. It will change display photo if required and menage
      * other UI part such as button visibility and correctness of texts.
      */
     private void updateUI() {
         if (tempPhotos.size() > 0) {
-            addPhoto_ImageView.setImageBitmap(tempPhotos.get(indexer));
+            addPhoto_ImageView.setImageBitmap(tempPhotos.get(indexer).second);
             deletePhotoButton.setVisibility(View.VISIBLE);
         } else {
             addPhoto_ImageView.setImageResource(0);

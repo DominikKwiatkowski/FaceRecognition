@@ -1,15 +1,21 @@
 package com.libs.benchmark;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.HashMap;
 
 public class BenchmarkResult {
     private final Bitmap photo;
     private HashMap<String, String> modelResult = new HashMap<>();
+    public final String name;
 
-    public BenchmarkResult(Bitmap photo) {
+    public BenchmarkResult(Bitmap photo, String filename) {
         this.photo = photo;
+        this.name = filename;
     }
 
     /**
@@ -39,4 +45,5 @@ public class BenchmarkResult {
     public Bitmap getPhoto() {
         return photo;
     }
+
 }

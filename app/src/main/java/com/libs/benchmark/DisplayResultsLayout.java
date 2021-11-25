@@ -1,6 +1,7 @@
 package com.libs.benchmark;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
@@ -86,25 +87,28 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private void processPhotos() {
         // 1. Pro process all photos
         ArrayList<Task<List<Face>>> faceDetectionTasks = new ArrayList<>();
-        ArrayList<Bitmap> testPhotos = addPhotoLayout.testPhotos;
-        for (Bitmap photo : testPhotos) {
-            faceDetectionTasks.add(facePreProcessor.detectAllFacesUsingML(photo));
+        ArrayList<Pair<String, Bitmap>> testPhotos = addPhotoLayout.testPhotos;
+        for (Pair<String, Bitmap> photo : testPhotos) {
+            faceDetectionTasks.add(facePreProcessor.detectAllFacesUsingML(photo.second));
         }
 
         // 2. Gather all returned data
         Assert.assertEquals(faceDetectionTasks.size(), testPhotos.size());
-        ArrayList<Bitmap> preProcessedFaces = new ArrayList<>();
+        ArrayList<Pair<String, Bitmap>> preProcessedFaces = new ArrayList<>();
         for (int i = 0; i < faceDetectionTasks.size(); i++) {
             facePreProcessor.waitForTask(faceDetectionTasks.get(i));
-            preProcessedFaces.addAll(facePreProcessor.preProcessAllFaces(
-                    testPhotos.get(i),
+            List<Bitmap> faces = (facePreProcessor.preProcessAllFaces(
+                    testPhotos.get(i).second,
                     faceDetectionTasks.get(i).getResult()));
+            for(Bitmap face : faces){
+                preProcessedFaces.add(new Pair<>(testPhotos.get(i).first,face));
+            }
         }
 
         // 3. Creates result structure
-        for (Bitmap face : preProcessedFaces) {
-            if (face != null) {
-                testResults.add(new BenchmarkResult(face));
+        for (Pair<String, Bitmap> photo : preProcessedFaces) {
+            if (photo.second != null) {
+                testResults.add(new BenchmarkResult(photo.second,photo.first));
             }
         }
 
@@ -176,6 +180,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
     private void showModelsResults() {
         int pixels = 100;
         AtomicInteger id = new AtomicInteger(1);
+        final String[] testRes = {"\n"};
         for (BenchmarkResult result : testResults) {
 
             // Create horizontal layout to collect all data for one face.
@@ -194,10 +199,12 @@ public class DisplayResultsLayout implements LayoutClassInterface {
 
             AtomicReference<TextView> previous = new AtomicReference<>();
             previous.set(null);
+            testRes[0] += result.name + ' ';
             // Add textView for every result model.
             result.getResults().forEach((model, name) -> {
                 // Create and setup text view for model output
                 TextView modelResultView = new TextView(caller);
+                testRes[0] += model + ' ' + name + ' ';
                 modelResultView.setText(model + ": " + name);
                 modelResultView.setId(id.getAndIncrement());
 
@@ -214,6 +221,8 @@ public class DisplayResultsLayout implements LayoutClassInterface {
             });
 
             showResultLayout.addView(objectLayout);
+            testRes[0] += '\n';
         }
+        Log.i("BENCHRESULT", testRes[0]);
     }
 }

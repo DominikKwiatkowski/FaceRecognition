@@ -141,7 +141,7 @@ public class DisplayResultsLayout implements LayoutClassInterface {
         long startTime = System.nanoTime();
         ModelObject model = GlobalData.getModel(caller, modelName, databaseName);
         for (BenchmarkResult processingResult : testResults) {
-            UserRecord record = model.userDatabase.findClosestRecord(
+            UserRecord record = model.userDatabase.findClosestRecordAboveThreshold(
                     model.neuralModel.resizeAndProcess(processingResult.getPhoto()));
             processingResult.addResult(modelName, record.username);
         }

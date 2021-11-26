@@ -4,4 +4,17 @@
         <item>DeepID</item>
         <item>OpenFace</item>
     </string-array>
+
+    <string-array name="metrics">
+        <item>euclidean_norm</item>
+        <item>euclidean_norm</item>
+        <item>euclidean_norm</item>
+    </string-array>
+
+    <string-array name="threshold">
+        <item>0.5</item>
+        <item>0.5</item>
+        <item>0.5</item>
+    </string-array>
+
 </resources>

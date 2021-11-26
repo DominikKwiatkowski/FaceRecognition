@@ -60,4 +60,6 @@
     <string name="navDrawer_open_state">Open</string>
     <string name="navDrawer_close_state">Close</string>
 
+    <string name="Euclidean">Euclidean</string>
+
 </resources>

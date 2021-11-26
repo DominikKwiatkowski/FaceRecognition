@@ -2,7 +2,7 @@
     <string-array name="models">
         <item>Facenet</item>
         <item>DeepID</item>
-        <item>OpenFace</item>
+        <item>VGG-Face</item>
     </string-array>
 
     <string-array name="metrics">

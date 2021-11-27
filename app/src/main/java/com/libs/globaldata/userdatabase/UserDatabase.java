@@ -3,8 +3,6 @@ package com.libs.globaldata.userdatabase;
 import android.content.Context;
 import android.util.Log;
 
-import com.R;
-import com.common.VectorOperations;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -13,9 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -124,9 +120,10 @@ public class UserDatabase {
      * @param vector of n-dimensions, for which the closest equivalent wil be found
      * @return closest UserRecord - null if not found
      */
-    public UserRecord findClosestRecordAboveThreshold(float[] vector) {
+    public UserRecord findClosestRecordBelowThreshold(float[] vector) {
         UserRecord result = findClosestRecord(vector);
-        if(distanceFunction.apply(normalizationFuction.apply(vector), normalizationFuction.apply(result.vector)) <= threshold){
+        Double dist = distanceFunction.apply(normalizationFuction.apply(vector), normalizationFuction.apply(result.vector));
+        if(dist  <= new Double(threshold)){
             return result;
         }
         return new UserRecord("?", null);

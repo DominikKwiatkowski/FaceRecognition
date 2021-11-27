@@ -89,7 +89,7 @@ public class FaceRecognizer {
                 } finally {
                     // Find closest user in database.
                     // TODO: Add threshold to avoid detection of non-existing users
-                    UserRecord closestUser = userDatabase.findClosestRecordAboveThreshold(result);
+                    UserRecord closestUser = userDatabase.findClosestRecordBelowThreshold(result);
                     if (closestUser != null) {
                         newNames[i] = closestUser.username;
                     } else {

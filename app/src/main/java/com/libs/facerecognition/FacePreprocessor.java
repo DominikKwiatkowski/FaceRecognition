@@ -1,7 +1,10 @@
 package com.libs.facerecognition;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
@@ -14,6 +17,8 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,16 +123,21 @@ public class FacePreprocessor {
                 rotationMatrix,
                 false);
 
-        // Calculate new bounding box center coordinate
-        int newBoundingBoxCenterX = face.getBoundingBox().centerX() * rotatedImage.getWidth() / image.getWidth();
-        int newBoundingBoxCenterY = face.getBoundingBox().centerY() * rotatedImage.getHeight() / image.getHeight();
+        float newBoundingBoxCenterX = (face.getBoundingBox().centerX() - image.getWidth()/2);
+        float newBoundingBoxCenterY = (face.getBoundingBox().centerY() - image.getHeight()/2);
+        rotationMatrix.mapPoints(new float[]{newBoundingBoxCenterX, newBoundingBoxCenterY});
+        newBoundingBoxCenterX += rotatedImage.getWidth()/2;
+        newBoundingBoxCenterY += rotatedImage.getHeight()/2;
+
+        float nWidth = face.getBoundingBox().width() * rotatedImage.getWidth() / image.getWidth();
+        float nHeight = face.getBoundingBox().height() * rotatedImage.getHeight() / image.getHeight();
 
         // Create moved bounding box
         RectF boundingBoxF = new RectF(
-                face.getBoundingBox().left + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
-                face.getBoundingBox().top + newBoundingBoxCenterY - face.getBoundingBox().centerY(),
-                face.getBoundingBox().right + newBoundingBoxCenterX - face.getBoundingBox().centerX(),
-                face.getBoundingBox().bottom + newBoundingBoxCenterY - face.getBoundingBox().centerY()
+                newBoundingBoxCenterX - nWidth/2,
+                newBoundingBoxCenterY - nHeight/2,
+                newBoundingBoxCenterX + nWidth/2,
+                newBoundingBoxCenterY + nHeight/2
         );
 
         // Set new rotation matrix and apply it
@@ -146,13 +156,36 @@ public class FacePreprocessor {
         int xCordScale = (rotatedBox.width() - face.getBoundingBox().width()) / 2;
         int yCordScale = (rotatedBox.height() - face.getBoundingBox().height()) / 2;
         rotatedBox.set(
-                rotatedBox.left + xCordScale,
-                rotatedBox.top + yCordScale,
-                rotatedBox.right - xCordScale,
-                rotatedBox.bottom - yCordScale
+                Math.max(rotatedBox.left + xCordScale, 0),
+                Math.max(rotatedBox.top + yCordScale, 0),
+                Math.min(rotatedBox.right - xCordScale, rotatedImage.getWidth()),
+                Math.min(rotatedBox.bottom - yCordScale, rotatedImage.getHeight())
         );
 
         Log.d(Tag, "Rotated and trimmed face");
+
+//        Bitmap mutableImage = image.copy(Bitmap.Config.ARGB_8888, true);
+//        Bitmap mutableRotated = rotatedImage.copy(Bitmap.Config.ARGB_8888, true);
+//        Paint paint = new Paint();
+//        paint.setARGB(255, 0, 255,0);
+//        paint.setStyle(Paint.Style.STROKE);
+//        Canvas canvas = new Canvas(mutableImage);
+//        canvas.drawRect(face.getBoundingBox(), paint);
+//        canvas = new Canvas(mutableRotated);
+//        canvas.drawRect(rotatedBox, paint);
+//
+//        try (FileOutputStream out = new FileOutputStream("/data/user/0/com.pg.face_recognition/files/before.png")) {
+//            mutableImage.compress(Bitmap.CompressFormat.PNG, 100, out);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try (FileOutputStream out = new FileOutputStream("/data/user/0/com.pg.face_recognition/files/after.png")) {
+//            mutableRotated.compress(Bitmap.CompressFormat.PNG, 100, out);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 
         // Trim and return preprocessed face.
         return createBitmap(rotatedImage, rotatedBox.left, rotatedBox.top, rotatedBox.width(), rotatedBox.height());

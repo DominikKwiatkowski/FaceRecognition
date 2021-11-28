@@ -1,10 +1,7 @@
 package com.libs.facerecognition;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
@@ -17,8 +14,6 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,29 +158,6 @@ public class FacePreprocessor {
         );
 
         Log.d(Tag, "Rotated and trimmed face");
-
-//        Bitmap mutableImage = image.copy(Bitmap.Config.ARGB_8888, true);
-//        Bitmap mutableRotated = rotatedImage.copy(Bitmap.Config.ARGB_8888, true);
-//        Paint paint = new Paint();
-//        paint.setARGB(255, 0, 255,0);
-//        paint.setStyle(Paint.Style.STROKE);
-//        Canvas canvas = new Canvas(mutableImage);
-//        canvas.drawRect(face.getBoundingBox(), paint);
-//        canvas = new Canvas(mutableRotated);
-//        canvas.drawRect(rotatedBox, paint);
-//
-//        try (FileOutputStream out = new FileOutputStream("/data/user/0/com.pg.face_recognition/files/before.png")) {
-//            mutableImage.compress(Bitmap.CompressFormat.PNG, 100, out);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try (FileOutputStream out = new FileOutputStream("/data/user/0/com.pg.face_recognition/files/after.png")) {
-//            mutableRotated.compress(Bitmap.CompressFormat.PNG, 100, out);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
 
         // Trim and return preprocessed face.
         return createBitmap(rotatedImage, rotatedBox.left, rotatedBox.top, rotatedBox.width(), rotatedBox.height());

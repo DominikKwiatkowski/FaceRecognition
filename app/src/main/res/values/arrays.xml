@@ -2,17 +2,18 @@
     <string-array name="models">
         <item>Facenet</item>
         <item>DeepID</item>
+        <item>VGG-Face</item>
     </string-array>
 
     <string-array name="metrics">
         <item>euclidean</item>
-        <item>euclidean_norm</item>
+        <item>euclidean</item>
         <item>euclidean_norm</item>
     </string-array>
 
     <string-array name="threshold">
         <item>10</item>
-        <item>0.17</item>
+        <item>45</item>
         <item>0.86</item>
     </string-array>
 

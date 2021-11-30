@@ -137,9 +137,6 @@ public class CameraPreview {
                 .build();
 
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
-            int frameCounter = 0;
-            long lastFpsTimestamp = 0;
-
             @Override
             public void analyze(@NonNull ImageProxy image) {
                 // The image rotation and RGB image buffer are initialized only once
@@ -154,19 +151,6 @@ public class CameraPreview {
 
                 // Notify all listeners about new frame
                 notifyCameraFrame(bitmapBuffer, imageRotationDegrees);
-
-                // Compute the FPS of the entire pipeline (just for performance testing)
-                if (false) {
-                    int frameCount = 10;
-                    if (++frameCounter % frameCount == 0) {
-                        frameCounter = 0;
-                        long now = System.currentTimeMillis();
-                        long delta = now - lastFpsTimestamp;
-                        float fps = 1000 * (float) frameCount / delta;
-                        Log.d(Tag, String.format("FPS: %02f.", fps));
-                        lastFpsTimestamp = now;
-                    }
-                }
             }
         });
 

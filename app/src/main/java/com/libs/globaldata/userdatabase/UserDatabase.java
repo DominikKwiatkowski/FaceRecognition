@@ -3,8 +3,6 @@ package com.libs.globaldata.userdatabase;
 import android.content.Context;
 import android.util.Log;
 
-import com.R;
-import com.common.VectorOperations;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -13,12 +11,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,7 +40,11 @@ public class UserDatabase {
     // Default is true
     private boolean saveToFile;
 
-    public UserDatabase(Context context, String databaseName, int vectorLength, boolean loadOnCreation) {
+    private final BiFunction<float[], float[], Double> distanceFunction;
+    private final Function<float[], float[]> normalizationFuction;
+    private final float threshold;
+
+    public UserDatabase(Context context, String databaseName, int vectorLength, boolean loadOnCreation, Metric metric, float threshold) {
         this.databaseFile = new File(context.getFilesDir(), Tag + "_" + databaseName + ".json");
         Log.d(Tag, databaseFile.getAbsolutePath());
         this.id = databaseName;
@@ -52,6 +54,10 @@ public class UserDatabase {
         this.saveToFile = true;
 
         this.usersRecords = new HashMap<String, UserRecord>();
+
+        this.distanceFunction = Metric.getDistanceFunction(metric);
+        this.normalizationFuction = Metric.getNormalizationFunction(metric);
+        this.threshold = threshold;
 
         if (loadOnCreation) {
             // Load Database on creation
@@ -92,9 +98,10 @@ public class UserDatabase {
 
             for (String user : usersRecords.keySet()) {
                 double prevMinDist = minDist;
-                minDist = Math.min(minDist, VectorOperations.euclideanDistance(
-                        VectorOperations.l2Normalize(vector),
-                        VectorOperations.l2Normalize(usersRecords.get(user).vector)));
+
+                minDist = Math.min(minDist, distanceFunction.apply(
+                        normalizationFuction.apply(vector),
+                        normalizationFuction.apply(usersRecords.get(user).vector)));
 
                 if (minDist < prevMinDist) {
                     closestRecord = usersRecords.get(user);
@@ -107,6 +114,20 @@ public class UserDatabase {
         }
     }
 
+    /**
+     * Find closest record from the database taking threshold into account.
+     *
+     * @param vector of n-dimensions, for which the closest equivalent wil be found
+     * @return closest UserRecord - null if not found
+     */
+    public UserRecord findClosestRecordBelowThreshold(float[] vector) {
+        UserRecord result = findClosestRecord(vector);
+        Double dist = distanceFunction.apply(normalizationFuction.apply(vector), normalizationFuction.apply(result.vector));
+        if(dist  <= new Double(threshold)){
+            return result;
+        }
+        return new UserRecord("?", null);
+    }
     /**
      * Validate given vector's data to check, if it matches database characteristics:
      * validate vector's size in relation to database's vector size

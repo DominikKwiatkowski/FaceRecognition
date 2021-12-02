@@ -15,6 +15,7 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.image.ops.ResizeOp;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Represents neural model. User can define which one will be used.

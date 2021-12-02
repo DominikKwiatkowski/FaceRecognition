@@ -44,7 +44,7 @@ public final class VectorOperations {
      * @return euclidean distance between the two vectors
      * @throws NullPointerException when null vector(s) passed
      */
-    static public double euclideanDistance(float[] vector1, float[] vector2) {
+    static public Double euclideanDistance(float[] vector1, float[] vector2) {
         if (vector1 == null || vector2 == null)
             throw new NullPointerException("Null vector(s) passed");
 

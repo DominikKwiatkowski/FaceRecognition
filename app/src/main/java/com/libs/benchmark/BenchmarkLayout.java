@@ -26,10 +26,10 @@ public class BenchmarkLayout implements LayoutClassInterface {
     private final List<Pair<String, String>> supportedModels = new ArrayList<>();
     private final AppCompatActivity caller;
 
-    private final AddPhotoLayout addPhotoLayout;
-    private final LayoutClassInterface displayResultLayout;
+    private AddPhotoLayout addPhotoLayout;
+    private LayoutClassInterface displayResultLayout;
     private final ToastWrapper toastWrapper;
-    private final ActivityResultLauncher<Intent> faceOperationLauncher;
+    private ActivityResultLauncher<Intent> faceOperationLauncher;
     // This field is only to get data about state of database
     private ModelObject sampleModelObject;
     private TextView numberOfPhotos;
@@ -47,13 +47,14 @@ public class BenchmarkLayout implements LayoutClassInterface {
             }
         }
 
-        CompletableFuture.runAsync(() -> initModels());
-
         // Check if there is a supported model
         if (supportedModels.size() == 0) {
             toastWrapper.showToast(caller.getString(R.string.BenchmarkMode_NoPhoto_Toast), Toast.LENGTH_LONG);
             caller.finish();
+            return;
         }
+
+        CompletableFuture.runAsync(() -> initModels());
 
         addPhotoLayout = new AddPhotoLayout(caller, this);
         displayResultLayout = new DisplayResultsLayout(
@@ -72,6 +73,10 @@ public class BenchmarkLayout implements LayoutClassInterface {
 
     @Override
     public void makeActive() {
+        if (supportedModels.size() == 0) {
+            return;
+        }
+
         caller.setContentView(R.layout.activity_benchmark_mode);
 
         Button addUserButton = caller.findViewById(R.id.benchAddFace);

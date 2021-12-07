@@ -15,6 +15,10 @@ To download the target ".apk" file, go to [releases](https://github.com/DominikK
 
 To download and modify the project according to your needs, use `git clone https://github.com/DominikKwiatkowski/FaceRecognition` and open it with Android Studio. It will download all required libraries through Gradle.
 
+## Download and the conversion of the model
+To download and optimize the neural network model, [DeepFace](https://github.com/serengil/deepface) library might be used. Follow the [tutorial](https://github.com/DominikKwiatkowski/FaceRecognition/tree/main/model-download) to setup the environment and run the script to convert model to mobile version.
+It will download and optimize "Facenet" model and save it to the script's location as "Facenet-optimized.tflite". Such generated model is used in our mobile app. Script can be modified to download other models.
+
 ## Addition of new model
 
 To add new face recognition model, add it with `.tflite` extension to `/app/src/main/ml` directory like presented below:
